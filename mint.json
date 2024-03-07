@@ -40,8 +40,35 @@
   ],
   "navigation": [
     {
-    "group": "Galadriel",
-    "pages": ["home"]
+      "group": "Learn",
+      "pages": [
+        "overview",
+        "about",
+        "use-cases"
+      ]
+    },
+    {
+      "group": "Basics",
+      "pages": [
+        "setting-up-a-wallet",
+        "faucet",
+        "block-explorer"
+      ]
+    },
+    {
+      "group": "Develop",
+      "pages": [
+        "quickstart",
+        {
+          "group": "Tutorials",
+          "pages": [
+            "tutorials/tutorial1"
+          ]
+        },
+        "how-it-works",
+        "developer-tools",
+        "solidity-reference"
+      ]
     }
   ],
   "footerSocials": {
