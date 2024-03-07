@@ -18,8 +18,8 @@
   "topbarLinks": [
   ],
   "topbarCtaButton": {
-    "name": "Explorer",
-    "url": "https://explorer.galadriel.com"
+    "name": "Support",
+    "url": "https://discord.com/invite/bHnFgSTKrP"
   },
   "anchors": [
     {
@@ -40,11 +40,26 @@
   ],
   "navigation": [
     {
-      "group": "Get Started",
+      "group": "Learn",
       "pages": [
-        "introduction",
+        "overview",
+        "about",
         "quickstart",
-        "development"
+        "use-cases"
+      ]
+    },
+    {
+      "group": "Develop",
+      "pages": [
+        {
+          "group": "Tutorials",
+          "pages": [
+            "tutorials/tutorial1"
+          ]
+        },
+        "how-it-works",
+        "developer-tools",
+        "solidity-reference"
       ]
     }
   ],
