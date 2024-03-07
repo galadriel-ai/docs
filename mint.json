@@ -1,6 +1,6 @@
 {
   "$schema": "https://mintlify.com/schema.json",
-  "name": "Galadriel",
+  "name": "Galadriel Docs",
   "logo": {
     "dark": "/logo/dark.png",
     "light": "/logo/light.png"
@@ -49,8 +49,17 @@
       ]
     },
     {
+      "group": "Basics",
+      "pages": [
+        "setting-up-a-wallet",
+        "faucet",
+        "block-explorer"
+      ]
+    },
+    {
       "group": "Develop",
       "pages": [
+        "quickstart",
         {
           "group": "Tutorials",
           "pages": [
