@@ -1,41 +1,48 @@
 
-<Warning>This description is not up to date with the latest developments.</Warning>
-
-
 ## Goal
 
-The goal of Galadriel is to enable on-chain, autonomous AI agents. Specifically, we want to enable developers to create on-chain programs which are capable of:
+The goal of Galadriel is to enable on-chain autonomous AI apps, especially agents. Specifically, we want to enable developers to create on-chain programs which are capable of:
 
-1. calling LLMs including closed-source API-provided models,
+1. calling LLMs and multimodal models, including from closed-source API-providers,
 1. permanently storing large amounts of data and retrieving relevant parts of it on-demand, including using embedding-based semantic search,
 1. making requests to external services like search engines,
 1. executing all the above in a loop running for several minutes.
 
+Why these requirements? First, models are the core of any AI app. Second, storage allows extending and specializing the models' knowledge with relatively little effort. Third, external tools are crucial for extending the AI's capability to act in the real world, in real time. And fourth, long runtimes are a fact of life for state of the art large models, and looping a model (which further extends inference time) improves the AI's reasoning ability.
+
 ## Design
 
-The core components of Galadriel are:
+The core of how Galadriel enables on-chain AI is the **oracle**.
 
-1. Oracle: a way for on-chain programs to call external APIs (LLM, tools) with minimal trust.
-1. Embedding database: a way for agents to retrieve a subset of a large database of documents, at runtime.
-1. Contracts: the code implementing the core loop of the agent.
+The oracle enables contracts to make external API calls (including LLMs). It offers an interface for Solidity contracts on the Galadriel chain to call out LLMs or other models, use tools, and retrieve data. 
 
-The core of an AI agent is a loop. In each iteration, the output of an LLM call determines what tool to use (e.g. web search), or whether the agent should terminate. After the tool is executed, its output is fed back into the next iteration, where the LLM decides on the next action, etc.
+To make your own on-chain AI, you need to build your Solidity contract in a specific way to interact with the oracle; see more in [Solidity reference](/solidity-reference).
+
+### Simple usage
+
+Assume you want to make one LLM call during the execution of your contract. You would TODO how to integrate. Here's the execution flow:
+
+TODO - describe the execution flow
+
+TODO - diagram
+
+### Complex usage
+
+AI agents are more complicated. The core of an AI agent is a loop. In each iteration, the output of an LLM call determines what tool to use (e.g. web search), or whether the agent should terminate. After the tool is executed, its output is fed back into the next iteration, where the LLM decides on the next action, etc.
 
 Since on-chain programs cannot typically execute long-running tasks (block time is the ceiling on execution time), we divide the execution of an AI agent into multiple blocks, with the help of the oracle.
 
 The execution flow is as follows:
 
-![Galadriel architecture drawing, as described below](images/architecture.jpg)
+TODO - describe the execution flow
 
-1. Caller (user) creates an AgentRun object to start the execution of an agent (**tx**).
-2. Caller sends the AgentRun object to the oracle registry contract, indicating that the oracle should start executing the loop (**tx**).
-3. The oracle back-end listens to new AgentRuns in the oracle registry contract.
-4. Once an AgentRun is found, the oracle back-end executes the HTTP request (e.g. LLM call to OpenAI, or web search tool use) that is the next step in the agent loop.
-5. The oracle back-end receives the HTTP response from the third party service.
-6. The oracle back-end calls the agent contract with the HTTP response (**tx**). If the agent loop is not finished, the oracle back-end proceeds to step 3.
+TODO - diagram
 
-In the current setup, a lot of trust is placed into the oracle back-end. This is the first step towards a working system while we are designing and building a minimal-trust approach to this oracle. Our end goal is to minimize the trust necessary to build an agent that is close to state-of-the-art in capability.
+## Security model
 
+A lot of trust is placed in the oracle. This is the first step towards a working system while we are designing and building a minimal-trust approach to this oracle.
+
+In the current architecture of Galadriel, the oracle runs inside a TEE and can be verified by anyone to be executing the correct code; see more in the [teeML](#teeML) section.
 
 ### teeML
 
