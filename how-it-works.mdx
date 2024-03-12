@@ -16,34 +16,85 @@ The core of how Galadriel enables on-chain AI is the **oracle**.
 
 The oracle enables contracts to make external API calls (including LLMs). It offers an interface for Solidity contracts on the Galadriel chain to call out LLMs or other models, use tools, and retrieve data. 
 
-To make your own on-chain AI, you need to build your Solidity contract in a specific way to interact with the oracle; see more in [Solidity reference](/solidity-reference).
+To make your own on-chain AI, you need to build your Solidity contract in a specific way to interact with the oracle. Making a call to most contracts on EVM chains is synchronous: the call is made, and the result is returned immediately. However, the oracle is asynchronous: the call is made, and the result is returned later, when the oracle has finished processing the request off-chain. The async nature of the oracle is because on-chain programs cannot typically execute long-running tasks (block time is the ceiling on execution time).
 
-### Simple usage
+Due to the above, to make a call to an LLM, generative image model, external tool, or anything else via the oracle you need to use a callback function. This function is called by the oracle when the result is ready.
 
-Assume you want to make one LLM call during the execution of your contract. You would TODO how to integrate. Here's the execution flow:
+## Usage
 
-TODO - describe the execution flow
+Based on this, here are the typical usage patterns for Galadriel.
+
+### Simple call, no history
+
+Assume you want to make one call to a generative image model during the execution of your contract.
+
+To do so, you would need to add two things to your contract:
+
+* Make a call to the generative image model. This is done by calling a function on the oracle.
+* Add a callback function to your contract. This function is called by the oracle when the result is ready.
+
+And the execution flow is as follows:
+
+1. Your contract calls the oracle contract to make a call to the generative image model -- say, DALL-E.
+2. The oracle backend makes a call to DALL-E API, off-chain.
+3. (About 10-20 seconds passes.)
+4. DALL-E API returns a result to the oracle backend.
+5. The oracle backend calls the oracle contract in a new transaction, containing the DALL-E response.
+6. The oracle contract calls the callback function in your contract, containing the DALL-E response.
 
 TODO - diagram
 
-### Complex usage
+For details on implementation, please see the [Solidity reference](/solidity-reference).
+
+### Simple LLM call, with history
+
+Generative image models are stateless: you put a prompt in and get an image out. However, ChatGPT conversations and many other AI apps require storing state in the form of conversation history. For example, for OpenAI [Chat Completions API](https://platform.openai.com/docs/guides/text-generation/chat-completions-api) you need to pass to the API a list of previous messages.
+
+To enable calling LLMs with history, you need to implement two more functions in your contract for fetching history. Overall, to call an LLM, you need to add the following things to your contract:
+
+* Make a call to the LLM. This is done by calling a function on the oracle.
+* Add a callback function to your contract. This function is called by the oracle when the result is ready.
+* Add a history getter function to your contract. This function is called by the oracle to get the history. (Detail: this actually needs to be two seperate functions, one for fetching message contents and the other for fetching message roles.)
+
+In this scenario, the execution flow is as follows:
+
+1. Your contract calls the oracle contract to make a call to the LLM, say OpenAI GPT-4 API.
+2. The oracle backend calls the oracle contract, which in turn calls your contract, to fetch the message history.
+3. The oracle backend makes a call to the GPT-4 API, off-chain.
+4. (About 5-20 seconds passes.)
+5. The GPT-4 API returns a result to the oracle backend.
+6. The oracle backend calls the oracle contract in a new transaction, containing the LLM response.
+7. The oracle contract calls the callback function in your contract, containing the LLM response.
+
+For details on implementation, please see the [Solidity reference](/solidity-reference).
+
+### Complex usage: AI agents
 
 AI agents are more complicated. The core of an AI agent is a loop. In each iteration, the output of an LLM call determines what tool to use (e.g. web search), or whether the agent should terminate. After the tool is executed, its output is fed back into the next iteration, where the LLM decides on the next action, etc.
 
-Since on-chain programs cannot typically execute long-running tasks (block time is the ceiling on execution time), we divide the execution of an AI agent into multiple blocks, with the help of the oracle.
+To make an on-chain agent with Galadriel, your callback (that is called when the oracle is ready) needs to contain code for choosing what to do next. For agent, this will typically be one of:
 
-The execution flow is as follows:
+1. Terminate (if the task is complete, or impossible)
+2. Make a call to an LLM
+3. Make a call to an external tool
 
-TODO - describe the execution flow
-
-TODO - diagram
+This way, the callback function will be repeatedly called by the oracle, until the agent decides to terminate. This creates the loop, even though no explicit loop is present in the contract.
 
 ## Security model
 
 A lot of trust is placed in the oracle. This is the first step towards a working system while we are designing and building a minimal-trust approach to this oracle.
 
-In the current architecture of Galadriel, the oracle runs inside a TEE and can be verified by anyone to be executing the correct code; see more in the [teeML](#teeML) section.
+In the current architecture of Galadriel, the oracle runs inside a trusted execution environment (TEE) and can be verified by anyone to be executing the correct code; see more in the [teeML](#teeML) section.
 
 ### teeML
 
 TODO - describe the how the oracle is executed in TEE and how the oracle is designed to be trust-minimized.
+
+
+## See also
+
+* Implementations of the above on in [galadriel-ai/contracts](https://github.com/galadriel-ai/contracts):
+    * [Example contracts](https://github.com/galadriel-ai/contracts/tree/main/contracts/contracts)
+    * [Oracle back-end](https://github.com/galadriel-ai/contracts/tree/main/oracles)
+    * [Oracle contract](https://github.com/galadriel-ai/contracts/blob/main/contracts/contracts/ChatOracle.sol)
+* Full [Solidity reference](/solidity-reference)

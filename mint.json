@@ -51,15 +51,9 @@
       "group": "For developers",
       "pages": [
         "quickstart",
-        {
-          "group": "Tutorials",
-          "pages": [
-            "tutorials/tutorial1"
-          ]
-        },
         "how-it-works",
-        "developer-tools",
-        "solidity-reference"
+        "solidity-reference",
+        "developer-tools"
       ]
     },
     {
