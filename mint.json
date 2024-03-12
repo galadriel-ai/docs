@@ -52,8 +52,7 @@
       "pages": [
         "quickstart",
         "how-it-works",
-        "solidity-reference",
-        "developer-tools"
+        "solidity-reference"
       ]
     },
     {
