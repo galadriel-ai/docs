@@ -48,15 +48,7 @@
       ]
     },
     {
-      "group": "Basics",
-      "pages": [
-        "setting-up-a-wallet",
-        "faucet",
-        "block-explorer"
-      ]
-    },
-    {
-      "group": "Develop",
+      "group": "For developers",
       "pages": [
         "quickstart",
         {
@@ -68,6 +60,14 @@
         "how-it-works",
         "developer-tools",
         "solidity-reference"
+      ]
+    },
+    {
+      "group": "For users",
+      "pages": [
+        "setting-up-a-wallet",
+        "faucet",
+        "block-explorer"
       ]
     }
   ],
