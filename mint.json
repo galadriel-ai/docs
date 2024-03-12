@@ -69,5 +69,10 @@
     "twitter": "https://twitter.com/Galadriel_AI",
     "github": "https://github.com/galadriel-ai",
     "discord": "https://discord.com/invite/bHnFgSTKrP"
+  },
+  "analytics": {
+    "ga4": {
+      "measurementId": "G-93RM06N82K"
+    }
   }
 }
