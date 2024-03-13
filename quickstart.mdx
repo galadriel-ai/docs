@@ -6,9 +6,11 @@ This quickstart covers two things:
 
 ### Prerequisites
 
-* You have a Galadriel testnet [account](/setting-up-a-wallet) and some [testnet tokens](/faucet).
+* A Galadriel testnet [account](/setting-up-a-wallet). We recommend creating a new EVM account for development purposes.
+* Some [testnet tokens](/faucet) on the account you are using.
+* `node` and `npm` installed on your machine.
 
-### Deploying an agent to Galadriel testnet
+### Deploying a contract on Galadriel testnet
 
 <Steps>
     <Step title="Testnet tokens">
@@ -32,8 +34,7 @@ This quickstart covers two things:
     cp template.env .env
     ```
 
-    Then, modify the `.env` file and set `PRIVATE_KEY_CUSTOM` to the private key of the account you want to use for deploying the contracts.
-    TODO - where get private key
+    Then, modify the `.env` file and set `PRIVATE_KEY_CUSTOM` to the private key of the account you want to use for deploying the contracts to Galadriel testnet.
 
     </Step>
     <Step title="Install dependencies">
@@ -45,32 +46,44 @@ This quickstart covers two things:
     ```
     </Step>
     <Step title="Deploy contract to testnet">
-    TODO - how do you deploy only an agent / LLM app to testnet?
+    The [quickstart contract](https://github.com/galadriel-ai/contracts/blob/main/contracts/contracts/Quickstart.sol)) can be deployed with a [simple script](https://github.com/galadriel-ai/contracts/blob/main/contracts/scripts/deployQuickstart.ts):
 
-    Save the resulting contract address so we can call the agent.
+    ```bash
+    npm run deployQuickstart
+    ```
+
+    The output of the script will show the deployed contract address. Store this to call the contract later:
+
+    ```bash
+    # Replace with your own contract address
+    export QUICKSTART_CONTRACT_ADDRESS=0x...
+    ```
     </Step>
 </Steps>
 
 ### Calling your agent
 
+Prerequisites:
+* You've deployed the quickstart contract in the previous step, and the the contract address.
+
 <Steps>
-    <Step title="Install dependencies">
-    Create a Python environment and install dependencies:
+    <Step name="Make a call to the contract">
+
+    Execute the following command to run a [script](https://github.com/galadriel-ai/contracts/blob/main/contracts/scripts/deployQuickstart.ts) that calls the deployed contract:
 
     ```bash
-    python -m venv venv
-    source venv/bin/activate
-    pip install -r requirements.txt
+    yarn hardhat run scripts/callQuickstart.ts --network galadriel
     ```
-
-    (TODO should rewrite the calling scripts into TS?)
+    </Step>
+    <Step name="Check the output">
+        TODO - how to see output in explorer
     </Step>
 </Steps>
 
-You're done! You've successfully created your own on-chain AI agent.
+You're done! You've successfully created your own on-chain AI app.
 
-Next, you can:
+What's next?
 
-* Follow the [tutorials](/tutorials).
+* Continue developing your own contracts. See the [contracts readme](https://github.com/galadriel-ai/contracts/tree/main/contracts) and the [Solidity reference](/solidity-reference) for more.
 * Read [how Galadriel works](/how-it-works).
 * Explore [use cases](/use-cases) for inspiration and examples of full dApps including a frontend.
