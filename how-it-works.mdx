@@ -24,11 +24,11 @@ Due to the above, to make a call to an LLM, generative image model, external too
 
 Based on this, here are the typical usage patterns for Galadriel.
 
-### Simple tool call, no history
+### Simple generative image model call
 
-Assume you want to make one call to a generative image model during the execution of your contract.
+Assume you want to make one call to a generative image model during the execution of your contract. This is what you need to make e.g. a [generative AI NFT minting dApp](/use-cases#generative-ai-nft-minter).
 
-To do so, you would need to add two things to your contract:
+To do so, you need to add two things to your contract:
 
 * Make a call to the generative image model. This is done by calling a function on the oracle.
 * Add a callback function to your contract. This function is called by the oracle when the result is ready.
@@ -48,7 +48,7 @@ For details on implementation, please see the [Solidity reference](/solidity-ref
 
 ### Simple LLM call, with history
 
-Generative image models are stateless: you put a prompt in and get an image out. However, ChatGPT conversations and many other AI apps require storing state in the form of conversation history. For example, for OpenAI [Chat Completions API](https://platform.openai.com/docs/guides/text-generation/chat-completions-api) you need to pass to the API a list of previous messages.
+Generative image models are stateless: you put a prompt in and get an image out. However, [on-chain ChatGPT](/use-cases#on-chain-chatgpt) and many other AI apps require storing state in the form of conversation history. For example, for OpenAI [Chat Completions API](https://platform.openai.com/docs/guides/text-generation/chat-completions-api) you need to pass to the API a list of previous messages.
 
 To enable calling LLMs with history, you need to implement two more functions in your contract for fetching history. Overall, to call an LLM, you need to add the following things to your contract:
 
