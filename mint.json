@@ -40,13 +40,39 @@
   ],
   "navigation": [
     {
-    "group": "Galadriel",
-    "pages": ["home"]
+      "group": "Learn",
+      "pages": [
+        "overview",
+        "about",
+        "use-cases"
+      ]
+    },
+    {
+      "group": "For developers",
+      "pages": [
+        "quickstart",
+        "how-it-works",
+        "solidity-reference",
+        "oracle-address"
+      ]
+    },
+    {
+      "group": "For users",
+      "pages": [
+        "setting-up-a-wallet",
+        "faucet",
+        "block-explorer"
+      ]
     }
   ],
   "footerSocials": {
     "twitter": "https://twitter.com/Galadriel_AI",
     "github": "https://github.com/galadriel-ai",
     "discord": "https://discord.com/invite/bHnFgSTKrP"
+  },
+  "analytics": {
+    "ga4": {
+      "measurementId": "G-93RM06N82K"
+    }
   }
 }

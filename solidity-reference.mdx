@@ -1,0 +1,73 @@
+This page describes the details of the Solidity interface to the oracle, and how to use it in your contract. We assume you are familiar with the [high-level architecture of Galadriel](/how-it-works).
+
+## Usage
+
+### Calling an LLM
+
+If you want to call an LLM, you need to:
+
+<Steps>
+    <Step>
+    Call a function on the oracle contract, with the following signature:
+    ```solidity
+    createLlmCall(uint callbackId)
+    ```
+    This will create a new LLM call and return immediately.
+    </Step>
+    <Step>
+    Implement a callback function into your contract with the following signature:
+    ```solidity
+    onOracleLlmResponse(
+        uint callbackId,
+        string response
+        )
+    ```
+    This function will be called when the LLM result is available (in a separate transaction potentially tens of seconds later).
+    </Step>
+    <Step>
+    Implement two functions into your contract that the oracle will call to get the message history necessary for the LLM, including the system prompt:
+    ```solidity
+    getMessageHistoryContents(uint callbackId)
+    getMessageHistoryRoles(uint callbackId)
+    ```
+    </Step>
+</Steps>
+
+### Calling an external tool
+
+If you are calling an external tool, you need to:
+
+<Steps>
+    <Step>
+    Call a function on the oracle contract, with the following signature:
+    ```solidity
+    createFunctionCall(
+        uint callbackId,
+        string functionType,
+        string functionInput
+        )
+    ```
+    This will create a new tool call and return immediately.
+    </Step>
+    <Step>
+    Implement a callback function into your contract with the following signature:
+    ```solidity
+    onOracleFunctionResponse(
+        uint callbackId,
+        string response
+        )
+    ```
+    This function will be called when the tool result is available (in a separate transaction potentially tens of seconds later).
+
+    Since function calls do not reference a message history, you don't need to implement any history getter functions.
+    </Step>
+</Steps>
+
+
+## Reference
+
+TODO 
+* describe oracle's interface that your contract will call
+    * link to it in github
+* describe interface that your contract must implement
+    * link to it in github
