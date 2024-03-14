@@ -14,7 +14,9 @@ Why these requirements? First, models are the core of any AI app. Second, storag
 
 The core of how Galadriel enables on-chain AI is the **oracle**.
 
-The oracle enables contracts to make external API calls (including LLMs). It offers an interface for Solidity contracts on the Galadriel chain to call out LLMs or other models, use tools, and retrieve data. 
+The oracle enables contracts to make external API calls (including LLMs). It offers an interface for Solidity contracts on the Galadriel chain to call out LLMs or other models, use tools, and retrieve data.
+
+The oracle is implemented as contract that is called asynchronously and has an off-chain component. This is similar in architecture to ChainLink. However, because tool calls (e.g. web searches) and LLM calls do not produce deterministic results nor cannot be averaged, consensus on those requests is not possible. To solve this, we execute the oracle in a trusted execution environment -- see the [TEE section](#TEE).
 
 To make your own on-chain AI, you need to build your Solidity contract in a specific way to interact with the oracle. Making a call to most contracts on EVM chains is synchronous: the call is made, and the result is returned immediately. However, the oracle is asynchronous: the call is made, and the result is returned later, when the oracle has finished processing the request off-chain. The async nature of the oracle is because on-chain programs cannot typically execute long-running tasks (block time is the ceiling on execution time).
 
@@ -50,7 +52,7 @@ For details on implementation, please see the [Solidity reference](/solidity-ref
 
 Generative image models are stateless: you put a prompt in and get an image out. However, [on-chain ChatGPT](/use-cases#on-chain-chatgpt) and many other AI apps require storing state in the form of conversation history. For example, for OpenAI [Chat Completions API](https://platform.openai.com/docs/guides/text-generation/chat-completions-api) you need to pass to the API a list of previous messages.
 
-To enable calling LLMs with history, you need to implement two more functions in your contract for fetching history. Overall, to call an LLM, you need to add the following things to your contract:
+To enable calling LLMs with history, you need to implement two more functions in your contract for fetching history which is stored in your contract, on-chain. Overall, to call an LLM, you need to add the following things to your contract:
 
 * Make a call to the LLM. This is done by calling a function on the oracle.
 * Add a callback function to your contract. This function is called by the oracle when the result is ready.
