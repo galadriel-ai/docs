@@ -1,3 +1,9 @@
+# IMPORTANT
+If you need to change the addresses of anything (deployed contracts, oracles, etc) -- please do so in `snippets/addresses.mdx`. All usages of these variables will then automatically change across all docs pages.
+
+Similarly, if you're adding a new address or other value into the docs that is going to change relatively often, please also add it as a snippet.
+
+
 # Mintlify Starter Kit
 
 Click on `Use this template` to copy the Mintlify starter kit. The starter kit contains examples including
