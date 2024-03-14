@@ -34,7 +34,9 @@ This quickstart covers two things:
     cp template.env .env
     ```
 
-    Then, modify the `.env` file and set `PRIVATE_KEY_CUSTOM` to the private key of the account you want to use for deploying the contracts to Galadriel testnet.
+    Then, modify the `.env` file:
+    * Set `PRIVATE_KEY_CUSTOM` to the private key of the account you want to use for deploying the contracts to Galadriel testnet.
+    * Set `ORACLE_ADDRESS` to the [current testnet oracle address](/oracle) provided by Galadriel team.
 
     </Step>
     <Step title="Install dependencies">
@@ -74,6 +76,8 @@ Prerequisites:
     ```bash
     yarn hardhat run scripts/callQuickstart.ts --network galadriel
     ```
+
+    (TODO if fails make sure contract address env is set)
     </Step>
     <Step name="Check the output">
         TODO - how to see output in explorer
