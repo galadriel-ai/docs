@@ -1,5 +1,45 @@
 This page describes the details of the Solidity interface to the oracle, and how to use it in your contract. We assume you are familiar with the [high-level architecture of Galadriel](/how-it-works).
 
+## Interface to oracle
+
+The oracle is exposed as a contract that you can call from your own contract. It exposes two types of functionality: calling **LLMs** and calling **external tools**.
+
+The relevant parts of the oracle contract that you can call consist of two parts:
+
+* Methods you call on the oracle. These are [`createLlmCall`](https://github.com/galadriel-ai/contracts/blob/main/contracts/contracts/ChatOracle.sol#L90C14-L90C27) and [`createFunctionCall`](https://github.com/galadriel-ai/contracts/blob/main/contracts/contracts/ChatOracle.sol#L132)
+* Method you implement on your contract to receive callbacks and provide extra context to the oracle. These are described in the [`IChatGpt` interface](https://github.com/galadriel-ai/contracts/blob/main/contracts/contracts/ChatOracle.sol#L7-L28).
+
+See the [Usage](#usage) section below on how to integrate depending on your use case.
+
+### LLM options
+
+If you are integrating an LLM, currently the default and only model you can use is GPT-4. We will add other models, including open-source, in the future.
+
+### Tool-calling options
+
+If you are integrating a tool call, you need to choose a tool from one of the following options. For every tool the input and output are of string type, and you choose a tool by specifying the `functionType` parameter in your `createFunctionCall` call.
+
+The currently available tools are:
+
+<AccordionGroup>
+<Accordion title="Image generation">
+
+* `functionType`: `image_generation`
+* Functionality: given an input prompt, run [DALL-E 3](https://openai.com/dall-e-3) to generate an image.
+* Input: a string with the prompt that is directly given as input to DALL-E.
+* Output: a string with the URL of the generated image.
+
+</Accordion>
+<Accordion title="Web search">
+
+* `functionType`: `web_search`
+* Functionality: given a query string, run a Google search and return the list of results.
+* Input: a string with the search query.
+* Output: a string with a list of search results in JSON format.
+
+</Accordion>
+</AccordionGroup>
+
 ## Usage
 
 ### Calling an LLM
@@ -8,24 +48,24 @@ If you want to call an LLM, you need to:
 
 <Steps>
     <Step>
-    Call a function on the oracle contract, with the following signature:
+    Call a method on the oracle contract, with the following signature:
     ```solidity
     createLlmCall(uint callbackId)
     ```
     This will create a new LLM call and return immediately.
     </Step>
     <Step>
-    Implement a callback function into your contract with the following signature:
+    Implement a callback method into your contract with the following signature:
     ```solidity
     onOracleLlmResponse(
         uint callbackId,
         string response
         )
     ```
-    This function will be called when the LLM result is available (in a separate transaction potentially tens of seconds later).
+    This method will be called when the LLM result is available (in a separate transaction potentially tens of seconds later).
     </Step>
     <Step>
-    Implement two functions into your contract that the oracle will call to get the message history necessary for the LLM, including the system prompt:
+    Implement two methods into your contract that the oracle will call to get the message history necessary for the LLM, including the system prompt:
     ```solidity
     getMessageHistoryContents(uint callbackId)
     getMessageHistoryRoles(uint callbackId)
@@ -39,7 +79,7 @@ If you are calling an external tool, you need to:
 
 <Steps>
     <Step>
-    Call a function on the oracle contract, with the following signature:
+    Call a method on the oracle contract, with the following signature:
     ```solidity
     createFunctionCall(
         uint callbackId,
@@ -50,24 +90,15 @@ If you are calling an external tool, you need to:
     This will create a new tool call and return immediately.
     </Step>
     <Step>
-    Implement a callback function into your contract with the following signature:
+    Implement a callback method into your contract with the following signature:
     ```solidity
     onOracleFunctionResponse(
         uint callbackId,
         string response
         )
     ```
-    This function will be called when the tool result is available (in a separate transaction potentially tens of seconds later).
+    This method will be called when the tool result is available (in a separate transaction potentially tens of seconds later).
 
-    Since function calls do not reference a message history, you don't need to implement any history getter functions.
+    Since method calls do not reference a message history, you don't need to implement any history getter methods.
     </Step>
 </Steps>
-
-
-## Reference
-
-TODO 
-* describe oracle's interface that your contract will call
-    * link to it in github
-* describe interface that your contract must implement
-    * link to it in github
