@@ -68,7 +68,7 @@ This quickstart covers two things:
 ### Calling your agent
 
 Prerequisites:
-* You've deployed the quickstart contract in the previous step, and the the contract address.
+* You've deployed the quickstart contract in the previous step, and stored the contract address.
 
 <Steps>
     <Step name="Make a call to the contract">
@@ -79,14 +79,13 @@ Prerequisites:
     yarn hardhat run scripts/callQuickstart.ts --network galadriel
     ```
 
-    (TODO if fails make sure contract address env is set)
-    </Step>
-    <Step name="Check the output">
-        TODO - how to see output in explorer
+    The script will interactively ask for the input (DALL-E prompt: what image should be generated) and then call the contract with the input. The output, when ready, will be printed to the console.
+
+    If this step fails, make sure you have set the `QUICKSTART_CONTRACT_ADDRESS` environment variable to the address of your deployed contract.
     </Step>
 </Steps>
 
-You're done! You've successfully created your own on-chain AI app.
+You're done! You've successfully created and called your own on-chain AI app.
 
 What's next?
 
