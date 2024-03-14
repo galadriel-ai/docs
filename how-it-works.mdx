@@ -33,7 +33,7 @@ To do so, you need to add two things to your contract:
 * Make a call to the generative image model. This is done by calling a function on the oracle.
 * Add a callback function to your contract. This function is called by the oracle when the result is ready.
 
-And the execution flow is as follows:
+And the execution flow is as follows (see the diagram below):
 
 1. Your contract calls the oracle contract to make a call to the generative image model -- say, DALL-E.
 2. The oracle backend makes a call to DALL-E API, off-chain.
@@ -42,7 +42,7 @@ And the execution flow is as follows:
 5. The oracle backend calls the oracle contract in a new transaction, containing the DALL-E response.
 6. The oracle contract calls the callback function in your contract, containing the DALL-E response.
 
-TODO - diagram
+<img src="images/architecture.jpg" />
 
 For details on implementation, please see the [Solidity reference](/solidity-reference).
 
@@ -88,7 +88,14 @@ In the current architecture of Galadriel, the oracle runs inside a trusted execu
 
 ### teeML
 
-TODO - describe the how the oracle is executed in TEE and how the oracle is designed to be trust-minimized.
+The oracle is executed in a trusted execution environment, specifically an [AWS Nitro Enclave](https://aws.amazon.com/ec2/nitro/nitro-enclaves/). Upon startup, the enclave generates a private key which can only be accessed inside the enclave, and is used for signing the transactions made by the oracle. Since the image running in the enclave is public and auditable (see links below) and for every execution of the oracle an attestation is provided, you can verify every execution of the oracle to be correct after-the-fact.
+
+See more details about the teeML setup in the following links.
+
+* [Oracle contract](https://github.com/galadriel-ai/contracts/blob/main/contracts/contracts/ChatOracle.sol)
+* [Oracle back-end code](https://github.com/galadriel-ai/contracts/tree/main/oracles)
+* Enclave image: will be shared soon (TODO)
+* How to verify attestations: will be shared soon (TODO)
 
 
 ## See also
