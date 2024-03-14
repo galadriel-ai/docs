@@ -1,23 +1,41 @@
 This page describes the details of the Solidity interface to the oracle, and how to use it in your contract. We assume you are familiar with the [high-level architecture of Galadriel](/how-it-works).
 
-## Interface to oracle
+## Oracle interface
 
 The oracle is exposed as a contract that you can call from your own contract. It exposes two types of functionality: calling **LLMs** and calling **external tools**.
 
 The relevant parts of the oracle contract that you can call consist of two parts:
 
-* Methods you call on the oracle. These are [`createLlmCall`](https://github.com/galadriel-ai/contracts/blob/main/contracts/contracts/ChatOracle.sol#L90C14-L90C27) and [`createFunctionCall`](https://github.com/galadriel-ai/contracts/blob/main/contracts/contracts/ChatOracle.sol#L132)
-* Method you implement on your contract to receive callbacks and provide extra context to the oracle. These are described in the [`IChatGpt` interface](https://github.com/galadriel-ai/contracts/blob/main/contracts/contracts/ChatOracle.sol#L7-L28).
+* Methods you call on the oracle: see [Methods you can call on the oracle](#oracle-contract-methods).
+* Callback methods you implement on your contract: see [Callback methods](#callback-methods).
 
 See the [Usage](#usage) section below on how to integrate depending on your use case.
 
-### LLM options
+### Oracle contract methods
 
-If you are integrating an LLM, currently the default and only model you can use is GPT-4. We will add other models, including open-source, in the future.
+See source code for all the methods in the [`ChatOracle` contract](https://github.com/galadriel-ai/contracts/blob/main/contracts/contracts/ChatOracle.sol#L90C14-L90C27).
 
-### Tool-calling options
+#### createLlmCall
 
-If you are integrating a tool call, you need to choose a tool from one of the following options. For every tool the input and output are of string type, and you choose a tool by specifying the `functionType` parameter in your `createFunctionCall` call.
+This method makes a call to OpenAI GPT-4. We will add other models, including open-source, in the future.
+
+Arguments
+* `uint promptCallbackId` - identifier which will be passed into the callback.
+
+Returns:
+* `uint` - an internal counter of the oracle, which is incremented on every call.
+
+#### createFunctionCall
+
+This method makes a call to a tool -- see options below. For every tool the input and output are of string type, and you choose a tool by specifying the `functionType` parameter.
+
+Arguments
+* `uint functionCallbackId` - identifier which will be passed into the callback.
+* `string functionType` - specifies which function to call. Must be one of: `image_generation`, `web_search`.
+* `string functionInput` - input to the function.
+
+Returns
+* `uint` - an internal counter of the oracle, which is incremented on every call.
 
 The currently available tools are:
 
@@ -40,6 +58,75 @@ The currently available tools are:
 </Accordion>
 </AccordionGroup>
 
+### Callback methods
+
+These are callbacks the oracle will call once the response is available, and are described in the [`IChatGpt` interface](https://github.com/galadriel-ai/contracts/blob/main/contracts/contracts/ChatOracle.sol#L7-L28).
+
+#### onOracleLlmResponse
+
+Called when the result of an LLM call, created with [`createLlmCall`](#createllmcall), is available.
+
+Arguments
+* `uint callbackId` - the identifier you passed into the `createLlmCall` method.
+* `string response` - the result of the LLM call.
+* `string errorMessage` - an error message. Present if and only if the oracle failed to execute this call.
+
+#### onOracleFunctionResponse
+Called when the result of a tool call, created with [`createFunctionCall`](#createfunctioncall), is available.
+
+Arguments
+* `uint callbackId` - the identifier you passed into the `createFunctionCall` method.
+* `string response` - the result of the tool call.
+* `string errorMessage` - an error message. Present if and only if the oracle failed to execute this call.
+
+
+#### getMessageHistoryContents and getMessageHistoryRoles
+
+These two methods in combination are used to provide the oracle with the message history necessary for the LLM call. They are called by the oracle after [`createLlmcall`](#createllmcall).
+
+The methods should each return a list, one with message contents and the other listing the roles of the message authors. The list lengths should be equal for a given `callbackId`.
+
+For example, if the message history is the following:
+
+
+role      |        content              |
+----------|-----------------------------|
+system    | You are a helpful assistant |
+user      | Hello!                      |
+assistant | Hi! How can I help?         |
+user      | How big is the Sun?         |
+
+
+Then `getMessageHistoryContents` should return the following list of 4 items:
+```solidity
+["You are a helpful assistant", "Hello!", "Hi! How can I help?", "How big is the Sun?"]
+```
+
+...and `getMessageHistoryRoles` should return the following list of 4 items:
+```solidity
+["system", "user", "assistant", "user"]
+```
+
+The signatures of these methods should be:
+
+**getMessageHistoryRoles**
+
+Arguments:
+* `uint callbackId` - the identifier you passed into the `createLlmCall` method.
+
+Returns:
+* `string[]` - a list of roles.
+
+**getMessageHistoryContents**
+
+Arguments:
+* `uint callbackId` - the identifier you passed into the `createLlmCall` method.
+
+Returns:
+* `string[]` - a list of message contents.
+
+
+
 ## Usage
 
 ### Calling an LLM
@@ -48,28 +135,13 @@ If you want to call an LLM, you need to:
 
 <Steps>
     <Step>
-    Call a method on the oracle contract, with the following signature:
-    ```solidity
-    createLlmCall(uint callbackId)
-    ```
-    This will create a new LLM call and return immediately.
+    Call the [createLlmCall](#createllmcall) method on the oracle contract. This will create a new LLM call and return immediately.
     </Step>
     <Step>
-    Implement a callback method into your contract with the following signature:
-    ```solidity
-    onOracleLlmResponse(
-        uint callbackId,
-        string response
-        )
-    ```
-    This method will be called when the LLM result is available (in a separate transaction potentially tens of seconds later).
+    Implement the [onOracleLlmResponse](#onoraclellmresponse) method into your contract. This method will be called when the LLM result is available (in a separate transaction potentially tens of seconds later).
     </Step>
     <Step>
-    Implement two methods into your contract that the oracle will call to get the message history necessary for the LLM, including the system prompt:
-    ```solidity
-    getMessageHistoryContents(uint callbackId)
-    getMessageHistoryRoles(uint callbackId)
-    ```
+    Implement two methods into your contract that the oracle will call to get the message history necessary for the LLM, including the system prompt: [getMessageHistoryContents and getMessageHistoryRoles](#getmessagehistorycontents-and-getmessagehistoryroles).
     </Step>
 </Steps>
 
@@ -79,26 +151,15 @@ If you are calling an external tool, you need to:
 
 <Steps>
     <Step>
-    Call a method on the oracle contract, with the following signature:
-    ```solidity
-    createFunctionCall(
-        uint callbackId,
-        string functionType,
-        string functionInput
-        )
-    ```
-    This will create a new tool call and return immediately.
+    Call the [createFunctionCall](#createfunctioncall) method on the oracle contract. This will create a new tool call and return immediately.
     </Step>
     <Step>
-    Implement a callback method into your contract with the following signature:
-    ```solidity
-    onOracleFunctionResponse(
-        uint callbackId,
-        string response
-        )
-    ```
-    This method will be called when the tool result is available (in a separate transaction potentially tens of seconds later).
+    Implement the [onOracleFunctionResponse](#onoraclefunctionresponse) method into your contract. This method will be called when the tool result is available (in a separate transaction potentially tens of seconds later).
 
     Since method calls do not reference a message history, you don't need to implement any history getter methods.
     </Step>
 </Steps>
+
+### Examples
+
+Please refer to the [example contracts](https://github.com/galadriel-ai/contracts/tree/main/contracts/contracts), corresponding to the outlined [use cases](/use-cases), for complete usage examples.
