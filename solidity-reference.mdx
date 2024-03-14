@@ -69,7 +69,7 @@ Called when the result of an LLM call, created with [`createLlmCall`](#createllm
 Arguments
 * `uint callbackId` - the identifier you passed into the `createLlmCall` method.
 * `string response` - the result of the LLM call.
-* `string errorMessage` - an error message. Present if and only if the oracle failed to execute this call.
+* `string errorMessage` - an error message. Contains an empty string if there was no error, and a description of the error otherwise.
 
 #### onOracleFunctionResponse
 Called when the result of a tool call, created with [`createFunctionCall`](#createfunctioncall), is available.
@@ -77,7 +77,7 @@ Called when the result of a tool call, created with [`createFunctionCall`](#crea
 Arguments
 * `uint callbackId` - the identifier you passed into the `createFunctionCall` method.
 * `string response` - the result of the tool call.
-* `string errorMessage` - an error message. Present if and only if the oracle failed to execute this call.
+* `string errorMessage` - an error message. Contains an empty string if there was no error, and a description of the error otherwise.
 
 
 #### getMessageHistoryContents and getMessageHistoryRoles
@@ -135,13 +135,13 @@ If you want to call an LLM, you need to:
 
 <Steps>
     <Step>
-    Call the [createLlmCall](#createllmcall) method on the oracle contract. This will create a new LLM call and return immediately.
-    </Step>
-    <Step>
-    Implement the [onOracleLlmResponse](#onoraclellmresponse) method into your contract. This method will be called when the LLM result is available (in a separate transaction potentially tens of seconds later).
+    Call the [createLlmCall](#createllmcall) method on the oracle contract. This will create a new LLM call.
     </Step>
     <Step>
     Implement two methods into your contract that the oracle will call to get the message history necessary for the LLM, including the system prompt: [getMessageHistoryContents and getMessageHistoryRoles](#getmessagehistorycontents-and-getmessagehistoryroles).
+    </Step>
+    <Step>
+    Implement the [onOracleLlmResponse](#onoraclellmresponse) method into your contract. This method will be called when the LLM result is available (in a separate transaction potentially tens of seconds later).
     </Step>
 </Steps>
 
@@ -151,7 +151,7 @@ If you are calling an external tool, you need to:
 
 <Steps>
     <Step>
-    Call the [createFunctionCall](#createfunctioncall) method on the oracle contract. This will create a new tool call and return immediately.
+    Call the [createFunctionCall](#createfunctioncall) method on the oracle contract. This will create a new tool call.
     </Step>
     <Step>
     Implement the [onOracleFunctionResponse](#onoraclefunctionresponse) method into your contract. This method will be called when the tool result is available (in a separate transaction potentially tens of seconds later).
