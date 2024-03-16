@@ -82,6 +82,8 @@ To make an on-chain agent with Galadriel, your callback (that is called when the
 
 This way, the callback function will be repeatedly called by the oracle, until the agent decides to terminate. This creates the loop, even though no explicit loop is present in the contract.
 
+For an example implementation of a simple agent, see [this contract](https://github.com/galadriel-ai/contracts/blob/main/contracts/contracts/Agent.sol).
+
 ## Security model
 
 A lot of trust is placed in the oracle. This is the first step towards a working system while we are designing and building a minimal-trust approach to this oracle.
