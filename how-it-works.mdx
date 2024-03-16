@@ -16,7 +16,7 @@ The core of how Galadriel enables on-chain AI is the **oracle**.
 
 The oracle enables contracts to make external API calls (including LLMs). It offers an interface for Solidity contracts on the Galadriel chain to call out LLMs or other models, use tools, and retrieve data.
 
-The oracle is implemented as contract that is called asynchronously and has an off-chain component. This is similar in architecture to ChainLink. However, because tool calls (e.g. web searches) and LLM calls do not produce deterministic results nor cannot be averaged, consensus on those requests is not possible. To solve this, we execute the oracle in a trusted execution environment -- see the [TEE section](#TEE).
+The oracle is implemented as contract that is called asynchronously and has an off-chain component. This is similar in architecture to ChainLink. However, because tool calls (e.g. web searches) and LLM calls do not produce deterministic results nor cannot be averaged, consensus on those requests is not possible. To solve this, we execute the oracle in a trusted execution environment -- see the [TEE section](#tee).
 
 To make your own on-chain AI, you need to build your Solidity contract in a specific way to interact with the oracle. Making a call to most contracts on EVM chains is synchronous: the call is made, and the result is returned immediately. However, the oracle is asynchronous: the call is made, and the result is returned later, when the oracle has finished processing the request off-chain. The async nature of the oracle is because on-chain programs cannot typically execute long-running tasks (block time is the ceiling on execution time).
 
@@ -88,7 +88,7 @@ For an example implementation of a simple agent, see [this contract](https://git
 
 A lot of trust is placed in the oracle. This is the first step towards a working system while we are designing and building a minimal-trust approach to this oracle.
 
-In the current architecture of Galadriel, the oracle runs inside a trusted execution environment (TEE) and can be verified by anyone to be executing the correct code; see more in the [TEE](#TEE) section.
+In the current architecture of Galadriel, the oracle runs inside a trusted execution environment (TEE) and can be verified by anyone to be executing the correct code; see more in the [TEE](#tee) section.
 
 ### TEE
 
