@@ -52,6 +52,10 @@
       "pages": [
         "quickstart",
         "how-it-works",
+        {
+          "group": "Tutorials",
+          "pages": ["tutorials/agents"]
+        },
         "solidity-reference",
         "oracle-address"
       ]
