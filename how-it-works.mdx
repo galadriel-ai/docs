@@ -94,7 +94,7 @@ In the current architecture of Galadriel, the oracle runs inside a trusted execu
 
 ### TEE
 
-The oracle is executed in a trusted execution environment, specifically an [AWS Nitro Enclave](https://aws.amazon.com/ec2/nitro/nitro-enclaves/). Upon startup, the enclave generates a private key which can only be accessed inside the enclave, and is used for signing the transactions made by the oracle. Since the image running in the enclave is public and auditable (see links below) and for every execution of the oracle an attestation is provided, you can verify every execution of the oracle to be correct after-the-fact.
+The oracle is executed in a trusted execution environment, specifically an [AWS Nitro Enclave](https://aws.amazon.com/ec2/nitro/nitro-enclaves/). Upon startup, the enclave generates a private key which can only be accessed inside the enclave, and is used for signing the transactions made by the oracle. The code running in the enclave posts an attestation onto the chain, proving to the chain that this account (private key) is being used in an enclave with a given image. Since that image, running in the enclave, is public and auditable (see links below), you can be certain that the oracle was correctly executed.
 
 See more details about the TEE setup in the following links.
 
