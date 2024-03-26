@@ -64,9 +64,9 @@ In this scenario, the execution flow is as follows:
 
 1. Your contract calls the oracle contract to make a call to the LLM, say OpenAI GPT-4 API.
 2. The oracle backend calls the oracle contract, which in turn calls your contract, to fetch the message history.
-3. The oracle backend makes a call to the GPT-4 API, off-chain.
+3. The oracle backend makes a call to the LLM API, off-chain.
 4. (About 5-20 seconds passes.)
-5. The GPT-4 API returns a result to the oracle backend.
+5. The LLM API returns a result to the oracle backend.
 6. The oracle backend calls the oracle contract in a new transaction, containing the LLM response.
 7. The oracle contract calls the callback function in your contract, containing the LLM response.
 

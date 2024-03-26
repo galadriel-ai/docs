@@ -1,6 +1,6 @@
 This page describes the details of the Solidity interface to the oracle, and how to use it in your contract. We assume you are familiar with the [high-level architecture of Galadriel](/how-it-works).
 
-## Oracle interface
+# Oracle interface
 
 The oracle is exposed as a contract that you can call from your own contract. It exposes two types of functionality: calling **LLMs** and calling **external tools**.
 
@@ -11,31 +11,201 @@ The relevant parts of the oracle contract that you can call consist of two parts
 
 See the [Usage](#usage) section below on how to integrate depending on your use case.
 
-### Oracle contract methods
+## Oracle contract methods
 
 See source code for all the methods in the [`ChatOracle` contract](https://github.com/galadriel-ai/contracts/blob/main/contracts/contracts/ChatOracle.sol#L90C14-L90C27).
 
-#### createLlmCall
+### createLlmCall
 
-This method makes a call to OpenAI GPT-4. We will add other models, including open-source, in the future.
+This is a simplified function that method makes a call to OpenAI GPT-4 with default parameters and provides no configurability. If you want to use other models, or configure other parameters like `temperature`, see [createOpenAiLlmCall](#createopenaillmcall).
 
-Arguments
-* `uint promptCallbackId` - identifier which will be passed into the callback.
+**Arguments**
 
-Returns:
-* `uint` - an internal counter of the oracle, which is incremented on every call.
+<ParamField path="promptCallbackId" type="uint">
+  Identifier which will be passed into the callback.
+</ParamField>
 
-#### createFunctionCall
+**Returns**
+
+<ResponseField name="counter" type="uint">
+  An internal counter of the oracle, which is incremented on every call.
+</ResponseField>
+
+### createOpenAiLlmCall
+
+This is a function that calls an OpenAI LLM. You can configure almost any parameter that can be configured in the [Create chat completion](https://platform.openai.com/docs/api-reference/chat/create) OpenAI endpoint.
+
+**Arguments**
+
+<ParamField path="promptCallbackId" type="uint">
+  Identifier which will be passed into the callback.
+</ParamField>
+
+<ParamField path="config" type="OpenAiRequest">
+  An object that contains all configuration parameters for the LLM call. See [below](#openairequest-object) for details on the OpenAiRequest object.
+</ParamField>
+
+**Returns**
+
+<ResponseField name="counter" type="uint">
+  An internal counter of the oracle, which is incremented on every call.
+</ResponseField>
+
+
+#### OpenAiRequest object
+
+The `OpenAiRequest` object (see source in [ChatOracle.sol](https://github.com/galadriel-ai/contracts/blob/main/contracts/contracts/ChatOracle.sol)) has the following fields:
+
+<ParamField path="model" type="string">
+  The identifier for the model, either `gpt-4-turbo-preview` or `gpt-3.5-turbo-1106`.
+</ParamField>
+
+<ParamField path="frequencyPenalty" type="int8">
+  An integer between -20 and 20, mapped to a float between -2.0 and 2.0; values greater than 20 are treated as null.
+</ParamField>
+
+<ParamField path="logitBias" type="string">
+  A JSON string representing logit bias or an empty string if none.
+</ParamField>
+
+<ParamField path="maxTokens" type="uint32">
+  The maximum number of tokens to generate, with 0 indicating null.
+</ParamField>
+
+<ParamField path="presencePenalty" type="int8">
+  An integer between -20 and 20, mapped to a float between -2.0 and 2.0; values greater than 20 are treated as null.
+</ParamField>
+
+<ParamField path="responseFormat" type="string">
+  A JSON string specifying the format of the response or an empty string if default.
+</ParamField>
+
+<ParamField path="seed" type="uint">
+  A seed for the random number generator, with 0 indicating null.
+</ParamField>
+
+<ParamField path="stop" type="string">
+  A string specifying stop sequences, or an empty string to indicate null.
+</ParamField>
+
+<ParamField path="temperature" type="uint">
+  A temperature setting for randomness, with values from 0 to 20; values greater than 20 indicate null.
+</ParamField>
+
+<ParamField path="topP" type="uint">
+  Controls diversity via nucleus sampling, with values from 0 to 100 percent; values greater than 100 indicate null.
+</ParamField>
+
+<ParamField path="tools" type="string">
+  A JSON list of tools in OpenAI format, or an empty string for null, where names must match supported tools.
+</ParamField>
+
+<ParamField path="toolChoice" type="string">
+  Specifies tool selection strategy, with values "none", "auto", or an empty string which defaults to "auto" on OpenAI's side.
+</ParamField>
+
+<ParamField path="user" type="string">
+  Identifier for the user making the request.
+</ParamField>
+
+
+
+### createGroqLlmCall
+
+This is a function that calls an open-source LLM hosted by [Groq](https://groq.com/). You can configure almost any parameter that can be configured in the [Create chat completion](https://console.groq.com/docs/text-chat) Groq endpoint.
+
+**Arguments**
+
+<ParamField path="promptCallbackId" type="uint">
+  Identifier which will be passed into the callback.
+</ParamField>
+
+<ParamField path="config" type="GroqRequest">
+  An object that contains all configuration parameters for the LLM call. See [below](#groqrequest-object) for details on the GroqRequest object.
+</ParamField>
+
+**Returns**
+
+<ResponseField name="counter" type="uint">
+  An internal counter of the oracle, which is incremented on every call.
+</ResponseField>
+
+
+
+#### GroqRequest object
+
+The `GroqRequest` object (see source in [ChatOracle.sol](https://github.com/galadriel-ai/contracts/blob/main/contracts/contracts/ChatOracle.sol)) has the following fields:
+
+<ParamField path="model" type="string">
+  The model to be used, options are `llama2-70b-4096`, `mixtral-8x7b-32768`, or `gemma-7b-it`. See [Groq docs](https://console.groq.com/docs/models) for more info on the models.
+</ParamField>
+
+<ParamField path="frequencyPenalty" type="int8">
+  Penalty for frequency, int -20 to 20, mapped to float -2.0 to 2.0. Values greater than 20 result in null.
+</ParamField>
+
+<ParamField path="logitBias" type="string">
+  JSON string specifying logit bias, or an empty string for none.
+</ParamField>
+
+<ParamField path="maxTokens" type="uint32">
+  Maximum number of tokens to generate, with 0 indicating null.
+</ParamField>
+
+<ParamField path="presencePenalty" type="int8">
+  Penalty for presence, int -20 to 20, mapped to float -2.0 to 2.0. Values greater than 20 result in null.
+</ParamField>
+
+<ParamField path="responseFormat" type="string">
+  JSON string indicating the format of the response, or an empty string for default format.
+</ParamField>
+
+<ParamField path="seed" type="uint">
+  Seed for random number generation, with 0 indicating null.
+</ParamField>
+
+<ParamField path="stop" type="string">
+  Stop sequence(s) for generation, or an empty string to indicate none.
+</ParamField>
+
+<ParamField path="temperature" type="uint">
+  Temperature for generation, 0 to 20, with values greater than 20 indicating null.
+</ParamField>
+
+<ParamField path="topP" type="uint">
+  Top p sampling parameter, 0 to 100 percentage, with values greater than 100 indicating null.
+</ParamField>
+
+<ParamField path="user" type="string">
+  User identifier or context.
+</ParamField>
+
+
+
+### createFunctionCall
 
 This method makes a call to a tool -- see options below. For every tool the input and output are of string type, and you choose a tool by specifying the `functionType` parameter.
 
-Arguments
-* `uint functionCallbackId` - identifier which will be passed into the callback.
-* `string functionType` - specifies which function to call. Must be one of: `image_generation`, `web_search`.
-* `string functionInput` - input to the function.
+**Arguments**
 
-Returns
-* `uint` - an internal counter of the oracle, which is incremented on every call.
+<ParamField path="functionCallbackId" type="uint">
+  Identifier which will be passed into the callback.
+</ParamField>
+
+<ParamField path="functionType" type="string">
+  Specifies which function to call. Must be one of: `image_generation`, `web_search`.
+</ParamField>
+
+<ParamField path="functionInput" type="string">
+  Input to the function.
+</ParamField>
+
+**Returns**
+
+<ResponseField name="counter" type="uint">
+  An internal counter of the oracle, which is incremented on every call.
+</ResponseField>
+
 
 The currently available tools are:
 
@@ -58,29 +228,180 @@ The currently available tools are:
 </Accordion>
 </AccordionGroup>
 
-### Callback methods
+## Callback methods
 
 These are callbacks the oracle will call once the response is available, and are described in the [`IChatGpt` interface](https://github.com/galadriel-ai/contracts/blob/main/contracts/contracts/ChatOracle.sol#L7-L28).
 
-#### onOracleLlmResponse
+### onOracleLlmResponse
 
 Called when the result of an LLM call, created with [`createLlmCall`](#createllmcall), is available.
 
-Arguments
-* `uint callbackId` - the identifier you passed into the `createLlmCall` method.
-* `string response` - the result of the LLM call.
-* `string errorMessage` - an error message. Contains an empty string if there was no error, and a description of the error otherwise.
+**Arguments**
 
-#### onOracleFunctionResponse
+<ParamField path="callbackId" type="uint">
+  The identifier you passed into the `createLlmCall` method.
+</ParamField>
+
+<ParamField path="response" type="string">
+  The result of the LLM call.
+</ParamField>
+
+<ParamField path="errorMessage" type="string">
+  An error message. Contains an empty string if there was no error, and a description of the error otherwise.
+</ParamField>
+
+
+### onOracleOpenAiLlmResponse
+
+Called when the result of an LLM call, created with [`createOpenAiLlmCall`](#createopenaillmcall), is available.
+
+**Arguments**
+
+<ParamField path="callbackId" type="uint">
+  The identifier you passed into the `createOpenAiLlmCall` method.
+</ParamField>
+
+<ParamField path="response" type="OpenAiResponse">
+  The result of the LLM call. See [below](#openairesponse-object) for details on the OpenAiResponse object.
+</ParamField>
+
+<ParamField path="errorMessage" type="string">
+  An error message. Contains an empty string if there was no error, and a description of the error otherwise.
+</ParamField>
+
+
+#### OpenAiResponse object
+
+The `OpenAiResponse` object (see source in [ChatOracle.sol](https://github.com/galadriel-ai/contracts/blob/main/contracts/contracts/ChatOracle.sol)) has the following fields, most of which map directly to the fields in the [OpenAI API response](https://platform.openai.com/docs/api-reference/chat/object):
+
+<ParamField path="id" type="string">
+  Unique identifier for the completion, generated by OpenAI.
+</ParamField>
+
+<ParamField path="content" type="string">
+  The model output. Either this field or `functionArguments` and `functionName` will be populated, depending on whether the output is a normal message or a function call.
+</ParamField>
+
+<ParamField path="functionName" type="string">
+  Name of the function invoked, if any.
+</ParamField>
+
+<ParamField path="functionArguments" type="string">
+  Arguments passed to the function, if any, as a JSON string. For format details, refer to the specific function documentation.
+</ParamField>
+
+<ParamField path="created" type="uint64">
+  Timestamp of creation.
+</ParamField>
+
+<ParamField path="model" type="string">
+  The model name used for generation.
+</ParamField>
+
+<ParamField path="systemFingerprint" type="string">
+  Identifier for the system generating the completion.
+</ParamField>
+
+<ParamField path="object" type="string">
+  Type of the object, always `chat.completion`.
+</ParamField>
+
+<ParamField path="completionTokens" type="uint32">
+  Number of tokens generated in the completion.
+</ParamField>
+
+<ParamField path="promptTokens" type="uint32">
+  Number of tokens in the prompt.
+</ParamField>
+
+<ParamField path="totalTokens" type="uint32">
+  Total number of tokens, including both prompt and completion.
+</ParamField>
+
+
+
+
+### onOracleGroqLlmResponse
+
+Called when the result of an LLM call, created with [`createGroqLlmCall`](#creategroqllmcall), is available.
+
+**Arguments**
+
+<ParamField path="callbackId" type="uint">
+  The identifier you passed into the `createGroqLlmCall` method.
+</ParamField>
+
+<ParamField path="response" type="GroqResponse">
+  The result of the LLM call. See [below](#groqresponse-object) for details on the GroqResponse object.
+</ParamField>
+
+<ParamField path="errorMessage" type="string">
+  An error message. Contains an empty string if there was no error, and a description of the error otherwise.
+</ParamField>
+
+
+#### GroqResponse object
+
+The `GroqResponse` object (see source in [ChatOracle.sol](https://github.com/galadriel-ai/contracts/blob/main/contracts/contracts/ChatOracle.sol)) has the following fields, most of which map directly to the fields in the [Groq API response](https://console.groq.com/docs/text-chat):
+
+<ParamField path="id" type="string">
+  Unique identifier for the completion, generated by Groq.
+</ParamField>
+
+<ParamField path="content" type="string">
+  The content associated with the completion.
+</ParamField>
+
+<ParamField path="created" type="uint64">
+  Timestamp of creation.
+</ParamField>
+
+<ParamField path="model" type="string">
+  The model name used for the completion.
+</ParamField>
+
+<ParamField path="systemFingerprint" type="string">
+  System identifier that generated the completion.
+</ParamField>
+
+<ParamField path="object" type="string">
+  Type of the object, always `chat.completion`.
+</ParamField>
+
+<ParamField path="completionTokens" type="uint32">
+  Number of tokens in the completion.
+</ParamField>
+
+<ParamField path="promptTokens" type="uint32">
+  Number of tokens in the prompt.
+</ParamField>
+
+<ParamField path="totalTokens" type="uint32">
+  Total number of tokens, sum of prompt and completion tokens.
+</ParamField>
+
+
+
+### onOracleFunctionResponse
 Called when the result of a tool call, created with [`createFunctionCall`](#createfunctioncall), is available.
 
-Arguments
-* `uint callbackId` - the identifier you passed into the `createFunctionCall` method.
-* `string response` - the result of the tool call.
-* `string errorMessage` - an error message. Contains an empty string if there was no error, and a description of the error otherwise.
+**Arguments**
+
+<ParamField path="callbackId" type="uint">
+  The identifier you passed into the `createFunctionCall` method.
+</ParamField>
+
+<ParamField path="response" type="string">
+  The result of the tool call.
+</ParamField>
+
+<ParamField path="errorMessage" type="string">
+  An error message. Contains an empty string if there was no error, and a description of the error otherwise.
+</ParamField>
 
 
-#### getMessageHistoryContents and getMessageHistoryRoles
+
+### getMessageHistoryContents and getMessageHistoryRoles
 
 These two methods in combination are used to provide the oracle with the message history necessary for the LLM call. They are called by the oracle after [`createLlmcall`](#createllmcall).
 
@@ -99,7 +420,12 @@ user      | How big is the Sun?         |
 
 Then `getMessageHistoryContents` should return the following list of 4 items:
 ```solidity
-["You are a helpful assistant", "Hello!", "Hi! How can I help?", "How big is the Sun?"]
+[
+    "You are a helpful assistant",
+    "Hello!",
+    "Hi! How can I help?",
+    "How big is the Sun?"
+]
 ```
 
 ...and `getMessageHistoryRoles` should return the following list of 4 items:
@@ -109,29 +435,45 @@ Then `getMessageHistoryContents` should return the following list of 4 items:
 
 The signatures of these methods should be:
 
-**getMessageHistoryRoles**
+#### getMessageHistoryRoles
 
-Arguments:
-* `uint callbackId` - the identifier you passed into the `createLlmCall` method.
+**Arguments**
 
-Returns:
-* `string[]` - a list of roles.
+<ParamField path="callbackId" type="uint">
+  The identifier you passed into the `createLlmCall` method.
+</ParamField>
 
-**getMessageHistoryContents**
+**Returns**
 
-Arguments:
-* `uint callbackId` - the identifier you passed into the `createLlmCall` method.
+<ResponseField name="return" type="string[]">
+  A list of roles. Each role in the list is a string and one of `system`, `user`, or `assistant`.
+</ResponseField>
 
-Returns:
-* `string[]` - a list of message contents.
+#### getMessageHistoryContents
+
+**Arguments**
+
+<ParamField path="callbackId" type="uint">
+  The identifier you passed into the `createLlmCall` method.
+</ParamField>
+
+**Returns**
+
+<ResponseField name="return" type="string[]">
+  A list of message contents.
+</ResponseField>
 
 
 
-## Usage
 
-### Calling an LLM
+# Usage
 
-If you want to call an LLM, you need to:
+## Calling an LLM
+
+For calling an LLM, one option is to use the [createLlmCall](#createllmcall) method, which has a simple interface but little configurability. The other option is to use the more complex but more powerful [createOpenAiLlmCall](#createopenaillmcall) method -- to make a call to OpenAI-provided LLMs -- or the [createGroqLlmCall](#creategroqllmcall) method -- to make a call to Groq-provided LLMs.
+
+
+Using the [createLlmCall](#createllmcall) example: to call an LLM you need to:
 
 <Steps>
     <Step>
@@ -145,7 +487,13 @@ If you want to call an LLM, you need to:
     </Step>
 </Steps>
 
-### Calling an external tool
+Using the other two methods is analogous, but you need to use the corresponding callback method:
+
+* `createLlmCall` -> implement callback `onOracleLlmResponse`
+* `createOpenAiLlmCall` -> implement callback `onOracleOpenAiLlmResponse`
+* `createGroqLlmCall` -> implement callback `onOracleGroqLlmResponse`
+
+## Calling an external tool
 
 If you are calling an external tool, you need to:
 
@@ -160,6 +508,6 @@ If you are calling an external tool, you need to:
     </Step>
 </Steps>
 
-### Examples
+## Examples
 
 Please refer to the [example contracts](https://github.com/galadriel-ai/contracts/tree/main/contracts/contracts), corresponding to the outlined [use cases](/use-cases), for complete usage examples.

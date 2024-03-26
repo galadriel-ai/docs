@@ -3,20 +3,20 @@ import {oracleAddress} from '/snippets/addresses.mdx';
 
 This quickstart covers two things:
 
-1. Deploying an AI app to the Galadriel testnet
+1. Deploying an AI app to the Galadriel devnet
 2. Calling your deployed AI app and viewing the results
 
 ### Prerequisites
 
-* A Galadriel testnet [account](/setting-up-a-wallet). We recommend creating a new EVM account for development purposes.
-* Some [testnet tokens](/faucet) on the account you are using.
+* A Galadriel devnet [account](/setting-up-a-wallet). We recommend creating a new EVM account for development purposes.
+* Some [devnet tokens](/faucet) on the account you are using.
 * `node` and `npm` installed on your machine.
 
-### Deploying a contract on Galadriel testnet
+### Deploying a contract on Galadriel devnet
 
 <Steps>
-    <Step title="Testnet tokens">
-    Get yourself some testnet tokens from the [faucet](/faucet).
+    <Step title="devnet tokens">
+    Get yourself some devnet tokens from the [faucet](/faucet).
     </Step>
     <Step title="Clone repository">
     Clone the repo that contains Galadriel example contracts and the oracle implementation.
@@ -36,8 +36,8 @@ This quickstart covers two things:
     ```
 
     Then, modify the `.env` file:
-    * Set `PRIVATE_KEY_CUSTOM` to the private key of the account you want to use for deploying the contracts to Galadriel testnet.
-    * Set `ORACLE_ADDRESS` to the [current testnet oracle address](/oracle-address) provided by Galadriel team: **{oracleAddress}**.
+    * Set `PRIVATE_KEY_CUSTOM` to the private key of the account you want to use for deploying the contracts to Galadriel devnet.
+    * Set `ORACLE_ADDRESS` to the [current devnet oracle address](/oracle-address) provided by Galadriel team: **{oracleAddress}**.
 
     </Step>
     <Step title="Install dependencies">
@@ -48,7 +48,7 @@ This quickstart covers two things:
     npm install
     ```
     </Step>
-    <Step title="Deploy contract to testnet">
+    <Step title="Deploy contract to devnet">
     The [quickstart contract](https://github.com/galadriel-ai/contracts/blob/main/contracts/contracts/Quickstart.sol) can be deployed with a [simple script](https://github.com/galadriel-ai/contracts/blob/main/contracts/scripts/deployQuickstart.ts):
 
     ```bash
