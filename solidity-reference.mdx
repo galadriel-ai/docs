@@ -15,8 +15,6 @@ See the [Usage](#usage) section below on how to integrate depending on your use 
 
 See source code for all the methods in the [`ChatOracle` contract](https://github.com/galadriel-ai/contracts/blob/main/contracts/contracts/ChatOracle.sol#L90C14-L90C27).
 
-TODO explain why there are multiple LLM methods and which you should pick
-
 ### createLlmCall
 
 This is a simplified function that method makes a call to OpenAI GPT-4 with default parameters and provides no configurability. If you want to use other models, or configure other parameters like `temperature`, see [createOpenAiLlmCall](#createopenaillmcall).
@@ -244,7 +242,10 @@ Returns:
 
 ## Calling an LLM
 
-If you want to call an LLM, you need to:
+For calling an LLM, one option is to use the [createLlmCall](#createllmcall) method, which has a simple interface but little configurability. The other option is to use the more complex but more powerful [createOpenAiLlmCall](#createopenaillmcall) method -- to make a call to OpenAI-provided LLMs -- or the [createGroqLlmCall](#creategroqllmcall) method -- to make a call to Groq-provided LLMs.
+
+
+Using the [createLlmCall](#createllmcall) example: to call an LLM you need to:
 
 <Steps>
     <Step>
@@ -257,6 +258,12 @@ If you want to call an LLM, you need to:
     Implement the [onOracleLlmResponse](#onoraclellmresponse) method into your contract. This method will be called when the LLM result is available (in a separate transaction potentially tens of seconds later).
     </Step>
 </Steps>
+
+Using the other two methods is analogous, but you need to use the corresponding callback method:
+
+* `createLlmCall` -> implement callback `onOracleLlmResponse`
+* `createOpenAiLlmCall` -> implement callback `onOracleOpenAiLlmResponse`
+* `createGroqLlmCall` -> implement callback `onOracleGroqLlmResponse`
 
 ## Calling an external tool
 
