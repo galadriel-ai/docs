@@ -1,6 +1,6 @@
 This page describes the details of the Solidity interface to the oracle, and how to use it in your contract. We assume you are familiar with the [high-level architecture of Galadriel](/how-it-works).
 
-## Oracle interface
+# Oracle interface
 
 The oracle is exposed as a contract that you can call from your own contract. It exposes two types of functionality: calling **LLMs** and calling **external tools**.
 
@@ -11,13 +11,15 @@ The relevant parts of the oracle contract that you can call consist of two parts
 
 See the [Usage](#usage) section below on how to integrate depending on your use case.
 
-### Oracle contract methods
+## Oracle contract methods
 
 See source code for all the methods in the [`ChatOracle` contract](https://github.com/galadriel-ai/contracts/blob/main/contracts/contracts/ChatOracle.sol#L90C14-L90C27).
 
-#### createLlmCall
+TODO explain why there are multiple LLM methods and which you should pick
 
-This method makes a call to OpenAI GPT-4. We will add other models, including open-source, in the future.
+### createLlmCall
+
+This is a simplified function that method makes a call to OpenAI GPT-4 with default parameters and provides no configurability. If you want to use other models, or configure other parameters like `temperature`, see [createOpenAiLlmCall](#createopenaillmcall).
 
 Arguments
 * `uint promptCallbackId` - identifier which will be passed into the callback.
@@ -25,7 +27,67 @@ Arguments
 Returns:
 * `uint` - an internal counter of the oracle, which is incremented on every call.
 
-#### createFunctionCall
+### createOpenAiLlmCall
+
+This is a function that calls an OpenAI LLM. You can configure almost any parameter that can be configured in the [Create chat completion](https://platform.openai.com/docs/api-reference/chat/create) OpenAI endpoint.
+
+Arguments
+* `uint promptCallbackId` - identifier which will be passed into the callback.
+* `OpenAiRequest config` - an object that contains all configuration parameters for the LLM call; see [below](#openairequest-object).
+
+Returns:
+* `uint` - an internal counter of the oracle, which is incremented on every call.
+
+
+#### OpenAiRequest object
+
+The `OpenAiRequest` object (see source in [ChatOracle.sol](https://github.com/galadriel-ai/contracts/blob/main/contracts/contracts/ChatOracle.sol)) has the following fields:
+
+* `string model` - the identifier for the model, either `gpt-4-turbo-preview` or `gpt-3.5-turbo-1106`.
+* `int8 frequencyPenalty` - an integer between -20 and 20, mapped to a float between -2.0 and 2.0; values greater than 20 are treated as null. TODO
+* `string logitBias` - a JSON string representing logit bias or an empty string if none.
+* `uint32 maxTokens` - the maximum number of tokens to generate, with 0 indicating null.
+* `int8 presencePenalty` - an integer between -20 and 20, mapped to a float between -2.0 and 2.0; values greater than 20 are treated as null.
+* `string responseFormat` - a JSON string specifying the format of the response or an empty string if default.
+* `uint seed` - a seed for the random number generator, with 0 indicating null.
+* `string stop` - a string specifying stop sequences, or an empty string to indicate null.
+* `uint temperature` - a temperature setting for randomness, with values from 0 to 20; values greater than 20 indicate null.
+* `uint topP` - controls diversity via nucleus sampling, with values from 0 to 100 percent; values greater than 100 indicate null.
+* `string tools` - a JSON list of tools in OpenAI format, or an empty string for null, where names must match supported tools.
+* `string toolChoice` - specifies tool selection strategy, with values "none", "auto", or an empty string which defaults to "auto" on OpenAI's side.
+* `string user` - identifier for the user making the request.
+
+
+### createGroqLlmCall
+
+This is a function that calls an open-source LLM hosted by [Groq](https://groq.com/). You can configure almost any parameter that can be configured in the [Create chat completion](https://console.groq.com/docs/text-chat) Groq endpoint.
+
+Arguments
+* `uint promptCallbackId` - identifier which will be passed into the callback.
+* `GroqRequest config` - an object that contains all configuration parameters for the LLM call; see [below](#groqrequest-object).
+
+Returns:
+* `uint` - an internal counter of the oracle, which is incremented on every call.
+
+
+#### GroqRequest object
+
+The `GroqRequest` object (see source in [ChatOracle.sol](https://github.com/galadriel-ai/contracts/blob/main/contracts/contracts/ChatOracle.sol)) has the following fields:
+
+* `string model` - the model to be used, options are `llama2-70b-4096`, `mixtral-8x7b-32768`, or `gemma-7b-it`. See [Groq docs](https://console.groq.com/docs/models) for more info on the models.
+* `int8 frequencyPenalty` - penalty for frequency, int -20 to 20, mapped to float -2.0 to 2.0. Values greater than 20 result in null.
+* `string logitBias` - JSON string specifying logit bias, or an empty string for none.
+* `uint32 maxTokens` - maximum number of tokens to generate, with 0 indicating null.
+* `int8 presencePenalty` - penalty for presence, int -20 to 20, mapped to float -2.0 to 2.0. Values greater than 20 result in null.
+* `string responseFormat` - JSON string indicating the format of the response, or an empty string for default format.
+* `uint seed` - seed for random number generation, with 0 indicating null.
+* `string stop` - stop sequence(s) for generation, or an empty string to indicate none.
+* `uint temperature` - temperature for generation, 0 to 20, with values greater than 20 indicating null.
+* `uint topP` - top p sampling parameter, 0 to 100 percentage, with values greater than 100 indicating null.
+* `string user` - user identifier or context.
+
+
+### createFunctionCall
 
 This method makes a call to a tool -- see options below. For every tool the input and output are of string type, and you choose a tool by specifying the `functionType` parameter.
 
@@ -58,11 +120,11 @@ The currently available tools are:
 </Accordion>
 </AccordionGroup>
 
-### Callback methods
+## Callback methods
 
 These are callbacks the oracle will call once the response is available, and are described in the [`IChatGpt` interface](https://github.com/galadriel-ai/contracts/blob/main/contracts/contracts/ChatOracle.sol#L7-L28).
 
-#### onOracleLlmResponse
+### onOracleLlmResponse
 
 Called when the result of an LLM call, created with [`createLlmCall`](#createllmcall), is available.
 
@@ -71,7 +133,58 @@ Arguments
 * `string response` - the result of the LLM call.
 * `string errorMessage` - an error message. Contains an empty string if there was no error, and a description of the error otherwise.
 
-#### onOracleFunctionResponse
+### onOracleOpenAiLlmResponse
+
+Called when the result of an LLM call, created with [`createOpenAiLlmCall`](#createopenaillmcall), is available.
+
+Arguments
+* `uint callbackId` - the identifier you passed into the `createOpenAiLlmCall` method.
+* `OpenAiResponse response` - the result of the LLM call; see [below](#openairesponse-object).
+* `string errorMessage` - an error message. Contains an empty string if there was no error, and a description of the error otherwise.
+
+#### OpenAiResponse object
+
+The `OpenAiResponse` object (see source in [ChatOracle.sol](https://github.com/galadriel-ai/contracts/blob/main/contracts/contracts/ChatOracle.sol)) has the following fields, most of which map directly to the fields in the [OpenAI API response](https://platform.openai.com/docs/api-reference/chat/object):
+
+* `string id` - unique identifier for the completion, generated by OpenAI.
+* `string content` - the model output, either an empty string or combined with `functionName` and `functionArguments`. TODO-Kristjan what format if function?
+* `string functionName` - name of the function invoked, if any.
+* `string functionArguments` - arguments passed to the function, if any.
+* `uint64 created` - timestamp of creation.
+* `string model` - the model name used for generation.
+* `string systemFingerprint` - identifier for the system generating the completion.
+* `string object` - type of the object, always `chat.completion`.
+* `uint32 completionTokens` - number of tokens generated in the completion.
+* `uint32 promptTokens` - number of tokens in the prompt.
+* `uint32 totalTokens` - total number of tokens, including both prompt and completion.
+
+
+
+### onOracleGroqLlmResponse
+
+Called when the result of an LLM call, created with [`createGroqLlmCall`](#creategroqllmcall), is available.
+
+Arguments
+* `uint callbackId` - the identifier you passed into the `createGroqLlmCall` method.
+* `GroqResponse response` - the result of the LLM call; see [below](#groqresponse-object).
+* `string errorMessage` - an error message. Contains an empty string if there was no error, and a description of the error otherwise.
+
+#### GroqResponse object
+
+The `GroqResponse` object (see source in [ChatOracle.sol](https://github.com/galadriel-ai/contracts/blob/main/contracts/contracts/ChatOracle.sol)) has the following fields, most of which map directly to the fields in the [Groq API response](https://console.groq.com/docs/text-chat):
+
+* `string id` - unique identifier for the completion, generated by Groq.
+* `string content` - the content associated with the completion.
+* `uint64 created` - timestamp of creation.
+* `string model` - the model name used for the completion.
+* `string systemFingerprint` - system identifier that generated the completion.
+* `string object` - type of the object, always `chat.completion`.
+* `uint32 completionTokens` - number of tokens in the completion.
+* `uint32 promptTokens` - number of tokens in the prompt.
+* `uint32 totalTokens` - total number of tokens, sum of prompt and completion tokens.
+
+
+### onOracleFunctionResponse
 Called when the result of a tool call, created with [`createFunctionCall`](#createfunctioncall), is available.
 
 Arguments
@@ -80,7 +193,7 @@ Arguments
 * `string errorMessage` - an error message. Contains an empty string if there was no error, and a description of the error otherwise.
 
 
-#### getMessageHistoryContents and getMessageHistoryRoles
+### getMessageHistoryContents and getMessageHistoryRoles
 
 These two methods in combination are used to provide the oracle with the message history necessary for the LLM call. They are called by the oracle after [`createLlmcall`](#createllmcall).
 
@@ -127,9 +240,9 @@ Returns:
 
 
 
-## Usage
+# Usage
 
-### Calling an LLM
+## Calling an LLM
 
 If you want to call an LLM, you need to:
 
@@ -145,7 +258,7 @@ If you want to call an LLM, you need to:
     </Step>
 </Steps>
 
-### Calling an external tool
+## Calling an external tool
 
 If you are calling an external tool, you need to:
 
@@ -160,6 +273,6 @@ If you are calling an external tool, you need to:
     </Step>
 </Steps>
 
-### Examples
+## Examples
 
 Please refer to the [example contracts](https://github.com/galadriel-ai/contracts/tree/main/contracts/contracts), corresponding to the outlined [use cases](/use-cases), for complete usage examples.
