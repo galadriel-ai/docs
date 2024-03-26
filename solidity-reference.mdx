@@ -42,7 +42,7 @@ This is a function that calls an OpenAI LLM. You can configure almost any parame
 </ParamField>
 
 <ParamField path="config" type="OpenAiRequest">
-  An object that contains all configuration parameters for the LLM call. See below for details on the OpenAiRequest object.
+  An object that contains all configuration parameters for the LLM call. See [below](#openairequest-object) for details on the OpenAiRequest object.
 </ParamField>
 
 **Returns**
@@ -56,19 +56,58 @@ This is a function that calls an OpenAI LLM. You can configure almost any parame
 
 The `OpenAiRequest` object (see source in [ChatOracle.sol](https://github.com/galadriel-ai/contracts/blob/main/contracts/contracts/ChatOracle.sol)) has the following fields:
 
-* `string model` - the identifier for the model, either `gpt-4-turbo-preview` or `gpt-3.5-turbo-1106`.
-* `int8 frequencyPenalty` - an integer between -20 and 20, mapped to a float between -2.0 and 2.0; values greater than 20 are treated as null.
-* `string logitBias` - a JSON string representing logit bias or an empty string if none.
-* `uint32 maxTokens` - the maximum number of tokens to generate, with 0 indicating null.
-* `int8 presencePenalty` - an integer between -20 and 20, mapped to a float between -2.0 and 2.0; values greater than 20 are treated as null.
-* `string responseFormat` - a JSON string specifying the format of the response or an empty string if default.
-* `uint seed` - a seed for the random number generator, with 0 indicating null.
-* `string stop` - a string specifying stop sequences, or an empty string to indicate null.
-* `uint temperature` - a temperature setting for randomness, with values from 0 to 20; values greater than 20 indicate null.
-* `uint topP` - controls diversity via nucleus sampling, with values from 0 to 100 percent; values greater than 100 indicate null.
-* `string tools` - a JSON list of tools in OpenAI format, or an empty string for null, where names must match supported tools.
-* `string toolChoice` - specifies tool selection strategy, with values "none", "auto", or an empty string which defaults to "auto" on OpenAI's side.
-* `string user` - identifier for the user making the request.
+<ParamField path="model" type="string">
+  The identifier for the model, either `gpt-4-turbo-preview` or `gpt-3.5-turbo-1106`.
+</ParamField>
+
+<ParamField path="frequencyPenalty" type="int8">
+  An integer between -20 and 20, mapped to a float between -2.0 and 2.0; values greater than 20 are treated as null.
+</ParamField>
+
+<ParamField path="logitBias" type="string">
+  A JSON string representing logit bias or an empty string if none.
+</ParamField>
+
+<ParamField path="maxTokens" type="uint32">
+  The maximum number of tokens to generate, with 0 indicating null.
+</ParamField>
+
+<ParamField path="presencePenalty" type="int8">
+  An integer between -20 and 20, mapped to a float between -2.0 and 2.0; values greater than 20 are treated as null.
+</ParamField>
+
+<ParamField path="responseFormat" type="string">
+  A JSON string specifying the format of the response or an empty string if default.
+</ParamField>
+
+<ParamField path="seed" type="uint">
+  A seed for the random number generator, with 0 indicating null.
+</ParamField>
+
+<ParamField path="stop" type="string">
+  A string specifying stop sequences, or an empty string to indicate null.
+</ParamField>
+
+<ParamField path="temperature" type="uint">
+  A temperature setting for randomness, with values from 0 to 20; values greater than 20 indicate null.
+</ParamField>
+
+<ParamField path="topP" type="uint">
+  Controls diversity via nucleus sampling, with values from 0 to 100 percent; values greater than 100 indicate null.
+</ParamField>
+
+<ParamField path="tools" type="string">
+  A JSON list of tools in OpenAI format, or an empty string for null, where names must match supported tools.
+</ParamField>
+
+<ParamField path="toolChoice" type="string">
+  Specifies tool selection strategy, with values "none", "auto", or an empty string which defaults to "auto" on OpenAI's side.
+</ParamField>
+
+<ParamField path="user" type="string">
+  Identifier for the user making the request.
+</ParamField>
+
 
 
 ### createGroqLlmCall
@@ -82,7 +121,7 @@ This is a function that calls an open-source LLM hosted by [Groq](https://groq.c
 </ParamField>
 
 <ParamField path="config" type="GroqRequest">
-  An object that contains all configuration parameters for the LLM call. See below for details on the GroqRequest object.
+  An object that contains all configuration parameters for the LLM call. See [below](#groqrequest-object) for details on the GroqRequest object.
 </ParamField>
 
 **Returns**
@@ -97,17 +136,50 @@ This is a function that calls an open-source LLM hosted by [Groq](https://groq.c
 
 The `GroqRequest` object (see source in [ChatOracle.sol](https://github.com/galadriel-ai/contracts/blob/main/contracts/contracts/ChatOracle.sol)) has the following fields:
 
-* `string model` - the model to be used, options are `llama2-70b-4096`, `mixtral-8x7b-32768`, or `gemma-7b-it`. See [Groq docs](https://console.groq.com/docs/models) for more info on the models.
-* `int8 frequencyPenalty` - penalty for frequency, int -20 to 20, mapped to float -2.0 to 2.0. Values greater than 20 result in null.
-* `string logitBias` - JSON string specifying logit bias, or an empty string for none.
-* `uint32 maxTokens` - maximum number of tokens to generate, with 0 indicating null.
-* `int8 presencePenalty` - penalty for presence, int -20 to 20, mapped to float -2.0 to 2.0. Values greater than 20 result in null.
-* `string responseFormat` - JSON string indicating the format of the response, or an empty string for default format.
-* `uint seed` - seed for random number generation, with 0 indicating null.
-* `string stop` - stop sequence(s) for generation, or an empty string to indicate none.
-* `uint temperature` - temperature for generation, 0 to 20, with values greater than 20 indicating null.
-* `uint topP` - top p sampling parameter, 0 to 100 percentage, with values greater than 100 indicating null.
-* `string user` - user identifier or context.
+<ParamField path="model" type="string">
+  The model to be used, options are `llama2-70b-4096`, `mixtral-8x7b-32768`, or `gemma-7b-it`. See [Groq docs](https://console.groq.com/docs/models) for more info on the models.
+</ParamField>
+
+<ParamField path="frequencyPenalty" type="int8">
+  Penalty for frequency, int -20 to 20, mapped to float -2.0 to 2.0. Values greater than 20 result in null.
+</ParamField>
+
+<ParamField path="logitBias" type="string">
+  JSON string specifying logit bias, or an empty string for none.
+</ParamField>
+
+<ParamField path="maxTokens" type="uint32">
+  Maximum number of tokens to generate, with 0 indicating null.
+</ParamField>
+
+<ParamField path="presencePenalty" type="int8">
+  Penalty for presence, int -20 to 20, mapped to float -2.0 to 2.0. Values greater than 20 result in null.
+</ParamField>
+
+<ParamField path="responseFormat" type="string">
+  JSON string indicating the format of the response, or an empty string for default format.
+</ParamField>
+
+<ParamField path="seed" type="uint">
+  Seed for random number generation, with 0 indicating null.
+</ParamField>
+
+<ParamField path="stop" type="string">
+  Stop sequence(s) for generation, or an empty string to indicate none.
+</ParamField>
+
+<ParamField path="temperature" type="uint">
+  Temperature for generation, 0 to 20, with values greater than 20 indicating null.
+</ParamField>
+
+<ParamField path="topP" type="uint">
+  Top p sampling parameter, 0 to 100 percentage, with values greater than 100 indicating null.
+</ParamField>
+
+<ParamField path="user" type="string">
+  User identifier or context.
+</ParamField>
+
 
 
 ### createFunctionCall
@@ -190,7 +262,7 @@ Called when the result of an LLM call, created with [`createOpenAiLlmCall`](#cre
 </ParamField>
 
 <ParamField path="response" type="OpenAiResponse">
-  The result of the LLM call. See below for details on the OpenAiResponse object.
+  The result of the LLM call. See [below](#openairesponse-object) for details on the OpenAiResponse object.
 </ParamField>
 
 <ParamField path="errorMessage" type="string">
@@ -202,18 +274,50 @@ Called when the result of an LLM call, created with [`createOpenAiLlmCall`](#cre
 
 The `OpenAiResponse` object (see source in [ChatOracle.sol](https://github.com/galadriel-ai/contracts/blob/main/contracts/contracts/ChatOracle.sol)) has the following fields, most of which map directly to the fields in the [OpenAI API response](https://platform.openai.com/docs/api-reference/chat/object):
 
-* `string id` - unique identifier for the completion, generated by OpenAI.
-* `string content` - the model output. **Either this field or `functionArguments` and `functionName` will be populated**, depending on whether the output is a normal message or a function call.
-* `string functionArguments`. TODO-Kristjan what format if function?
-* `string functionName` - name of the function invoked, if any.
-* `string functionArguments` - arguments passed to the function, if any.
-* `uint64 created` - timestamp of creation.
-* `string model` - the model name used for generation.
-* `string systemFingerprint` - identifier for the system generating the completion.
-* `string object` - type of the object, always `chat.completion`.
-* `uint32 completionTokens` - number of tokens generated in the completion.
-* `uint32 promptTokens` - number of tokens in the prompt.
-* `uint32 totalTokens` - total number of tokens, including both prompt and completion.
+<ParamField path="id" type="string">
+  Unique identifier for the completion, generated by OpenAI.
+</ParamField>
+
+<ParamField path="content" type="string">
+  The model output. Either this field or `functionArguments` and `functionName` will be populated, depending on whether the output is a normal message or a function call.
+</ParamField>
+
+<ParamField path="functionName" type="string">
+  Name of the function invoked, if any.
+</ParamField>
+
+<ParamField path="functionArguments" type="string">
+  Arguments passed to the function, if any. For format details, refer to the specific function documentation.
+</ParamField>
+
+<ParamField path="created" type="uint64">
+  Timestamp of creation.
+</ParamField>
+
+<ParamField path="model" type="string">
+  The model name used for generation.
+</ParamField>
+
+<ParamField path="systemFingerprint" type="string">
+  Identifier for the system generating the completion.
+</ParamField>
+
+<ParamField path="object" type="string">
+  Type of the object, always `chat.completion`.
+</ParamField>
+
+<ParamField path="completionTokens" type="uint32">
+  Number of tokens generated in the completion.
+</ParamField>
+
+<ParamField path="promptTokens" type="uint32">
+  Number of tokens in the prompt.
+</ParamField>
+
+<ParamField path="totalTokens" type="uint32">
+  Total number of tokens, including both prompt and completion.
+</ParamField>
+
 
 
 
@@ -228,7 +332,7 @@ Called when the result of an LLM call, created with [`createGroqLlmCall`](#creat
 </ParamField>
 
 <ParamField path="response" type="GroqResponse">
-  The result of the LLM call. See below for details on the GroqResponse object.
+  The result of the LLM call. See [below](#groqresponse-object) for details on the GroqResponse object.
 </ParamField>
 
 <ParamField path="errorMessage" type="string">
@@ -240,15 +344,42 @@ Called when the result of an LLM call, created with [`createGroqLlmCall`](#creat
 
 The `GroqResponse` object (see source in [ChatOracle.sol](https://github.com/galadriel-ai/contracts/blob/main/contracts/contracts/ChatOracle.sol)) has the following fields, most of which map directly to the fields in the [Groq API response](https://console.groq.com/docs/text-chat):
 
-* `string id` - unique identifier for the completion, generated by Groq.
-* `string content` - the content associated with the completion.
-* `uint64 created` - timestamp of creation.
-* `string model` - the model name used for the completion.
-* `string systemFingerprint` - system identifier that generated the completion.
-* `string object` - type of the object, always `chat.completion`.
-* `uint32 completionTokens` - number of tokens in the completion.
-* `uint32 promptTokens` - number of tokens in the prompt.
-* `uint32 totalTokens` - total number of tokens, sum of prompt and completion tokens.
+<ParamField path="id" type="string">
+  Unique identifier for the completion, generated by Groq.
+</ParamField>
+
+<ParamField path="content" type="string">
+  The content associated with the completion.
+</ParamField>
+
+<ParamField path="created" type="uint64">
+  Timestamp of creation.
+</ParamField>
+
+<ParamField path="model" type="string">
+  The model name used for the completion.
+</ParamField>
+
+<ParamField path="systemFingerprint" type="string">
+  System identifier that generated the completion.
+</ParamField>
+
+<ParamField path="object" type="string">
+  Type of the object, always `chat.completion`.
+</ParamField>
+
+<ParamField path="completionTokens" type="uint32">
+  Number of tokens in the completion.
+</ParamField>
+
+<ParamField path="promptTokens" type="uint32">
+  Number of tokens in the prompt.
+</ParamField>
+
+<ParamField path="totalTokens" type="uint32">
+  Total number of tokens, sum of prompt and completion tokens.
+</ParamField>
+
 
 
 ### onOracleFunctionResponse
