@@ -420,7 +420,12 @@ user      | How big is the Sun?         |
 
 Then `getMessageHistoryContents` should return the following list of 4 items:
 ```solidity
-["You are a helpful assistant", "Hello!", "Hi! How can I help?", "How big is the Sun?"]
+[
+    "You are a helpful assistant",
+    "Hello!",
+    "Hi! How can I help?",
+    "How big is the Sun?"
+]
 ```
 
 ...and `getMessageHistoryRoles` should return the following list of 4 items:
@@ -430,21 +435,34 @@ Then `getMessageHistoryContents` should return the following list of 4 items:
 
 The signatures of these methods should be:
 
-**getMessageHistoryRoles**
+#### getMessageHistoryRoles
 
-Arguments:
-* `uint callbackId` - the identifier you passed into the `createLlmCall` method.
+**Arguments**
 
-Returns:
-* `string[]` - a list of roles.
+<ParamField path="callbackId" type="uint">
+  The identifier you passed into the `createLlmCall` method.
+</ParamField>
 
-**getMessageHistoryContents**
+**Returns**
 
-Arguments:
-* `uint callbackId` - the identifier you passed into the `createLlmCall` method.
+<ResponseField name="return" type="string[]">
+  A list of roles. Each role in the list is a string and one of `system`, `user`, or `assistant`.
+</ResponseField>
 
-Returns:
-* `string[]` - a list of message contents.
+#### getMessageHistoryContents
+
+**Arguments**
+
+<ParamField path="callbackId" type="uint">
+  The identifier you passed into the `createLlmCall` method.
+</ParamField>
+
+**Returns**
+
+<ResponseField name="return" type="string[]">
+  A list of message contents.
+</ResponseField>
+
 
 
 
@@ -493,15 +511,3 @@ If you are calling an external tool, you need to:
 ## Examples
 
 Please refer to the [example contracts](https://github.com/galadriel-ai/contracts/tree/main/contracts/contracts), corresponding to the outlined [use cases](/use-cases), for complete usage examples.
-
-
-
-
-<ParamField path="param" type="string">
-  An example of a parameter field
-</ParamField>
-
-
-<ResponseField name="response" type="string">
-  A response field example
-</ResponseField>
