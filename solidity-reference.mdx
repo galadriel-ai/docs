@@ -42,7 +42,7 @@ Returns:
 The `OpenAiRequest` object (see source in [ChatOracle.sol](https://github.com/galadriel-ai/contracts/blob/main/contracts/contracts/ChatOracle.sol)) has the following fields:
 
 * `string model` - the identifier for the model, either `gpt-4-turbo-preview` or `gpt-3.5-turbo-1106`.
-* `int8 frequencyPenalty` - an integer between -20 and 20, mapped to a float between -2.0 and 2.0; values greater than 20 are treated as null. TODO
+* `int8 frequencyPenalty` - an integer between -20 and 20, mapped to a float between -2.0 and 2.0; values greater than 20 are treated as null.
 * `string logitBias` - a JSON string representing logit bias or an empty string if none.
 * `uint32 maxTokens` - the maximum number of tokens to generate, with 0 indicating null.
 * `int8 presencePenalty` - an integer between -20 and 20, mapped to a float between -2.0 and 2.0; values greater than 20 are treated as null.
