@@ -401,7 +401,7 @@ Called when the result of a tool call, created with [`createFunctionCall`](#crea
 
 
 
-### getMessageHistoryContents and getMessageHistoryRoles
+### Message history callbacks
 
 These two methods in combination are used to provide the oracle with the message history necessary for the LLM call. They are called by the oracle after [`createLlmcall`](#createllmcall).
 
@@ -480,7 +480,7 @@ Using the [createLlmCall](#createllmcall) example: to call an LLM you need to:
     Call the [createLlmCall](#createllmcall) method on the oracle contract. This will create a new LLM call.
     </Step>
     <Step>
-    Implement two methods into your contract that the oracle will call to get the message history necessary for the LLM, including the system prompt: [getMessageHistoryContents and getMessageHistoryRoles](#getmessagehistorycontents-and-getmessagehistoryroles).
+    Implement two methods into your contract that the oracle will call to get the message history necessary for the LLM, including the system prompt: [getMessageHistoryContents and getMessageHistoryRoles](#message-history-callbacks).
     </Step>
     <Step>
     Implement the [onOracleLlmResponse](#onoraclellmresponse) method into your contract. This method will be called when the LLM result is available (in a separate transaction potentially tens of seconds later).
