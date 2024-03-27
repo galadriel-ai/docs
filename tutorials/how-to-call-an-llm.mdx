@@ -1,6 +1,5 @@
-# Building an On-Chain ChatGPT with Solidity: A Step-by-Step Guide
 
-In this tutorial, we'll build an on-chain ChatGPT model step by step using Solidity on the Galadriel Network. If you're interested in building decentralized AI applications, this guide will help you understand the basics of interacting with on-chain oracles and storing conversation history on the blockchain.
+In this tutorial, we'll build up a custom ChatGPT-like chatbot step by step using Solidity on the Galadriel Network. If you're interested in building decentralized AI applications, this guide will help you understand the basics of calling on-chain LLM models and storing conversation history on the blockchain.
 
 ### Prerequisites
 
@@ -9,30 +8,30 @@ Before we start, ensure you have the following:
 - A Galadriel devnet account. For more information on setting up a wallet, visit [Setting Up A Wallet](/setting-up-a-wallet.mdx).
 - Some devnet tokens. Get your free devnet tokens from the [Faucet](/faucet.mdx).
 
-### Step 1: Clone the Repo and Install Dependencies
+### Clone the Repo
 
-1. Open your terminal and clone the Galadriel AI contracts repository:
+```
+git clone https://github.com/galadriel-ai/contracts
+cd contracts/contracts
+```
 
-   ```
-   git clone https://github.com/galadriel-ai/contracts
-   cd contracts
-   ```
+### Create a New Contract
 
-2. Install project dependencies:
+Let's start by creating a new Solidity file in the `contracts` directory named `MyChatbot.sol`. We'll incrementally build up our contract into that file. Let's start with an empty contract:
 
-   ```
-   npm install
-   ```
+```solidity
+pragma solidity ^0.8.9;
 
-3. Ensure you have a local node running for development testing. Refer to [Quickstart](/quickstart.mdx) for getting started with a local node.
+contract MyChatbot {
+    constructor(address initialOracleAddress) {
+        
+    }
+}
+```
 
-### Step 2: Create a New Trivial Contract
+### Set the Oracle Address
 
-Let's start by creating a new Solidity file in the `contracts` directory named `ChatGpt.sol`. Similar to the provided contents, we'll incrementally build up our contract.
-
-### Step 3: Set the Oracle Address in the Contract Constructor
-
-The oracle address is critical for making requests to LLMs. Initialize the oracle address in the constructor to ensure your contract can interact with it.
+The oracle address is critical for making requests to LLMs. Change the constructor to initialize the oracle address in the constructor to ensure your contract can interact with it.
 
 ```solidity
 constructor(address initialOracleAddress) {
@@ -41,7 +40,23 @@ constructor(address initialOracleAddress) {
 }
 ```
 
-Also, have a function to update the oracle address. As the oracle's address may change, it's necessary to have a mechanism to update it without redeploying the contract. This functionality is encapsulated in the `setOracleAddress` function, guarded by the `onlyOwner` modifier to ensure only the contract owner can update it.
+We also need a function to update the oracle address. As the oracle's address may change, it's necessary to have a mechanism to update it without redeploying the contract. This functionality is encapsulated in the `setOracleAddress` function, guarded by the `onlyOwner` modifier to ensure only the contract owner can update it. We also emit an event whenever the oracle address is updated.
+
+```solidity
+modifier onlyOwner() {
+    require(msg.sender == owner, "Caller is not owner");
+    _;
+}
+
+event OracleAddressUpdated(address indexed newOracleAddress);
+
+function setOracleAddress(address newOracleAddress) public onlyOwner {
+    oracleAddress = newOracleAddress;
+    emit OracleAddressUpdated(newOracleAddress);
+}
+```
+
+Later in this tutorial, when deploying the contract, we will set this address to the concrete address of a [Galadriel-provided oracle](/oracle-address.mdx).
 
 ### Step 4: Implement `startChat`
 
@@ -49,7 +64,7 @@ The `startChat` function initializes a new chat session and stores the initial m
 
 ```solidity
 function startChat(string memory message) public returns (uint) {
-    // Implementation as shown earlier
+    // TODO
 }
 ```
 

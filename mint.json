@@ -56,7 +56,7 @@
           "group": "Tutorials",
           "pages": [
             "tutorials/agents",
-            "tutorials/tutorial"
+            "tutorials/how-to-call-an-LLM"
           ]
         },
         "solidity-reference",
