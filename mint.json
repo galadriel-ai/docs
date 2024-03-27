@@ -54,7 +54,10 @@
         "how-it-works",
         {
           "group": "Tutorials",
-          "pages": ["tutorials/agents"]
+          "pages": [
+            "tutorials/agents",
+            "tutorials/tutorial"
+          ]
         },
         "solidity-reference",
         "oracle-address"

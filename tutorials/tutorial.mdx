@@ -1,0 +1,135 @@
+# Building an On-Chain ChatGPT with Solidity: A Step-by-Step Guide
+
+In this tutorial, we'll build an on-chain ChatGPT model step by step using Solidity on the Galadriel Network. If you're interested in building decentralized AI applications, this guide will help you understand the basics of interacting with on-chain oracles and storing conversation history on the blockchain.
+
+### Prerequisites
+
+Before we start, ensure you have the following:
+
+- A Galadriel devnet account. For more information on setting up a wallet, visit [Setting Up A Wallet](/setting-up-a-wallet.mdx).
+- Some devnet tokens. Get your free devnet tokens from the [Faucet](/faucet.mdx).
+
+### Step 1: Clone the Repo and Install Dependencies
+
+1. Open your terminal and clone the Galadriel AI contracts repository:
+
+   ```
+   git clone https://github.com/galadriel-ai/contracts
+   cd contracts
+   ```
+
+2. Install project dependencies:
+
+   ```
+   npm install
+   ```
+
+3. Ensure you have a local node running for development testing. Refer to [Quickstart](/quickstart.mdx) for getting started with a local node.
+
+### Step 2: Create a New Trivial Contract
+
+Let's start by creating a new Solidity file in the `contracts` directory named `ChatGpt.sol`. Similar to the provided contents, we'll incrementally build up our contract.
+
+### Step 3: Set the Oracle Address in the Contract Constructor
+
+The oracle address is critical for making requests to LLMs. Initialize the oracle address in the constructor to ensure your contract can interact with it.
+
+```solidity
+constructor(address initialOracleAddress) {
+    owner = msg.sender;
+    oracleAddress = initialOracleAddress;
+}
+```
+
+Also, have a function to update the oracle address. As the oracle's address may change, it's necessary to have a mechanism to update it without redeploying the contract. This functionality is encapsulated in the `setOracleAddress` function, guarded by the `onlyOwner` modifier to ensure only the contract owner can update it.
+
+### Step 4: Implement `startChat`
+
+The `startChat` function initializes a new chat session and stores the initial message from a user.
+
+```solidity
+function startChat(string memory message) public returns (uint) {
+    // Implementation as shown earlier
+}
+```
+
+### Step 5: Define `Message` and `ChatRun` Structs
+
+To store messages and chat sessions, we use structs. Each `ChatRun` can contain multiple messages, allowing us to maintain a history of the conversation.
+
+```solidity
+struct Message {
+    string role;
+    string content;
+}
+
+struct ChatRun {
+    address owner;
+    Message[] messages;
+    uint messagesCount;
+}
+```
+
+### Step 6: Implement Oracle Interface and `createLlmCall`
+
+The contract interacts with the oracle using its interface. Use the oracle interface (`IOracle`) to make requests to the LLM via `createLlmCall` method within the `startChat` function as we initialized it:
+
+```solidity
+IOracle(oracleAddress).createLlmCall(currentId);
+```
+
+### Step 7: Implement `getMessageHistoryContents` and `getMessageHistoryRoles`
+
+These functions are crucial for fetching the chat history, which is passed to the LLM upon every new interaction:
+
+```solidity
+function getMessageHistoryContents(uint chatId) public view returns (string[] memory) {
+    // Implementation as shown earlier
+}
+
+function getMessageHistoryRoles(uint chatId) public view returns (string[] memory) {
+    // Implementation as shown earlier
+}
+```
+
+### Step 8: Handle Oracle Responses with `onOracleLlmResponse`
+
+Capture LLM responses using `onOracleLlmResponse`, which is triggered by the Oracle once it has processed a request:
+
+```solidity
+function onOracleLlmResponse(uint runId, string memory response, string memory errorMessage) public onlyOracle {
+    // Implementation as shown earlier
+}
+```
+
+### Step 9: Deploy the Contract
+
+Utilize the script provided in the Galadriel AI contracts repository to deploy your contract:
+
+```
+npm run deploy
+```
+
+Make sure you've set the correct environment variables as per [Quickstart](/quickstart.mdx).
+
+### Step 10: Verify Contract Deployment on the Explorer
+
+After deploying, verify your contract on [Galadriel's Block Explorer](https://explorer.galadriel.com) by searching for your contract's address.
+
+### Step 11: Interact with Your Contract
+
+To interact with your contract, you can either create scripts as in the `examples` directory of the Galadriel repository or use tools like [Hardhat](https://hardhat.org/) or [Remix](https://remix.ethereum.org/) to invoke contract functions.
+
+### Step 12: Observe the Results on the Explorer
+
+Once you've interacted with your contract, observe the transaction results and state changes on the [Block Explorer](/block-explorer.mdx).
+
+### What's Next?
+
+Congratulations on deploying your on-chain ChatGPT! Explore further:
+
+- Dive deeper into the Galadriel documentation, particularly the [How It Works](/how-it-works.mdx) section, to understand the underlying technology.
+- Experiment with different LLMs and oracle configurations.
+- Explore other [Use Cases](/use-cases.mdx) to get inspired for your next project.
+
+Happy building!
