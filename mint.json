@@ -52,13 +52,6 @@
       "pages": [
         "quickstart",
         "how-it-works",
-        {
-          "group": "Tutorials",
-          "pages": [
-            "tutorials/agents",
-            "tutorials/how-to-call-an-LLM"
-          ]
-        },
         "solidity-reference",
         "oracle-address"
       ]
