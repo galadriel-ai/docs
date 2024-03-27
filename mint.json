@@ -52,6 +52,7 @@
       "pages": [
         "quickstart",
         "how-it-works",
+        "features",
         "solidity-reference",
         "oracle-address"
       ]
