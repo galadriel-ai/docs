@@ -4,16 +4,6 @@ If you need to change the addresses of anything (deployed contracts, oracles, et
 Similarly, if you're adding a new address or other value into the docs that is going to change relatively often, please also add it as a snippet.
 
 
-# Mintlify Starter Kit
-
-Click on `Use this template` to copy the Mintlify starter kit. The starter kit contains examples including
-
-- Guide pages
-- Navigation
-- Customizations
-- API Reference pages
-- Use of popular components
-
 ### Development
 
 Install the [Mintlify CLI](https://www.npmjs.com/package/mintlify) to preview the documentation changes locally. To install, use the following command
@@ -28,9 +18,16 @@ Run the following command at the root of your documentation (where mint.json is)
 mintlify dev
 ```
 
-### Publishing Changes
+Run the following to check for broken links (does not check headers and external links):
 
-Install our Github App to autopropagate changes from youre repo to your deployment. Changes will be deployed to production automatically after pushing to the default branch. Find the link to install on your dashboard. 
+```
+mintlify broken-links
+```
+
+### Deployment
+
+The `main` branch is automatically deployed to docs.galadriel.com.
+
 
 #### Troubleshooting
 
