@@ -1,6 +1,4 @@
-### Message history callbacks
-
-These two methods in combination are used to provide the oracle with the message history necessary for the LLM call. They are called by the oracle after you invoke [`createLlmcall`](/reference/llms/basic#createllmcall) or an analogous method for other LLM providers.
+The two methods in combination -- `getMessageHistoryContents` and `getMessageHistoryRoles` -- are used to provide the oracle with the message history necessary for the LLM call. They are called by the oracle after you invoke [`createLlmcall`](/reference/llms/basic#createllmcall) or an analogous method for other LLM providers.
 
 The methods should each return a list, one with message contents and the other listing the roles of the message authors. The list lengths should be equal for a given `callbackId`.
 
