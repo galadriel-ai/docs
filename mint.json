@@ -53,7 +53,17 @@
         "quickstart",
         "how-it-works",
         "features",
-        "solidity-reference",
+        {
+          "group": "Solidity reference",
+          "pages": [
+            "reference/overview",
+            {
+              "group": "LLMs",
+              "pages": ["reference/llms/basic", "reference/llms/openai", "reference/llms/groq", "reference/llms/message-history"]
+            },
+            "reference/tools"
+          ]
+        },
         "oracle-address"
       ]
     },

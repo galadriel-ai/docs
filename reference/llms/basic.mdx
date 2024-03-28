@@ -1,0 +1,34 @@
+### createLlmCall
+
+This is a simplified function that method makes a call to OpenAI GPT-4 with default parameters and provides no configurability. If you want to use other models, or configure other parameters like `temperature`, see [createOpenAiLlmCall](/reference/llms/openai#createopenaillmcall).
+
+**Arguments**
+
+<ParamField path="promptCallbackId" type="uint">
+  Identifier which will be passed into the callback.
+</ParamField>
+
+**Returns**
+
+<ResponseField name="counter" type="uint">
+  An internal counter of the oracle, which is incremented on every call.
+</ResponseField>
+
+
+### onOracleLlmResponse
+
+Called when the result of an LLM call, created with [`createLlmCall`](#createllmcall), is available.
+
+**Arguments**
+
+<ParamField path="callbackId" type="uint">
+  The identifier you passed into the `createLlmCall` method.
+</ParamField>
+
+<ParamField path="response" type="string">
+  The result of the LLM call.
+</ParamField>
+
+<ParamField path="errorMessage" type="string">
+  An error message. Contains an empty string if there was no error, and a description of the error otherwise.
+</ParamField>

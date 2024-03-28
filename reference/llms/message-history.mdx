@@ -1,0 +1,59 @@
+The two methods in combination -- `getMessageHistoryContents` and `getMessageHistoryRoles` -- are used to provide the oracle with the message history necessary for the LLM call. They are called by the oracle after you invoke [`createLlmcall`](/reference/llms/basic#createllmcall) or an analogous method for other LLM providers.
+
+The methods should each return a list, one with message contents and the other listing the roles of the message authors. The list lengths should be equal for a given `callbackId`.
+
+For example, if the message history is the following:
+
+
+role      |        content              |
+----------|-----------------------------|
+system    | You are a helpful assistant |
+user      | Hello!                      |
+assistant | Hi! How can I help?         |
+user      | How big is the Sun?         |
+
+
+Then `getMessageHistoryContents` should return the following list of 4 items:
+```solidity
+[
+    "You are a helpful assistant",
+    "Hello!",
+    "Hi! How can I help?",
+    "How big is the Sun?"
+]
+```
+
+...and `getMessageHistoryRoles` should return the following list of 4 items:
+```solidity
+["system", "user", "assistant", "user"]
+```
+
+The signatures of these methods should be:
+
+#### getMessageHistoryRoles
+
+**Arguments**
+
+<ParamField path="callbackId" type="uint">
+  The identifier you passed into the `createLlmCall` method.
+</ParamField>
+
+**Returns**
+
+<ResponseField name="return" type="string[]">
+  A list of roles. Each role in the list is a string and one of `system`, `user`, or `assistant`.
+</ResponseField>
+
+#### getMessageHistoryContents
+
+**Arguments**
+
+<ParamField path="callbackId" type="uint">
+  The identifier you passed into the `createLlmCall` method.
+</ParamField>
+
+**Returns**
+
+<ResponseField name="return" type="string[]">
+  A list of message contents.
+</ResponseField>
