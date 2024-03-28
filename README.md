@@ -9,19 +9,19 @@ Similarly, if you're adding a new address or other value into the docs that is g
 Install the [Mintlify CLI](https://www.npmjs.com/package/mintlify) to preview the documentation changes locally. To install, use the following command
 
 ```
-npm i -g mintlify
+npm install
 ```
 
 Run the following command at the root of your documentation (where mint.json is)
 
 ```
-mintlify dev
+npm run dev
 ```
 
 Run the following to check for broken links (does not check headers and external links):
 
 ```
-mintlify broken-links
+npm run broken-links
 ```
 
 ### Deployment
