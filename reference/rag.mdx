@@ -1,0 +1,64 @@
+---
+title: [RAG]
+---
+
+You can add a knowledge base to your LLM app or agent. A knowledge base is broadly useful for including lots of information in the context -- information that is too long to always include in the prompt.
+
+This technique, called **Retrieval Augmented Generation (RAG)**, is a combination of a retriever and a generator. The retriever finds the relevant information from the knowledge base, and the generator uses this information to generate a response. In our case, the generator is an [LLM](/reference/llms), and as explained below, you can use a vector database through the Galadriel oracle as the retriever.
+
+Before you can call any of the steps above, you need to:
+
+1. Extract text from your documents (PDFs, books, websites, etc).
+2. Upload the chunks to IPFS.
+3. Request the oracle to index it.
+
+We have provided a script that does this for you -- **follow the steps in [this README](https://github.com/galadriel-ai/contracts/tree/main/rag_tools)**; this is a prerequisite for your contract to be able to call the below methods.
+
+After indexing your documents, you should have an IPFS CID representing your knowledge base (the above script provides this).
+
+### createKnowledgeBaseQuery
+
+This method makes a call to query the knowledge base. The oracle will return the documents that match the query in the callback: see [`onOracleKnowledgeBaseQueryResponse`](#onoracleknowledgebasequeryresponse).
+
+**Arguments**
+
+<ParamField path="kbQueryCallbackId" type="uint">
+  Identifier which will be passed into the callback.
+</ParamField>
+
+<ParamField path="cid" type="string">
+  IPFS CID representing the indexed knowledge base, which will be queried.
+</ParamField>
+
+<ParamField path="query" type="string">
+  The query to be used to retrieve the documents from the knowledge base.
+</ParamField>
+
+<ParamField path="num_documents" type="uint32">
+  Maximum number of documents to retrieve.
+</ParamField>
+
+**Returns**
+
+<ResponseField name="counter" type="uint">
+  An internal counter of the oracle, which is incremented on every call.
+</ResponseField>
+
+
+### onOracleKnowledgeBaseQueryResponse
+
+Called when the result of a knowledge base query, created with `createKnowledgeBaseQuery`, is ready.
+
+**Arguments**
+
+<ParamField path="kbQueryCallbackId" type="uint">
+  The identifier you passed into the `createKnowledgeBaseQuery` method.
+</ParamField>
+
+<ParamField path="documents" type="string[]">
+  A list of document contents that were retrieved from the knowledge base.
+</ParamField>
+
+<ParamField path="errorMessage" type="string">
+  An error message. Contains an empty string if there was no error, and a description of the error otherwise.
+</ParamField>
