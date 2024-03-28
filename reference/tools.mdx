@@ -43,6 +43,14 @@ The currently available tools are:
 * Output: a string with a list of search results in JSON format.
 
 </Accordion>
+<Accordion title="Code interpreter">
+
+* `functionType`: `code_interpreter`
+* Functionality: given some Python code, run that code and return the output of the program. Generated files are returned as links to the files.
+* Input: a string containing Python code.
+* Output: a JSON string containing the stdout and stderr output of the executed program, e.g. `{"stdout": "Output is 4", "stderr": ""}`.
+
+</Accordion>
 </AccordionGroup>
 
 ### onOracleFunctionResponse
