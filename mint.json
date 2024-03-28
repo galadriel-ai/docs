@@ -15,6 +15,9 @@
       "to": "#0657E0"
     }
   },
+  "metadata": {
+    "og:image": "/images/og_image.png"
+  },
   "topbarLinks": [
   ],
   "topbarCtaButton": {
