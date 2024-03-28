@@ -65,7 +65,8 @@
               "group": "LLMs",
               "pages": ["reference/llms/basic", "reference/llms/openai", "reference/llms/groq", "reference/llms/message-history"]
             },
-            "reference/tools"
+            "reference/tools",
+            "reference/rag"
           ]
         },
         "oracle-address"

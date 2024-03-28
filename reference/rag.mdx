@@ -1,0 +1,48 @@
+---
+title: [RAG]
+---
+
+You can add a knowledge base to your LLM app or agent. A knowledge base is broadly useful for including lots of information in the context -- information that is too long to always include in the prompt.
+
+This technique, called **Retrieval Augmented Generation (RAG)**, is a combination of a retriever and a generator. The retriever finds the relevant information from the knowledge base, and the generator uses this information to generate a response. In our case, the generator is an [LLM](/reference/llms), and as explained below, you can use a vector database through the Galadriel oracle as the retriever.
+
+Before you can call any of the steps above, you need to:
+
+1. Extract text from your documents (PDFs, books, websites, etc).
+2. Upload the chunks to IPFS.
+3. Request the oracle to index it.
+
+We have provided a script that does this for you -- **follow the steps in [this README](https://github.com/galadriel-ai/contracts/tree/main/rag_tools)**; this is a prerequisite for your contract to be able to call the below methods.
+
+After indexing your documents, you should have an IPFS CID representing your knowledge base (the above script provides this).
+
+### createKnowledgeBaseQuery
+
+**Arguments**
+
+<ParamField path="kbQueryCallbackId" type="uint">
+  TODO
+</ParamField>
+
+<ParamField path="cid" type="string">
+  TODO
+</ParamField>
+
+<ParamField path="query" type="string">
+  TODO
+</ParamField>
+
+<ParamField path="num_documents" type="uint32">
+  TODO
+</ParamField>
+
+**Returns**
+
+<ResponseField name="counter" type="uint">
+  An internal counter of the oracle, which is incremented on every call.
+</ResponseField>
+
+
+###
+
+**Arguments**
