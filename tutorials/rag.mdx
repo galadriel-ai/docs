@@ -6,7 +6,7 @@ import {oracleAddress, nonEnclaveOracleAddress} from '/snippets/addresses.mdx';
 
 In this tutorial, we'll enhance a ChatGPT-like chatbot with a knowledge base. The knowledge base will be used to retrieve relevant information that can be used to generate more informative and contextually relevant responses. This is also known as **retrieval-augmented generation** (RAG).
 
-### Prerequisites
+## Prerequisites
 
 You can read this tutorial as-is to understand the basics of RAG with Galadriel. However, to create a knowledge base you can use in your contract, you will need:
 
@@ -17,7 +17,7 @@ You can read this tutorial as-is to understand the basics of RAG with Galadriel.
 - The files you want to add to the knowledge base (TODO what formats supported).
 
 
-### What is RAG?
+## What is RAG?
 
 RAG is a solution to a simple problem. Assume you want to make an app that can answer questions based on a particular book. To make an LLM answer questions based on a book, you need the relevant parts of the book to be available to the model, so you need to put these parts into the context window (input prompt to the LLM). However, since input tokens are expensive, you don't want to put in the whole book on every query.
 
@@ -37,7 +37,7 @@ The key parts of the RAG implementation are:
 
 This way, the knowledge base is stored off-chain in IPFS. However, a reference to the knowledge base is stored on-chain. This way it is guaranteed to be used correctly because the oracle runs in a TEE, and the IPFS file cannot be modified (otherwise the [CID](https://docs.ipfs.tech/concepts/content-addressing/) will change)
 
-### Repository and environment setup
+## Repository and environment setup
 
 Here's how you can setup your environment to create a knowledge base.
 
@@ -82,7 +82,7 @@ Here's how you can setup your environment to create a knowledge base.
     </Step>
 </Steps>
 
-### Collect your knowledge base files
+## Collect your knowledge base files
 
 Collect all files you want to end up in your knowledge base in a single directory. For example, into a `kb` folder:
 
@@ -94,12 +94,140 @@ ethereum.pdf
 
 You can put anything you want into the knowledge base, as long as it is in text format. The scripts we provide uses the [Unstructured file loader](https://python.langchain.com/docs/integrations/document_loaders/unstructured_file) in langchain do a default conversion for you for a list of common formats: text files, powerpoints, html, pdfs, images, and more. However, you can customize the extraction process by customizing the loader in [`add_knowledge_base.py`](https://github.com/galadriel-ai/contracts/blob/main/rag_tools/add_knowledge_base.py) script.
 
-### Run local script; explain what will it do
+## Index the knowledge base
 
-### Add KB call, with IPFS link, to your contract
+Now we can execute the script that will extract the text from the documents in the `kb/` directory and upload them to IPFS. After uploading the documents, the script will request the oracle to index the documents. Once the index is complete, the script will output the IPFS link to the index.
 
-### Add listener
+The output of the script should look like this:
 
-### Putting it all together
+```plaintext
+TODO
+```
 
-ChatGpt contract link
+Make sure you store the index IPFS link from this output as we will need it later -- in this example it is `TODO`.
+
+## Integrating in your contract
+
+Now that your knowledge base is indexed, we can actually query it in a contract. To do this, we need to do two things:
+
+1. Store the index IPFS hash in the contract.
+2. Make a call to the oracle to start the knowledge base query: calling `createKnowledgeBaseQuery`.
+3. Add a listener to our contract which the oracle will call once the results of the query are ready: implementing `onOracleKnowledgeBaseQueryResponse`.
+
+We will go through these steps in the next sections. See the [oracle reference](/reference/rag) for a full description of the RAG-related interface.
+
+### Store the index IPFS hash in the contract
+
+Since on every query we need to reference the index, we need to store the index IPFS hash in the contract. This can be done by adding a new state variable to the contract:
+
+```solidity
+string public knowledgeBase;
+```
+
+You might also want to add this into the constructor of your contract:
+
+```solidity
+constructor(address initialOracleAddress, string memory knowledgeBaseCID) {
+    owner = msg.sender;
+    oracleAddress = initialOracleAddress;
+    knowledgeBase = knowledgeBaseCID;
+}
+```
+
+At contract deployment time, you will pass in the IPFS CID of the specific knowledge base you created above.
+
+### Create a knowledge base query
+
+In your contract, at the point where you want to query the knowledge base, you need to call the `createKnowledgeBaseQuery` function in the oracle. This function takes the IPFS link to the index as an argument. The oracle will then retrieve the relevant documents and return them to you.
+
+Make sure you have the oracle interface defined in your contract file:
+
+```solidity
+interface IOracle {
+    function createKnowledgeBaseQuery(
+        uint kbQueryCallbackId,
+        string memory cid,
+        string memory query,
+        uint32 num_documents
+    ) external returns (uint i);
+}
+```
+
+You need to call the `createKnowledgeBaseQuery` function immediately prior to every call to the LLM (because on every LLM call we want the knowledge base contents to be available). If you've built your ChatGPT-like chatbot similarly to our [example](https://github.com/galadriel-ai/contracts/blob/main/contracts/contracts/ChatGpt.sol), that means adding a call to `createKnowledgeBaseQuery` in two places: `startChat` and `addMessage`. Refer to the [chatbot tutorial](/tutorials/llm) for a full explanation of these methods.
+
+In both cases, you should make sure the knowledge base IPFS hash is non-empty. There's another tricky thing: if there is no knowledge base, you want to call the LLM immediately. If there is one, you need to call the LLM in the `onOracleKnowledgeBaseQueryResponse` callback. (You can simplify this if you always deploy your contract with a knowledge base and it is never empty.)
+
+```solidity
+if (bytes(knowledgeBase).length > 0) {
+    // If there is a knowledge base, create a knowledge base query
+    IOracle(oracleAddress).createKnowledgeBaseQuery(
+        runId,
+        knowledgeBase,
+        message,
+        3
+    );
+} else {
+    // Otherwise, create an LLM call
+    IOracle(oracleAddress).createLlmCall(runId);
+}
+```
+
+In the snippet above, `message` is the text used to query documents in the knowledge base.
+
+### Implement the callback
+
+Once the knowledge base query is complete, the oracle will call the `onOracleKnowledgeBaseQueryResponse` function in your contract. This function should be implemented to handle the results of the query. The results will be a list of plaintext documents.
+
+See the inline comments below for an explanation of this function -- which again assumes you are using the ChatGPT-like chatbot from our [example](https://github.com/galadriel-ai/contracts/blob/main/contracts/contracts/ChatGpt.sol).
+
+```solidity
+function onOracleKnowledgeBaseQueryResponse(
+    uint runId,
+    string [] memory documents,
+    string memory errorMessage
+) public onlyOracle {
+    ChatRun storage run = chatRuns[runId];
+    require(
+        keccak256(abi.encodePacked(run.messages[run.messagesCount - 1].role)) == keccak256(abi.encodePacked("user")),
+        "No message to add context to"
+    );
+    // Retrieve the last user message
+    Message storage lastMessage = run.messages[run.messagesCount - 1];
+
+    // Start with the original message content
+    string memory newContent = lastMessage.content;
+
+    // Append "Relevant context:\n" only if there are documents
+    if (documents.length > 0) {
+        newContent = string(abi.encodePacked(newContent, "\n\nRelevant context:\n"));
+    }
+
+    // Iterate through the documents and append each to the newContent
+    for (uint i = 0; i < documents.length; i++) {
+        newContent = string(abi.encodePacked(newContent, documents[i], "\n"));
+    }
+
+    // Finally, set the lastMessage content to the newly constructed string
+    lastMessage.content = newContent;
+
+    // Call LLM
+    IOracle(oracleAddress).createLlmCall(runId);
+}
+```
+
+## Putting it all together
+
+That's it -- if you now deploy the contract to the Galadriel Devnet, you can start chatting with your on-chain chatbot.
+
+You'll find a fully functional KB-enabled chatbot in our example contracts directory: [ChatGpt.sol](https://github.com/galadriel-ai/contracts/blob/main/contracts/contracts/ChatGpt.sol).
+
+## What's Next?
+
+Congratulations on deploying your RAG-enabled chatbot! Explore further:
+
+- Dive deeper into the Galadriel documentation, particularly the [How It Works](/how-it-works) section, to understand the underlying technology.
+- Review the full [RAG reference](/reference/rag) to understand the full capabilities of the RAG oracle.
+- Experiment with different LLMs, e.g. Groq-hosted open-source LLMS or take control over the nuances of text generation: see [Solidity reference](/reference).
+- Explore other [Use Cases](/use-cases) to get inspired for your next project.
+
+Happy building!
