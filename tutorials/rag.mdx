@@ -2,15 +2,104 @@
 title: "Retrieval-augmented generation"
 ---
 
+import {oracleAddress, nonEnclaveOracleAddress} from '/snippets/addresses.mdx';
+
 In this tutorial, we'll enhance a ChatGPT-like chatbot with a knowledge base. The knowledge base will be used to retrieve relevant information that can be used to generate more informative and contextually relevant responses. This is also known as **retrieval-augmented generation** (RAG).
 
 ### Prerequisites
 
-You can read this tutorial as-is to understand the basics of RAG with Galadriel. However, to deploy the contract and interact with it, you will need:
+You can read this tutorial as-is to understand the basics of RAG with Galadriel. However, to create a knowledge base you can use in your contract, you will need:
 
+- Python 3.11 or later installed on your system.
 - A Galadriel devnet account. For more information on setting up a wallet, visit [Setting Up A Wallet](/setting-up-a-wallet).
 - Some devnet tokens. Get your free devnet tokens from the [Faucet](/faucet).
+- An API key for `nft.storage` to facilitate document uploading to IPFS. You can obtain this key by registering at [nft.storage](https://nft.storage).
+- The files you want to add to the knowledge base (TODO what formats supported).
 
 
+### What is RAG?
 
-Outline
+RAG is a solution to a simple problem. Assume you want to make an app that can answer questions based on a particular book. To make an LLM answer questions based on a book, you need the relevant parts of the book to be available to the model, so you need to put these parts into the context window (input prompt to the LLM). However, since input tokens are expensive, you don't want to put in the whole book on every query.
+
+RAG solves this problem by storing the book in a knowledge base and only retrieving the relevant parts of the book when needed. The straightforward implementation of this is to:
+
+1. Divide the book into smaller parts (e.g., paragraphs).
+2. Put these paragraphs into an index structure for fast retrieval.
+3. When a query comes in, retrieve the relevant paragraphs from the index and put them into the context window.
+
+Galadriel's RAG implementation does this and uses the industry-standard approach of creating document embeddings, specifically using OpenAI's TODO model, to support semantic search (as opposed to simple keyword-based search).
+
+The key parts of the RAG implementation are:
+
+1. Collecting the text: you upload to IPFS a list of text documents that will comprise the knowledge base.
+2. Building the index: once you give the IPFS link (pointing to a list of documents), our [oracle](/oracle-address) running in a [TEE](/how-it-works#TEE) will embed these documents and build an index.
+3. Querying the index: you can query the index by calling a function in your contract, including a reference to the index in IPFS. The oracle will retrieve the relevant documents and return them to you.
+
+This way, the knowledge base is stored off-chain in IPFS. However, a reference to the knowledge base is stored on-chain. This way it is guaranteed to be used correctly because the oracle runs in a TEE, and the IPFS file cannot be modified (otherwise the [CID](https://docs.ipfs.tech/concepts/content-addressing/) will change)
+
+### Repository and environment setup
+
+Here's how you can setup your environment to create a knowledge base.
+
+<Steps>
+    <Step name="Clone the repository">
+        If you haven't already, clone the Galadriel repository:
+
+        ```bash
+        git clone https://github.com/galadriel-ai/contracts.git
+        cd contracts/rag_tools
+        ```
+    </Step>
+    <Step name="Create a Python virtual environment">
+        Create a virtual environment for Python dependencies:
+
+        ```bash
+        python -m venv venv
+        source venv/bin/activate
+        ```
+    </Step>
+    <Step name="Install the required Python packages">
+        Install the required Python packages:
+
+        ```bash
+        pip install -r requirements.txt
+        ```
+    </Step>
+    <Step name="Create a .env file">
+        Create a `.env` file and add your `nft.storage` API key and wallet private key as follows:
+
+        ```plaintext
+        ORACLE_ADDRESS=galadriel_oracle_address
+        PRIVATE_KEY=your_wallet_private key
+        NFT_STORAGE_API_KEY=your_api_key_here
+        ```
+
+        `ORACLE_ADDRESS` should be set to the [current Galadriel oracle address](/oracle-address): **{oracleAddress}**.
+
+        `PRIVATE_KEY` will be used to make an indexing request to the oracle. You can use any account as long as it has enough devnet tokens to pay for the transaction.
+        
+        `NFT_STORAGE_API_KEY` will be used to upload the documents to IPFS.
+    </Step>
+</Steps>
+
+### Collect your knowledge base files
+
+Collect all files you want to end up in your knowledge base in a single directory. For example, into a `kb` folder:
+
+```bash
+$ ls kb/
+bitcoin.pdf
+ethereum.pdf
+```
+
+You can put anything you want into the knowledge base, as long as it is in text format. The scripts we provide uses the [Unstructured file loader](https://python.langchain.com/docs/integrations/document_loaders/unstructured_file) in langchain do a default conversion for you for a list of common formats: text files, powerpoints, html, pdfs, images, and more. However, you can customize the extraction process by customizing the loader in [`add_knowledge_base.py`](https://github.com/galadriel-ai/contracts/blob/main/rag_tools/add_knowledge_base.py) script.
+
+### Run local script; explain what will it do
+
+### Add KB call, with IPFS link, to your contract
+
+### Add listener
+
+### Putting it all together
+
+ChatGpt contract link
