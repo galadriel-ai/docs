@@ -14,7 +14,7 @@ You can read this tutorial as-is to understand the basics of RAG with Galadriel.
 - A Galadriel devnet account. For more information on setting up a wallet, visit [Setting Up A Wallet](/setting-up-a-wallet).
 - Some devnet tokens. Get your free devnet tokens from the [Faucet](/faucet).
 - An API key for `nft.storage` to facilitate document uploading to IPFS. You can obtain this key by registering at [nft.storage](https://nft.storage).
-- The files you want to add to the knowledge base (TODO what formats supported).
+- The files you want to add to the knowledge base (see [below](#collect-your-knowledge-base-files) for supported formats).
 
 
 ## What is RAG?
@@ -27,7 +27,7 @@ RAG solves this problem by storing the book in a knowledge base and only retriev
 2. Put these paragraphs into an index structure for fast retrieval.
 3. When a query comes in, retrieve the relevant paragraphs from the index and put them into the context window.
 
-Galadriel's RAG implementation does this and uses the industry-standard approach of creating document embeddings, specifically using OpenAI's TODO model, to support semantic search (as opposed to simple keyword-based search).
+Galadriel's RAG implementation does this and uses the industry-standard approach of creating document embeddings, specifically using OpenAI's [`text-embedding-3-small` model](https://platform.openai.com/docs/guides/embeddings), to support semantic search (as opposed to simple keyword-based search).
 
 The key parts of the RAG implementation are:
 
@@ -92,7 +92,7 @@ bitcoin.pdf
 ethereum.pdf
 ```
 
-You can put anything you want into the knowledge base, as long as it is in text format. The scripts we provide uses the [Unstructured file loader](https://python.langchain.com/docs/integrations/document_loaders/unstructured_file) in langchain do a default conversion for you for a list of common formats: text files, powerpoints, html, pdfs, images, and more. However, you can customize the extraction process by customizing the loader in [`add_knowledge_base.py`](https://github.com/galadriel-ai/contracts/blob/main/rag_tools/add_knowledge_base.py) script.
+You can put anything you want into the knowledge base, as long as it can be converted into text format. The scripts we provide uses the [Unstructured file loader](https://python.langchain.com/docs/integrations/document_loaders/unstructured_file) in langchain do a default conversion for you for a list of common formats: text files, powerpoints, html, pdfs, images, and more. However, you can customize the extraction process by customizing the loader in [`add_knowledge_base.py`](https://github.com/galadriel-ai/contracts/blob/main/rag_tools/add_knowledge_base.py) script.
 
 ## Index the knowledge base
 
