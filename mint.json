@@ -61,7 +61,8 @@
         {
           "group": "Tutorials",
           "pages": [
-            "tutorials/how-to-call-an-llm"
+            "tutorials/llm",
+            "tutorials/rag"
           ]
         },
         {
