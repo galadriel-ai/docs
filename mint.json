@@ -47,6 +47,7 @@
       "pages": [
         "overview",
         "about",
+        "litepaper",
         "use-cases",
         "roadmap"
       ]
@@ -57,6 +58,12 @@
         "quickstart",
         "how-it-works",
         "features",
+        {
+          "group": "Tutorials",
+          "pages": [
+            "tutorials/how-to-call-an-llm"
+          ]
+        },
         {
           "group": "Solidity reference",
           "pages": [
