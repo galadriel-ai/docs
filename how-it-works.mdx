@@ -96,11 +96,22 @@ In the current architecture of Galadriel, the oracle runs inside a trusted execu
 
 The oracle is executed in a trusted execution environment, specifically an [AWS Nitro Enclave](https://aws.amazon.com/ec2/nitro/nitro-enclaves/). Upon startup, the enclave generates a private key which can only be accessed inside the enclave, and is used for signing the transactions made by the oracle. The code running in the enclave posts an attestation onto the chain, proving to the chain that this account (private key) is being used in an enclave with a given image. Since that image, running in the enclave, is public and auditable (see links below), you can be certain that the oracle was correctly executed.
 
+Specifically, to trust the oracle and verify everything yourself, you need to:
+1. Trust that the TEE itself is correctly manufactured.
+2. Verify that the enclave image is correct. To do so, you need to
+    1. build the oracle docker image,
+    2. convert the docker image to a Nitro Enclave image,
+    3. verify that the Nitro Enclave image hash is correct (i.e. the hash Galadriel's TEE oracle uses is equal to the hash you received), proving that the enclave image is correctly assembled from the docker image.
+3. Verify the attestation that a TEE-executed oracle is correct, and the enclave image hash included in the attestation matches the hash from step (2.3).
+
+Step (2) is complex and requires nuanced setup in AWS. Step (3) is relatively simple, computationally cheap, and can in principle be done in-browser.
+
 See more details about the TEE setup in the following links.
 
+* An [interactive explanation](https://teeml.galadriel.com/) of the TEE setup and verification.
+* Repository containing the enclave setup and instructions for verifying attestations: see [galadriel-ai/teeML](https://github.com/galadriel-ai/teeML.git).
 * [Oracle contract](https://github.com/galadriel-ai/contracts/blob/main/contracts/contracts/ChatOracle.sol)
 * [Oracle back-end code](https://github.com/galadriel-ai/contracts/tree/main/oracles)
-* Enclave setup and how to verify attestations: see [galadriel-ai/teeML](https://github.com/galadriel-ai/teeML.git)
 
 
 ## See also
