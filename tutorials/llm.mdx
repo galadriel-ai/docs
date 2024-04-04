@@ -1,5 +1,5 @@
 ---
-title: "How to call an LLM"
+title: "Calling an LLM"
 ---
 
 
@@ -9,8 +9,8 @@ In this tutorial, we'll build up a custom ChatGPT-like chatbot step by step usin
 
 You can read this tutorial as-is to understand the basics of calling an LLM. However, to deploy the contract and interact with it, you will need:
 
-- A Galadriel devnet account. For more information on setting up a wallet, visit [Setting Up A Wallet](/setting-up-a-wallet.mdx).
-- Some devnet tokens. Get your free devnet tokens from the [Faucet](/faucet.mdx).
+- A Galadriel devnet account. For more information on setting up a wallet, visit [Setting Up A Wallet](/setting-up-a-wallet).
+- Some devnet tokens. Get your free devnet tokens from the [Faucet](/faucet).
 
 ### Create a New Contract
 
@@ -28,7 +28,7 @@ contract ChatGpt {
 
 ### Set the Oracle Address
 
-The oracle address is critical for making requests to LLMs -- to generate text with an LLM, you need to call the oracle (see [How it works](/how-it-works.mdx) for details). Let's modify the constructor to initialize and store the oracle address in the constructor to ensure your contract can interact with it:
+The oracle address is critical for making requests to LLMs -- to generate text with an LLM, you need to call the oracle (see [How it works](/how-it-works) for details). Let's modify the constructor to initialize and store the oracle address in the constructor to ensure your contract can interact with it:
 
 ```solidity
 address private owner;
@@ -56,7 +56,7 @@ function setOracleAddress(address newOracleAddress) public onlyOwner {
 }
 ```
 
-Later in this tutorial, when deploying the contract, we will set this address to the concrete address of a [Galadriel-provided oracle](/oracle-address.mdx).
+Later in this tutorial, when deploying the contract, we will set this address to the concrete address of a [Galadriel-provided oracle](/oracle-address).
 
 ### Oracle interface
 
@@ -236,12 +236,13 @@ function onOracleLlmResponse(
 
 That's it -- if you now deploy the contract to the Galadriel Devnet, you can start chatting with your on-chain chatbot. Note that we did not add a [system message](https://platform.openai.com/docs/guides/text-generation/chat-completions-api) yet -- to customize your chatbot's instructions you can add a system message at the beginning of the conversation history.
 
-You can find the full contract file [here](https://github.com/galadriel-ai/contracts/blob/main/contracts/contracts/ChatGpt.sol) (ordered slightly differently).
+You can find the full ChatGPT contract file [here](https://github.com/galadriel-ai/contracts/blob/main/contracts/contracts/ChatGpt.sol). The code in that contract is ordered slightly differently, and contains additions covered in the [Retrieval-augmented generation tutorial](/tutorials/rag).
 
 ### What's Next?
 
 Congratulations on deploying your on-chain ChatGPT! Explore further:
 
+- Implement a more advanced chatbot by adding [retrieval-augmented generation](/tutorials/rag) to your contract.
 - Dive deeper into the Galadriel documentation, particularly the [How It Works](/how-it-works) section, to understand the underlying technology.
 - Experiment with different LLMs, e.g. Groq-hosted open-source LLMS or take control over the nuances of text generation: see [Solidity reference](/reference).
 - Explore other [Use Cases](/use-cases) to get inspired for your next project.
