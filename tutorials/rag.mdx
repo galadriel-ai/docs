@@ -96,15 +96,23 @@ You can put anything you want into the knowledge base, as long as it can be conv
 
 ## Index the knowledge base
 
-Now we can execute the script that will extract the text from the documents in the `kb/` directory and upload them to IPFS. After uploading the documents, the script will request the oracle to index the documents. Once the index is complete, the script will output the IPFS link to the index.
+Now we can execute the script that will extract the text from the documents in the `kb/` directory and upload them to IPFS. After uploading the documents, the script will request the oracle to index the documents. Once the index is complete, the script will output the IPFS hash of the index.
 
-The output of the script should look like this:
+The execution of the script should look like this:
 
 ```plaintext
-TODO
+$ python add_knowledge_base.py -d kb -s 1500
+[Loading 2 files from kb.]
+Processing Files: 100%|██████████████████████| 2/2 [00:08<00:00,  4.19s/file]
+Generated 78 documents from 2 files.
+Uploading documents to IPFS, please wait...done.
+Requesting indexing, please wait...done.
+Waiting for indexing to complete...done.
+Knowledge base indexed, index CID `QmdVEfixTc7qf7HQLN6UqxPsiMKSDcdKx3fSjiri2MRAfR`.
+Use CID `bafkreiduon46ccwwteicuqwjwikd43f7mt7xzpp6kjdheducgzoex555xa` in your contract to query the indexed knowledge base.
 ```
 
-Make sure you store the index IPFS link from this output as we will need it later -- in this example it is `TODO`.
+Make sure you store the index IPFS CID from this output as we will need it later -- in this example it is `bafkreiduon46ccwwteicuqwjwikd43f7mt7xzpp6kjdheducgzoex555xa`.
 
 ## Integrating in your contract
 
