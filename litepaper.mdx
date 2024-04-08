@@ -1,5 +1,3 @@
-![](/images/og_image.png)
-
 # The Creation of a New Species
 
 Today, we are on the cusp of inventing a new species on this planet—one that runs on silicon and, in evolutionary terms, is evolving orders of magnitudes faster than anything else this planet has seen. This can be observed in the 1000x AI compute increase in the past eight years on the left image as well, measured in the model's capability increase as seen on the right image. In 2018, Elon Musk wrote the following letter to the founders of OpenAI.
@@ -29,8 +27,8 @@ As a team, we have worked in cybersecurity, AI safety, and Web3 since 2015,. Thr
 Besides the lack of safety, another glaring problem is the lack of ownership and governance. In the '90s, there was a strong push for corporate networks by the likes of Microsoft, AOL, etc., meaning that the Internet would be corporate-owned, taxed, and controlled - imagine the Internet being like the App Store. Today, AI is akin to the 90's corporate intranets where they live on their permissioned and closed-off islands. AI will be the biggest wealth creator throughout human history, but suppose it is solely owned and governed by a handful of existing Web2 monopolies as of today. In that case, the most likely outcome is extreme wealth disparity because of their extractive economic model. Imagine in 5 years OpenAI's frontier model being able to conduct 50% of the workforce. OpenAI is predicting outcomes as such in its recent research: [GPTs are GPTs: An Early Look at the Labor Market Impact Potential of Large Language Models](https://arxiv.org/pdf/2303.10130.pdf). In the next coming years, AI will introduce a large scale workforce dislodge and seen in the chart below.
 
 ![Exposure to LLMs by industry, from the paper GPTs are GPTs](/images/litepaper/Untitled%202.png)
+<center>*Exposure to LLMs by industry, from the paper GPTs are GPTs*</center>
 
-Exposure to LLMs by industry, from the paper GPTs are GPTs
 
 Furthermore, no right-minded entrepreneur will build today on top of Facebook because it shut down all of the companies on its platform, most famously Zynga - almost all of the large Web2 platforms followed the same model with high take rates and anti-competitive behaviour. In a world where AI is closed and owned by a few oligopolies, there is no opportunity for people to own what they build, receive fair compensation for it, or have a say in its progress.
 
@@ -242,14 +240,13 @@ All of the above solutions are developing fast but still infeasible today for fr
 As the first step, we aim to bring verifiable inference on-chain, which is low latency and cost-competitive. The reasoning is that initially, we don't expect that most AI apps or agents require high computation integrity, which would, for example, be necessary in the case of enabling DeFi with ML. Instead, low latency, throughput, and cost are much more critical. To achieve those constraints, we developed [teeML: Trusted Execution Environment for Machine Learning Inference](https://github.com/galadriel-ai/teeML). It enables the querying of any of the existing LLM APIs, both for open and closed-source models, in a low latency, low cost, and verifiable manner. teeML node is run off-chain along with an on-chain oracle contract. Developers only need to call out the oracle contract, and a result is returned to them with a call-back. The teeML generates an attestation of the correct code execution, which anybody can verify off-chain.
 
 ![teeML execution flow](/images/litepaper/Untitled%203.png)
+<center>*teeML execution flow*</center>
 
-teeML execution flow
-
-Trusted execution environments (TEEs) have also been recently [proposed to solve Ethereum's MEV](https://www.youtube.com/watch?v=Xq7oWtiwWII&t=2218s) by producing ETH blocks in TEEs, which show its promise in blockchain applications. teeML's strengths are low latency, cost, and high throughput. On the downside, it can't be verified on-chain, which means it's not a fully trustless system. We at Galadriel run the teeML oracle, which means it's akin to a centralized sequencer in the case of L2s. For a more trustless setup, developers can also fork or run their own teeML oracle if they choose to. We also aim to incentivize more oracles to provide on-chain inference. 
+Trusted execution environments (TEEs) have also been recently [proposed to solve Ethereum's MEV](https://www.youtube.com/watch?v=Xq7oWtiwWII&t=2218s) by producing ETH blocks in TEEs, which show its promise in blockchain applications. teeML's strengths are low latency, cost, and high throughput. On the downside, enclaves can be potentially exploited by a well funded adversary and [attacks along with mitigation techniques have been published](https://opaque.co/how-to-defend-against-side-channel-attacks-on-sgx/). As well, enclave execution can't be fully verified on-chain, thus it's not a fully trustless system. We at Galadriel run the teeML oracle, which means it's akin to a centralized sequencer in the case of L2s. For a more trustless setup, developers can also fork or run their own teeML oracle if they choose to. We also aim to incentivize more oracles to provide on-chain inference. 
 
 ### Validator level inference
 
-teeML is only the first step and as part of our roadmap, we are planning to develop a fully verifiable AI inference on the node level that can run any open-source model. This meets the needs of securing high TVL use cases as it is trustless and is part of the network consensus. We will be writing more about this in the future.
+teeML is the first step towards progressive decentralization and as part of our roadmap, we are planning to develop a fully verifiable AI inference on the node level that can run any open-source model. This meets the needs of securing high TVL use cases as it is trustless and is part of the network consensus. We will be writing more about this in the future.
 
 ### Low-latency, low-cost, parallel execution EVM
 
@@ -325,14 +322,13 @@ Today, multi-agent systems follow similar mechanics, and Web3 provides them nati
 We loved when NFTs hit the mainstream because they brought culture on-chain and showed that Web3 can be more than just serious financial applications. AI opens up a new experimentation canvas for artists and developers alike. For example, imagine generative NFTs that are constantly changing and evolving. Or, imagine your favorite meme coin becoming alive and having a much deeper connection with it - might it be dogwifhat, Pepe, or Doge.
 
 ![On-chain Midjourney: [https://minter.galadriel.com/](https://minter.galadriel.com/)](/images/litepaper/Untitled%205.png)
-
-On-chain Midjourney: [https://minter.galadriel.com/](https://minter.galadriel.com/)
+<center>*On-chain Midjourney: [https://minter.galadriel.com/](https://minter.galadriel.com/)*</center>
 
 We also imagine use cases where existing centralized products will be decentralized, which can lead to better products with the right incentives. For example, in the same way, Farcaster is building a user-owned social media platform, we envision developers building [user-owned ChatGPT](https://github.com/galadriel-ai/contracts/blob/main/contracts/contracts/ChatGpt.sol), Midjourney, [Character.ai](http://Character.ai), etc. 
 
 ![On-chain ChatGPT: [https://chatgpt.galadriel.com/](https://chatgpt.galadriel.com/)](/images/litepaper/Screenshot_2024-03-19_at_15.32.29.png)
+<center>*On-chain ChatGPT: [https://chatgpt.galadriel.com/](https://chatgpt.galadriel.com/)*</center>
 
-On-chain ChatGPT: [https://chatgpt.galadriel.com/](https://chatgpt.galadriel.com/)
 
 ### AI Gaming & Simulations
 
@@ -343,18 +339,23 @@ Imagine a world where AI agents live and interact with each other in a virtual e
 We also see games where AI agents compete against each other, and users can bet on winners, like [hamsters.gg](http://hamsters.gg/), or users can compete themselves with on-chain AI to win prizes. As an example, we built [VitAIlik: an RPG game](https://vitailik.galadriel.com/) where users can battle with an on-chain AI version of Vitalik. Every game is new, as AI generates the lore and gameplay dynamically. Much more of future gaming will be dynamically generated by AI based on the users' preferences, and we see many of them coming on-chain.
 
 ![VitAIlik game built on Galadriel](/images/litepaper/Screenshot_2024-03-13_at_17.53.54.png)
+<center>*On-chain VitAIlik game: [https://vitailik.galadriel.com/](https://vitailik.galadriel.com/)*</center>
 
-VitAIlik game built on Galadriel
+### Finance & Settlement Layer for AI
 
-### AI Economy & Finance
+We believe, in the long term, AI will drive GDP growth in the world most through its ability to conduct business between companies on a global scale. Effectively, companies are going from operating at a human speed to machine speed. It's like the Internet made information move at the speed of light, but now it's for whole companies. For this, a native payment and settlement layer is necessary where AI agents can exchange money in a trustless manner for the exchanged services. 
 
-Imagine you are part of a DAO but the managing of the treasury is in the hands of humans, which need trust and the DAO is also missing out on many investments because of lack of consensus. This is exact problem we've seen in our DAO and to solve it we are developing DAO Treasury AI.
+Secondly, imagine you are part of a DAO but the managing of the treasury is not trustless. We've seen the exact problem in many DAOs and this could for example be solved by an AI DAO.
 
 ![An AI DAO where the treasury is managed by AI agents](/images/litepaper/Untitled%207.png)
+<center>*An AI DAO where the treasury is managed by AI agents*</center>
 
-An AI DAO where the treasury is managed by AI agents
+Furthermore, we see endless opportunities where AI can improve today's Web3 products or create new categories by giving AI money and thus increasing its utility:
 
-Furthermore, we see the following use cases: payment network for agents, automated yield farming, agent based prediction markets, on-chain insurance & hedge funds managed by AI and all sorts of incentive designs for progressing AI.
+* Automated yield farming;
+* Agent-based prediction markets;
+* On-chain insurance run by AI;
+* Hedge funds managed by AI;
 
 ### Let 1000 flowers blossom
 
@@ -372,23 +373,23 @@ Besides, the core product there's fundamental research to be conducted on the fo
 
 ### Devnet
 
-Galadriel's Devnet is now out. During devnet developers can build working on-chain AI agents and applications. The focus is on developing the core technology and quickly iterating the product along with user needs. We expect to make many big architectural changes during the devnet as the full spec is yet to be implemented. 
+Galadriel's Devnet is out now. During devnet developers can build working on-chain AI agents and applications. The focus is on developing the core technology, quickly iterating the product along with user needs and progressively decentralizing. We expect to make many big architectural changes during the devnet as the full chain spec is yet to be implemented. 
 
 ### Testnet
 
-After the validation of the design and architecture during devnet, we aim to lock the chain spec and release a testnet. It will act as the final testing ground before mainnet together with a security audit. We seek to reward and incentivise the early adopters and community members. 
+After the validation of the design and architecture during devnet, we aim to lock the chain spec and release a testnet. Biggest upgrade will be in bringing AI inference on the validator level so the network can achieve highest security and verifiability guarantees. It will act as the final testing ground before mainnet together with a security audit. We seek to reward and incentivise the early adopters and community members. 
 
 ### Mainnet
 
 Following the successful iterations and invaluable feedback garnered through our testnet phase, we will launch Galadriel's mainnet. In line with our tradition of rewarding early adopters and community members, the mainnet launch will distribute incentives and introduce new reward mechanisms. 
 
-# Join the mission in building a safe, citizen owned AI
+# Vision of Ethereum for AI
 
-Galadriel's long-term vision towards becoming ETH for AI is following:
+Galadriel's mission is to build **safe, citizen owned AI by building ETH for AI**. Our long-term vision can be unpacked as:
 
-1. Build the first L1 for AI;
-2. Use that to onboard FLOPS to the network;
-3. Use that to onboard user data to the network;
-4. While doing above, become the world's biggest AI safety network where crypto-incentives drive humanity to align AI.
+1. Build the first L1 for AI which acts as the settlement layer for AI, driving real GDP growth.
+2. Provide direct ownership and democratic governance over AI.
+3. Become the most secure rails for AI deployment and largest applied safety network where crypto-incentives drive humanity to align AI.
 
-What is the future of AI? Will it be closed, corporate-owned, or safe and user-owned? Become a pirate and join the mission - provide feedback, questions, and stress test the existing approach. One thing is certain: the only way to predict the future is to invent it.
+
+What is the future of AI? Will it be closed, corporate-owned, or safe and user-owned? Become a Galadrian and join the mission in making the latter happen.
