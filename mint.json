@@ -57,7 +57,7 @@
       "pages": [
         "quickstart",
         "how-it-works",
-        "features",
+        "teeML-features",
         {
           "group": "Tutorials",
           "pages": [
