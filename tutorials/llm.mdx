@@ -14,7 +14,7 @@ You can read this tutorial as-is to understand the basics of calling an LLM. How
 
 ### Create a New Contract
 
-Let's start by creating a new Solidity file. We'll incrementally build add to that file to build up our chatbot.
+Let's start by creating a new Solidity file. We'll incrementally add to that file to build up our chatbot.
 
 ```solidity
 pragma solidity ^0.8.9;
@@ -208,7 +208,7 @@ Note that the `chatId` the oracle passes in will be the same ID we passed to `cr
 
 At this point, we have implemented everything the oracle needs to process the response on their side. However, we need a way for the oracle to post a response back to our contract. For this, we need to implement a callback function `onOracleLlmResponse` that the oracle can call once it has processed the response.
 
-The function should take three arguments: the `runId` (the chat ID we passed in `createLlmCall`), the `response` (the response from the LLM), and an `errorMessage` (non-empty iff there was an error). The function should only be callable by the oracle, so we add a `onlyOracle` modifier to ensure this.
+The function should take three arguments: the `runId` (the chat ID we passed in `createLlmCall`), the `response` (the response from the LLM), and an `errorMessage` (non-empty if there was an error). The function should only be callable by the oracle, so we add a `onlyOracle` modifier to ensure this.
 
 The function first checks if the last message in the conversation was from the user. If it wasn't, the function reverts, as the user should always respond to the assistant's messages. The function then creates a new message with the response from the LLM and adds it to the conversation. The function increments the message count.
 
@@ -244,7 +244,7 @@ Congratulations on deploying your on-chain ChatGPT! Explore further:
 
 - Implement a more advanced chatbot by adding [retrieval-augmented generation](/tutorials/rag) to your contract.
 - Dive deeper into the Galadriel documentation, particularly the [How It Works](/how-it-works) section, to understand the underlying technology.
-- Experiment with different LLMs, e.g. Groq-hosted open-source LLMS or take control over the nuances of text generation: see [Solidity reference](/reference).
+- Experiment with different LLMs, e.g. Groq-hosted open-source LLMS or take control over the nuances of text generation: see [Solidity reference](/reference) and the [example contract](https://github.com/galadriel-ai/contracts/blob/main/contracts/contracts/GroqChatGpt.sol).
 - Explore other [Use Cases](/use-cases) to get inspired for your next project.
 
 Happy building!

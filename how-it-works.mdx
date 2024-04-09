@@ -16,13 +16,13 @@ The core of how Galadriel enables on-chain AI is the **oracle**.
 
 The oracle enables contracts to make external API calls (including LLMs). It offers an interface for Solidity contracts on the Galadriel chain to call out LLMs or other models, use tools, and retrieve data.
 
-The oracle is implemented as contract that is called asynchronously and has an off-chain component. This is similar in architecture to ChainLink. However, because tool calls (e.g. web searches) and LLM calls do not produce deterministic results nor cannot be averaged, consensus on those requests is not possible. To solve this, we execute the oracle in a trusted execution environment -- see the [TEE section](#tee).
+The oracle is implemented as a contract that is called asynchronously and has an off-chain component. This is similar in architecture to ChainLink. However, because tool calls (e.g. web searches) and LLM calls do not produce deterministic results nor cannot be averaged, consensus on those requests is not possible. To solve this, we execute the oracle in a trusted execution environment -- see the [TEE section](#tee).
 
 To make your own on-chain AI, you need to build your Solidity contract in a specific way to interact with the oracle. Making a call to most contracts on EVM chains is synchronous: the call is made, and the result is returned immediately. However, the oracle is asynchronous: the call is made, and the result is returned later, when the oracle has finished processing the request off-chain. The async nature of the oracle is because on-chain programs cannot typically execute long-running tasks (block time is the ceiling on execution time).
 
 Due to the above, to make a call to an LLM, generative image model, external tool, or anything else via the oracle you need to use a callback function. This function is called by the oracle when the result is ready.
 
-The oracle sits atop an parallel, EVM-compatible Layer 1, based on Cosmos SDK & Sei v2.
+The oracle sits atop a parallel, EVM-compatible Layer 1, based on Cosmos SDK & Sei v2.
 
 ## Usage patterns
 
@@ -76,7 +76,7 @@ For details on implementation, please see the [Solidity reference](/reference).
 
 AI agents are more complicated. The core of an AI agent is a loop. In each iteration, the output of an LLM call determines what tool to use (e.g. web search), or whether the agent should terminate. After the tool is executed, its output is fed back into the next iteration, where the LLM decides on the next action, etc.
 
-To make an on-chain agent with Galadriel, your callback (that is called when the oracle is ready) needs to contain code for choosing what to do next. For agent, this will typically be one of:
+To make an on-chain agent with Galadriel, your callback (that is called when the oracle is ready) needs to contain code for choosing what to do next. For agents, this will typically be one of:
 
 1. Terminate (if the task is complete, or impossible)
 2. Make a call to an LLM
