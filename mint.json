@@ -62,7 +62,8 @@
           "group": "Tutorials",
           "pages": [
             "tutorials/llm",
-            "tutorials/rag"
+            "tutorials/rag",
+            "tutorials/agents"
           ]
         },
         {
