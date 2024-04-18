@@ -2,6 +2,10 @@ The two methods in combination -- `getMessageHistoryContents` and `getMessageHis
 
 The methods should each return a list, one with message contents and the other listing the roles of the message authors. The list lengths should be equal for a given `callbackId`.
 
+<Tip>
+For certain advanced models, such as the `gpt-4-turbo`, which can handle complex queries including those with image URLs, a more integrated approach is used. This is facilitated through the [`getMessageHistory`](#getmessagehistory)  method, which provides both the message roles and contents in a structured format suitable for processing by these models.
+</Tip>
+
 For example, if the message history is the following:
 
 
@@ -56,4 +60,24 @@ The signatures of these methods should be:
 
 <ResponseField name="return" type="string[]">
   A list of message contents.
+</ResponseField>
+
+#### getMessageHistory
+
+For models like `gpt-4-turbo`, the getMessageHistory method is used to fetch a combined structure of messages, which includes both the content and the role within a single response. This method simplifies handling more complex data formats and supports enhanced features like image processing.
+
+**Arguments**
+
+<ParamField path="callbackId" type="uint">
+  The identifier you passed into the `createLlmCall` method.
+</ParamField>
+
+**Returns**
+
+<ResponseField name="return" type="IOracle.Message[]">
+An array of [IOracle.Message](https://github.com/galadriel-ai/contracts/blob/main/contracts/contracts/interfaces/IOracle.sol), where each message structure contains:
+* <ParamField path="role" type="string">The role of the message sender (e.g., system, user, assistant).</ParamField>
+* <ParamField path="content" type="IOracle.Content[]">An array of Content, where each Content includes:</ParamField>
+    - <ParamField path="contentType" type="string">`text` or `image_url`, specifies whether the content is text or an image.</ParamField>
+    - <ParamField path="value" type="string">The actual message or image URL.</ParamField>
 </ResponseField>
