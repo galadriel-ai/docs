@@ -156,6 +156,10 @@ These two methods in combination are used to provide the oracle with the message
 
 The methods should each return a list, one with message contents and the other listing the roles of the message authors. The list lengths should be equal for a given `callbackId`.
 
+<Tip>
+For certain advanced models, such as the `gpt-4-turbo`, which can handle complex queries including those with image URLs, a more integrated approach is used. This is facilitated through the [`getMessageHistory`](/reference/llms/message-history/#getmessagehistory)  method, which provides both the message roles and contents in a structured format suitable for processing by these models.
+</Tip>
+
 For example, if the message history is the following:
 
 
