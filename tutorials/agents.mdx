@@ -205,8 +205,8 @@ function onOracleOpenAiLlmResponse(
     AgentRun storage run = agentRuns[runId];
     if (!compareStrings(errorMessage, "")) {
         Message memory assistantMessage;
-        newMessage.role = "assistant";
-        newMessage.content = errorMessage;
+        assistantMessage.role = "assistant";
+        assistantMessage.content = errorMessage;
         run.messages.push(assistantMessage);
         run.responsesCount++;
         run.is_finished = true;
@@ -232,6 +232,30 @@ function onOracleOpenAiLlmResponse(
         run.is_finished = true;
     }
 }
+```
+#### Example run with an LLM loop
+Using the [example agent script](https://github.com/galadriel-ai/contracts/blob/main/examples/agent.ts), we can try running our agent.
+```
+Agent's task: Who is the president of United States?
+Max iterations: 5
+Task sent, tx hash: 0x20418bcd17d5c8714c59f4ccab02c8d45eb9c368523f53f45e1eb58af3296c03
+Agent started with task: "Who is the president of United States?"
+Created agent run ID: 0
+STEP: You are a helpful assistant
+STEP: Who is the president of United States?
+THOUGHT: As of my last update in 2023, Joe Biden is the President of the United States. He was inaugurated as the 46th president on January 20, 2021.
+STEP: Please elaborate!
+THOUGHT: Joe Biden, whose full name is Joseph Robinette Biden Jr., is an American politician from the Democratic Party who assumed office as the 46th President of the United States on January 20, 2021. Before becoming president, Joe Biden had a long and distinguished career in public service. He was born on November 20, 1942, in Scranton, Pennsylvania, and later moved to Delaware. 
+
+Biden's early entry into politics saw him elected to the New Castle County Council in 1970. Just two years later, at the age of 29, he made a significant leap into national politics by winning a seat in the U.S. Senate, representing Delaware. He would go on to serve in the Senate for 36 years, making him one of the longest-serving senators in American history. During his tenure in the Senate, Biden was known for his work on foreign relations, criminal justice, and drug policy. He served as the Chairman of the Senate Judiciary Committee and was also the Chairman of the Senate Foreign Relations Committee for several years.
+
+In 2008, Joe Biden was elected Vice President of the United States as the running mate of Barack Obama. He served two terms as Vice President from 2009 to 2017. Their administration was notable for its efforts in healthcare reform, economic recovery following the Great Recession, and foreign policy achievements, including the operation that led to the death of Osama bin Laden.
+
+After briefly retiring from public office following his vice presidency, Biden announced his candidacy for the 2020 presidential election. He won the Democratic nomination and went on to defeat the incumbent, Donald Trump, in the November 2020 election. The Biden-Harris ticket’s victory was historic for several reasons, including Kamala Harris becoming the first female Vice President, as well as the highest-ranking female official in U.S. history, and the first African American and Asian American Vice President.
+
+President Biden's administration has focused on addressing the COVID-19 pandemic, economic recovery, climate change, and civil rights. Biden has emphasized unity and healing for the nation, aiming to bridge the political divide and address the challenges facing America in the 21st century.
+agent run ID 0 finished!
+Done
 ```
 
 
@@ -318,7 +342,6 @@ function onOracleFunctionResponse(
 
 #### Example run with `web_search` tool
 
-Using a [utility script](https://github.com/galadriel-ai/contracts/blob/main/examples/agent.ts), we can try running our agent.
 ```
 Agent started with task: "What is the weather like in New York?"
 Created agent run ID: 0
