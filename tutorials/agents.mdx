@@ -194,7 +194,7 @@ function onOracleOpenAiLlmResponse(
 
 So far we've made an agent that makes one LLM query and finishes the run. We will now try to modify our agent to make one extra LLM call after getting results from a previous one, thus creating an agent loop.
 
-Let's modify our `onOracleOpenAiLlmResponse` to do so. Upon successful response from the Oracle, the agent will ask for more details. We can track agent steps by checking the `responsesCount` variable and make a decision about whether we need more clarification or we can end the run.
+Let's modify our `onOracleOpenAiLlmResponse` to do so. Upon successful response from the Oracle, the agent will ask for more details. We can track agent steps by checking the `responsesCount` variable and make a decision about whether the agent should make another loop (as the result is incomplete) or end the run.
 
 ```solidity
 function onOracleOpenAiLlmResponse(
@@ -584,6 +584,8 @@ contract Agent {
 }
 ```
 
+The most recent version is available on the [GitHub repository](https://github.com/galadriel-ai/contracts/blob/main/contracts/contracts/Agent.sol).
+
 #### Final run
 
 ```
@@ -603,3 +605,13 @@ agent run ID 1 finished!
 Done
 ```
 <img src="/images/newyork.png"/>
+
+### What's Next?
+
+Congratulations on your own on-chain Agent! Explore further:
+
+- Implement a more advanced agent by adding [retrieval-augmented generation](/tutorials/rag) to your contract.
+- Dive deeper into the Galadriel documentation, particularly the [How It Works](/how-it-works) section, to understand the underlying technology.
+- Explore other [Use Cases](/use-cases) to get inspired for your next project.
+
+Happy building!
