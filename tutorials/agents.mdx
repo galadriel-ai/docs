@@ -1,3 +1,4 @@
+import {agentAddress} from '/snippets/addresses.mdx';
 
 ### Introduction
 
@@ -6,8 +7,11 @@ AI agents are a specific kind of AI application. They are mainly defined by two 
 A common example is a researcher AI agent. Given tools for searching the web, browsing websites, and perhaps storing outputs in a scratch file, the agent assembles a report on a particular topic. After every loop the LLM decides the next action (use a tool or any other custom action defined by the dev), given the progress it's had so far.
 
 In this tutorial, our goal will be to create a simple agent that can create images based on live information, e.g. the current weather in the user's chosen location.
+
 <Tip>
     Try out and see the agent in action using the [script](https://github.com/galadriel-ai/contracts/blob/main/examples/agent.ts) that calls already deployed contract.
+
+    Deployed contract address: {agentAddress}
 </Tip>
 
 ### Prerequisites
