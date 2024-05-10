@@ -40,11 +40,16 @@ constructor(address initialOracleAddress) {
 }
 ```
 
-We also need a function to update the oracle address. As the oracle's address may change, it's necessary to have a mechanism to update it without redeploying the contract. This functionality is encapsulated in the `setOracleAddress` function, guarded by the `onlyOwner` modifier to ensure only the contract owner can update it. We also emit an event whenever the oracle address is updated.
+We also need a function to update the oracle address. As the oracle's address may change, it's necessary to have a mechanism to update it without redeploying the contract. This functionality is encapsulated in the `setOracleAddress` function, guarded by the `onlyOwner` modifier to ensure only the contract owner can update it. `onlyOracle` ensures that only the oracle contract can send back the LLM response to this contract.
 
 ```solidity
 modifier onlyOwner() {
     require(msg.sender == owner, "Caller is not owner");
+    _;
+}
+
+modifier onlyOracle() {
+    require(msg.sender == oracleAddress, "Caller is not oracle");
     _;
 }
 
@@ -61,6 +66,8 @@ Later in this tutorial, when deploying the contract, we will set this address to
 ### Oracle interface
 
 To interact with the oracle, we need to define an interface. This interface should include the `createLlmCall` function, which is used to trigger the oracle to make a request to the LLM.
+
+Define this outside the main `ChatGpt` contract object.
 
 ```solidity
 interface IOracle {
