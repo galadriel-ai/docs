@@ -62,6 +62,7 @@
           "group": "Tutorials",
           "pages": [
             "tutorials/llm",
+            "tutorials/multimodal",
             "tutorials/rag",
             "tutorials/agents"
           ]
