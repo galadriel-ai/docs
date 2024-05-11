@@ -227,7 +227,7 @@ The function first checks if the last message in the conversation was from the u
 function onOracleLlmResponse(
     uint runId,
     string memory response,
-    string memory errorMessage
+    string memory /*errorMessage*/
 ) public onlyOracle {
     ChatRun storage run = chatRuns[runId];
     require(
