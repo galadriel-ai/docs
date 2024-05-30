@@ -1,8 +1,8 @@
 ## FAQ for not getting answers back from oracle
 
-### 1. Is the correct oracle been whitelisted?
+### 1. Is the correct oracle address whitelisted?
 
-Correct oracle address is available here: https://docs.galadriel.com/quickstart
+The correct oracle address is available here: https://docs.galadriel.com/quickstart
 
 ### 2. Do you have funds on your address?
 
@@ -10,16 +10,16 @@ Can check from the explorer: [https://explorer.galadriel.com/address/](https://e
 
 ### 3. Is your contract deployed?
 
-Can you see your contract in here: [https://explorer.galadriel.com/address/](https://explorer.galadriel.com/address/0x4168668812C94a3167FCd41D12014c5498D74d7e)my_contract_address
+Can you see your contract in here: [https://explorer.galadriel.com/address/my_contract_address](https://explorer.galadriel.com/address/my_contract_address)
 
 ### 4. Can you get an answer with the quickstart?
 
 Did you try out the service with the quickstart tutorial?
 https://docs.galadriel.com/quickstart
 
-### 5. Was the tx send to oracle?
+### 5. Was the tx sent to the oracle?
 
-Check explorer for your own account: [https://explorer.galadriel.com/address/](https://explorer.galadriel.com/address/0x4168668812C94a3167FCd41D12014c5498D74d7e)my_wallet_address
+Check the explorer for your own account: [https://explorer.galadriel.com/address/my_wallet_address](https://explorer.galadriel.com/address/my_wallet_address)
 
 Do you see a successful tx?
 
@@ -27,11 +27,11 @@ Do you see a successful tx?
 
 Have you tested your code? Can you send back answers to your own contract?
 
-If your code has an error in the callback function and the tx gets reverted then then the Oracle just can’t send the response back. Make sure you can yourself call this function on your contract: https://github.com/galadriel-ai/contracts/blob/45bf72707adc21c5b2d3a2f95ac337ff4dde006c/contracts/contracts/interfaces/IChatGpt.sol#L13
+If your code has an error in the callback function and the tx gets reverted then the Oracle just can’t send the response back. Make sure you yourself can call this function on your contract: https://github.com/galadriel-ai/contracts/blob/45bf72707adc21c5b2d3a2f95ac337ff4dde006c/contracts/contracts/interfaces/IChatGpt.sol#L13
 
 Make sure one of the expected interfaces is implemented https://docs.galadriel.com/reference/overview 
 
-### 7. Can oracle get chat history from your contract?
+### 7. Can the oracle get the chat history from your contract?
 
 Can you call out getMessageHistory functions?
 For example this: https://github.com/galadriel-ai/contracts/blob/45bf72707adc21c5b2d3a2f95ac337ff4dde006c/contracts/contracts/interfaces/IChatGpt.sol#L25
