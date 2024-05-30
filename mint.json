@@ -79,7 +79,8 @@
             "reference/rag"
           ]
         },
-        "oracle-address"
+        "oracle-address",
+        "faq"
       ]
     },
     {
