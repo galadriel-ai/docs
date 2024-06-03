@@ -88,33 +88,33 @@ constructor(address initialOracleAddress) {
 }
 ```
 
-8. Swap out the whole `startChat` function to the following. This starts the LLM call with an image URL and text input.
-```solidity
-function startChat(string memory message, string memory imageUrl) public returns (uint i) {
-    ChatRun storage run = chatRuns[chatRunsCount];
+8. Swap out the whole `startChat` function to the following. This starts the LLM call with a list of image URLs and text input.
+In addition to `https` and base64-encoded image `data` URLs, the Oracle supports `ipfs://` URLs too.
 
+```solidity
+function startChat(string memory message, string[] memory imageUrls) public returns (uint i) {
+    ChatRun storage run = chatRuns[chatRunsCount];
     run.owner = msg.sender;
     IOracle.Message memory newMessage = IOracle.Message({
         role: "user",
-        content: new IOracle.Content[](2)
+        content: new IOracle.Content[](imageUrls.length + 1)
     });
     newMessage.content[0] = IOracle.Content({
         contentType: "text",
         value: message
     });
-    newMessage.content[1] = IOracle.Content({
-        contentType: "image_url",
-        value: imageUrl
-    });
+    for (uint u = 0; u < imageUrls.length; u++) {
+        newMessage.content[u + 1] = IOracle.Content({
+            contentType: "image_url",
+            value: imageUrls[u]
+        });
+    }
     run.messages.push(newMessage);
     run.messagesCount = 1;
-
     uint currentId = chatRunsCount;
     chatRunsCount = chatRunsCount + 1;
-
     IOracle(oracleAddress).createOpenAiLlmCall(currentId, config);
     emit ChatCreated(msg.sender, currentId);
-
     return currentId;
 }
 ```
