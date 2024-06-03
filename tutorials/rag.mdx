@@ -13,7 +13,7 @@ You can read this tutorial as-is to understand the basics of RAG with Galadriel.
 - Python 3.11 or later installed on your system.
 - A Galadriel devnet account. For more information on setting up a wallet, visit [Setting Up A Wallet](/setting-up-a-wallet).
 - Some devnet tokens. Get your free devnet tokens from the [Faucet](/faucet).
-- An API key for `nft.storage` to facilitate document uploading to IPFS. You can obtain this key by registering at [nft.storage](https://nft.storage).
+- An API key for `pinata.cloud` to facilitate document uploading to IPFS. You can obtain this key by registering at [pinata.cloud](https://pinata.cloud).
 - The files you want to add to the knowledge base (see [below](#collect-your-knowledge-base-files) for supported formats).
 
 
@@ -66,19 +66,19 @@ Here's how you can setup your environment to create a knowledge base.
         ```
     </Step>
     <Step name="Create a .env file">
-        Create a `.env` file and add your `nft.storage` API key and wallet private key as follows:
+        Create a `.env` file and add your `pinata.cloud` API key and wallet private key as follows:
 
         ```plaintext
         ORACLE_ADDRESS=galadriel_oracle_address
         PRIVATE_KEY=your_wallet_private key
-        NFT_STORAGE_API_KEY=your_api_key_here
+        PINATA_API_KEY=your_api_key_here
         ```
 
         `ORACLE_ADDRESS` should be set to the [current Galadriel oracle address](/oracle-address): **{oracleAddress}**.
 
         `PRIVATE_KEY` will be used to make an indexing request to the oracle. You can use any account as long as it has enough devnet tokens to pay for the transaction.
         
-        `NFT_STORAGE_API_KEY` will be used to upload the documents to IPFS.
+        `PINATA_API_KEY` will be used to upload the documents to IPFS.
     </Step>
 </Steps>
 
