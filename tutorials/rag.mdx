@@ -13,7 +13,7 @@ You can read this tutorial as-is to understand the basics of RAG with Galadriel.
 - Python 3.11 or later installed on your system.
 - A Galadriel devnet account. For more information on setting up a wallet, visit [Setting Up A Wallet](/setting-up-a-wallet).
 - Some devnet tokens. Get your free devnet tokens from the [Faucet](/faucet).
-- An API key for `pinata.cloud` to facilitate document uploading to IPFS. You can obtain this key by registering at [pinata.cloud](https://pinata.cloud).
+- An API key (JWT) for `pinata.cloud` to facilitate document uploading to IPFS. You can obtain this key by registering at [pinata.cloud](https://pinata.cloud).
 - The files you want to add to the knowledge base (see [below](#collect-your-knowledge-base-files) for supported formats).
 
 
@@ -66,7 +66,7 @@ Here's how you can setup your environment to create a knowledge base.
         ```
     </Step>
     <Step name="Create a .env file">
-        Create a `.env` file and add your `pinata.cloud` API key and wallet private key as follows:
+        Create a `.env` file and add your `pinata.cloud` JWT and wallet private key as follows:
 
         ```plaintext
         ORACLE_ADDRESS=galadriel_oracle_address
