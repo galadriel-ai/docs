@@ -4,9 +4,9 @@ title: "Calling an LLM: simple"
 import {oracleAddress} from '/snippets/addresses.mdx';
 
 
-In this tutorial, we’ll build a simple LLM contract using Solidity on Galadriel (Devnet). We’ll use GPT-4-turbo without extra chat history or additional features, to demonstrate how teeML functions and how to call it.
+In this tutorial, we’ll build a simplified LLM contract using Solidity on Galadriel (Devnet).
 
-To use a different LLM like `Claude-3.5-Sonnet`, `Mistral7B`, or [any other available with teeML](https://docs.galadriel.com/teeML-features) follow through with the tutorial and find code references in the end.
+We’ll use `GPT-4-turbo`. To use a different LLM like `Claude-3.5-Sonnet`, `Mistral7B`, or [any other LLM available with teeML](https://docs.galadriel.com/teeML-features) follow through with the tutorial and find code references in the end.
 
 To build an LLM with chat history, a.k.a chat bot, visit [Calling an LLM: advanced](https://docs.galadriel.com/tutorials/llm).
 
@@ -16,25 +16,27 @@ To deploy the contract and interact with it, you will need:
 
 - A Galadriel account. For more information on setting up a wallet, visit [**Setting Up A Wallet**](https://docs.galadriel.com/setting-up-a-wallet).
 - Some tokens for gas fees. Get Galadriel Devnet tokens from the [**Faucet**](https://docs.galadriel.com/faucet).
+- Go through [Quickstart](https://docs.galadriel.com/quickstart) to set up the local dev environment and run the first example.
 
 ### Contract
 
-Below is a simplified solidity contract. We will go over each variable and function below.
+Full contract code is below. The same simplified LLM contracts are also available in the [contracts](https://github.com/galadriel-ai/contracts/tree/main/contracts/contracts) folder. We will use GPT-4-turbo example here and go over each variable and function below.
 
 ```solidity
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.13;
 
-import "https://github.com/galadriel-ai/contracts/blob/main/contracts/contracts/interfaces/IOracle.sol";
+import "./interfaces/IOracle.sol";
 
 contract SimpleLLM {
-    address private oracleAddress = <oracle_address_here>; // https://docs.galadriel.com/oracle-address
-    uint private runId = 0;
-    string public message;
+    address private oracleAddress; // use latest: https://docs.galadriel.com/oracle-address
+    IOracle.Message public message;
     string public response;
     IOracle.OpenAiRequest private config;
 
-    constructor() {
+    constructor(address initialOracleAddress) {
+        oracleAddress = initialOracleAddress;
+
         config = IOracle.OpenAiRequest({
             model : "gpt-4-turbo", // gpt-4-turbo gpt-4o
             frequencyPenalty : 21, // > 20 for null
@@ -52,27 +54,19 @@ contract SimpleLLM {
         });
     }
 
-    function prompt(string memory _message) public {
-        IOracle.Message memory newMessage = IOracle.Message({
-            role: "user",
-            content: new IOracle.Content[](1)
-        });
-        newMessage.content[0] = IOracle.Content({
-            contentType: "text",
-            value: _message
-        });
-        message = _message;
-        IOracle(oracleAddress).createOpenAiLlmCall(runId, config);
+    function sendMessage(string memory _message) public {
+        message = createTextMessage("user", _message);
+        IOracle(oracleAddress).createLlmCall(0, config);
     }
-			
-	// required for Oracle
-    function onOracleOpenAiLlmResponse(
-        uint _runId,
-        IOracle.OpenAiResponse memory _response,
+
+    // required for Oracle
+    function onOracleLlmResponse(
+        uint /*_runId*/,
+        IOracle.LlmResponse memory _response,
         string memory _errorMessage
     ) public {
         require(msg.sender == oracleAddress, "Caller is not oracle");
-        if (keccak256(abi.encodePacked(_errorMessage)) != keccak256(abi.encodePacked(""))) {
+        if (bytes(_errorMessage).length > 0) {
             response = _errorMessage;
         } else {
             response = _response.content;
@@ -80,66 +74,63 @@ contract SimpleLLM {
     }
 
     // required for Oracle
-    function getMessageHistory(uint _runId) public view returns (IOracle.Message[] memory) {
+    function getMessageHistory(
+        uint /*_runId*/
+    ) public view returns (IOracle.Message[] memory) {
+        IOracle.Message[] memory messages = new IOracle.Message[](1);
+        messages[0] = message;
+        return messages;
+    }
+
+    // @notice Creates a text message with the given role and content
+    // @param role The role of the message
+    // @param content The content of the message
+    // @return The created message
+    function createTextMessage(string memory role, string memory content) private pure returns (IOracle.Message memory) {
         IOracle.Message memory newMessage = IOracle.Message({
-            role: "user",
+            role: role,
             content: new IOracle.Content[](1)
         });
-        newMessage.content[0] = IOracle.Content({
-            contentType: "text",
-            value: message
-        });
-        IOracle.Message[] memory newMessages = new IOracle.Message[](1);
-        newMessages[0] = newMessage;
-        return newMessages;
+        newMessage.content[0].contentType = "text";
+        newMessage.content[0].value = content;
+        return newMessage;
     }
 }
 ```
 ### Import
 
-To get started, import all of the required [interfaces](https://github.com/galadriel-ai/contracts/blob/main/contracts/contracts/interfaces/IOracle.sol). This gives the oracle the correct data structure.
+To get started, import all of the required [interfaces](https://github.com/galadriel-ai/contracts/blob/main/contracts/contracts/interfaces/IOracle.sol). This gives the oracle the correct data structure. 
 
 ```solidity
-import "<https://github.com/galadriel-ai/contracts/blob/main/contracts/contracts/interfaces/IOracle.sol>";
+// import "https://github.com/galadriel-ai/contracts/blob/main/contracts/contracts/interfaces/IOracle.sol";
+import "./interfaces/IOracle.sol";
 ```
+<Info>
+GitHub import is commented out as it's not working with local developemnt using Hardhat.
+</Info>
 ### Variables
 
 The address of the teeML [oracle](https://docs.galadriel.com/oracle-address) on Galadriel: **{oracleAddress}**.
 
-For more information on how it works, click [here](https://docs.galadriel.com/how-it-works).
+This needs to be passed in when deploying the contract. For more information on how it works, click [here](https://docs.galadriel.com/how-it-works).
 
 ```solidity
-address private oracleAddress = <oracle_address_here>;
-```
-
-The `runId` variable is an identifier to map the prompt to response. For example,
-
-- `runId` 0 will have
-  - prompt message: tell me about cats
-  - response: cats are…
-- `runId` 1 will have
-  - prompt message: tell me about dogs
-  - response: dogs are…
-
-In this simple example, we’ll set runId to 0 and future prompts will get overwritten.
-
-```solidity
-uint runId = 0;
+address private oracleAddress;
 ```
 
 The `message` variable will store the user input.
 
 ```solidity
-string message; // tell me about cats
+string message; // example: tell me about cats
 ```
 
 The oracle will store the response in the `response` variable.
 
 ```solidity
-string response; // cats are...
+string response; // example: cats are...
 ```
 
-The `config` variable will store the LLM configuration.
+The `config` variable will store the LLM configuration. The example uses configuration for OpenAI LLMs.
 
 ```solidity
 IOracle.OpenAiRequest private config;
@@ -147,10 +138,14 @@ IOracle.OpenAiRequest private config;
 
 ### Constructor
 
-We’ll set our config in the constructor. These will be parameters such as `model`, `temperature`, `seed` etc. For more information, visit [OpenAIRequest object.](https://docs.galadriel.com/reference/llms/openai)
+As mentioned, we'll set the oracle address when deploying the contract, so this needs to be an input for the constructor. 
+
+We’ll also set the LLM config in the constructor. These will be parameters such as `model`, `temperature`, `seed` etc. For more information, visit [OpenAIRequest object](https://docs.galadriel.com/reference/llms/openai).
 
 ```solidity
-constructor() {
+constructor(address initialOracleAddress) {
+    oracleAddress = initialOracleAddress;
+
     config = IOracle.OpenAiRequest({
         model : "gpt-4-turbo", // gpt-4-turbo gpt-4o
         frequencyPenalty : 21, // > 20 for null
@@ -169,91 +164,83 @@ constructor() {
 }
 ```
 
-### sendMessage
+### Send Message Function
 
-Create a public function to initiate the LLM inference. In this example, our function `sendMessage` accepts a string `_message`. An example message is “tell me about cats”.
+A public function to initiate the LLM inference. In this example, our function `sendMessage` accepts a string `_message`.
 
-`sendMessage` will call an oracle with the following parameters
+Notice the `message` variable is not sent to the oracle with `createLlmCall`, but rather stored on the same contract. This is done by the helper function `createTextMessage`.
 
-- `runId` is used to keep track of the messages and prompts
+The oracle will instead read `getMessageHistory` (next step) from this contract to retrieve the message history. This reading (instead of writing) will save on gas and storage.
+
+`createLlmCall` will call an oracle with the following parameters
+
+- `0` an id to keep track of the message and it's response (`runId` in later tutorials)
 - `config` set in the constructor
-
-`sendMessage` will send the values to the [oracle](https://docs.galadriel.com/how-it-works) to process the correct response.
-
-Notice the `message` variable is not sent to the oracle. This is because the oracle will read `getMessageHistory` from this contract to retrieve the message history. This reading (instead of writing) will save on gas and storage.
 
 ```solidity
 function sendMessage(string memory _message) public {
-	// create new message
-  IOracle.Message memory newMessage = IOracle.Message({
-      role: "user",
-      content: new IOracle.Content[](1)
-  });
-  // set value for new message
-  newMessage.content[0] = IOracle.Content({
-      contentType: "text",
-      value: _message
-  });
-  // update message variable for oracle to read
-  message = _message;
-  // create LLM Call for oracle
-  IOracle(oracleAddress).createOpenAiLlmCall(runId, config);
+    message = createTextMessage("user", _message);
+    IOracle(oracleAddress).createLlmCall(0, config);
+}
+```
+```solidity
+function createTextMessage(string memory role, string memory content) private pure returns (IOracle.Message memory) {
+    IOracle.Message memory newMessage = IOracle.Message({
+        role: role,
+        content: new IOracle.Content[](1)
+    });
+    newMessage.content[0].contentType = "text";
+    newMessage.content[0].value = content;
+    return newMessage;
 }
 ```
 
-### getMessageHistory
+### Read Message Function
 
-The `getMessageHistory` function is used to retrieve the message history. In order for the oracle to properly read the message history, the function
+The `getMessageHistory` function is used by the orcale to retrieve the message history, or in this case the only user sent message. 
+
+In order for the oracle to properly read the message history, the function
 
 - Must be called `getMessageHistory`
 - Must be a public view function for the oracle to call
 - Must return type `IOracle.Message[]`
+- Include `unint` parameter to keep track of the user message to respond to (we hardcoded this to `0`)
 
 ```solidity
-function getMessageHistory(uint _runId) public view returns (IOracle.Message[] memory) {
-		// create new message of length 1
-    IOracle.Message memory newMessage = IOracle.Message({
-        role: "user",
-        content: new IOracle.Content[](1)
-    });
-    // set value for message
-    newMessage.content[0] = IOracle.Content({
-        contentType: "text",
-        value: message
-    });
-    // add to array
-    IOracle.Message[] memory newMessages = new IOracle.Message[](1);
-    newMessages[0] = newMessage;
-    // return array of messages
-    return newMessages;
+function getMessageHistory(
+    uint /*_runId*/
+) public view returns (IOracle.Message[] memory) {
+    IOracle.Message[] memory messages = new IOracle.Message[](1);
+    messages[0] = message;
+    return messages;
 }
 ```
+<Info>
+In this example, the contract is returning a list of messages of length 1. To have a longer message history (for a chat bots), loop through and return a list of messages. For this go to [Calling an LLM: advanced](https://docs.galadriel.com/tutorials/llm).
+</Info>
 
-In this example, the contract is returning a list of messages of length 1. To have a longer message history (for a chat bots), loop through and return a list of messages.
+### LLM Response Callback Function
+Once the oracle reads the message, it will forward it to teeML to get a response from the LLM.
 
-Once the oracle reads the message history, the oracle will use teeML to get an LLM response and respond by calling `onOracleOpenAiLlmResponse` in this contract.
+After LLM returns the response to teeML, it gets pushed on-chain back to oracle, and from there the oracle calls `onOracleLlmResponse` callback function in your contract.
 
-### onOracleOpenAiLlmResponse
-
-After the oracle processes the message history, the oracle will respond with a response. In order for the oracle to properly respond, the function
-
-- Must be called `onOracleOpenAiLlmResponse`
-- Include parameter `runId` used to keep track of the prompts (commented out as not used in simple LLM tutorial)
-- Includes parameter `IOracle.OpenAiResponse` with the correct response
+- The funciont must be called `onOracleLlmResponse`
+- Include `unint` parameter to keep track of the user message to respond to (we hardcoded this to `0`)
+- Includes parameter `IOracle.LlmResponse` with the correct response
 - Includes parameter `errorMessage` if an error occurs
 
 ```solidity
-function onOracleOpenAiLlmResponse(
-  uint /*_runId*/,
-  IOracle.OpenAiResponse memory _response,
-  string memory _errorMessage
+function onOracleLlmResponse(
+    uint /*_runId*/,
+    IOracle.LlmResponse memory _response,
+    string memory _errorMessage
 ) public {
-  require(msg.sender == oracleAddress, "Caller is not oracle");
-  if (keccak256(abi.encodePacked(_errorMessage)) != keccak256(abi.encodePacked(""))) {
-    response = _errorMessage;
-  } else {
-    response = _response.content;
-  }
+    require(msg.sender == oracleAddress, "Caller is not oracle");
+    if (bytes(_errorMessage).length > 0) {
+        response = _errorMessage;
+    } else {
+        response = _response.content;
+    }
 }
 ```
 
@@ -277,10 +264,11 @@ string response; // tell me about cats
 
 ### What’s Next?
 
-Congratulations on deploying your first LLM contract!
+Congratulations on building your first LLM smart contract.
 
 **Explore further:**
-
+- [Instructions](https://github.com/galadriel-ai/contracts/tree/main/contracts) on how to deploy the contract on Galadrial Devnet using Hardhat.
+- [Example](https://github.com/galadriel-ai/contracts/tree/main/examples) scripts to call out deployed contracts (currently missing for `SimpleLLM`).
 - Use other LLMs: 
     - [Anthropic Claude-3.5-Sonnet code example](https://github.com/galadriel-ai/contracts/blob/main/contracts/contracts/AnthropicSimpleLLM.sol)
     - [Groq Mistral7B code example](https://github.com/galadriel-ai/contracts/blob/main/contracts/contracts/GroqSimpleLLM.sol)
