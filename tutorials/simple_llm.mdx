@@ -56,7 +56,7 @@ contract SimpleLLM {
 
     function sendMessage(string memory _message) public {
         message = createTextMessage("user", _message);
-        IOracle(oracleAddress).createLlmCall(0, config);
+        IOracle(oracleAddress).createOpenAiLlmCall(0, config);
     }
 
     // required for Oracle
@@ -168,11 +168,11 @@ constructor(address initialOracleAddress) {
 
 A public function to initiate the LLM inference. In this example, our function `sendMessage` accepts a string `_message`.
 
-Notice the `message` variable is not sent to the oracle with `createLlmCall`, but rather stored on the same contract. This is done by the helper function `createTextMessage`.
+Notice the `message` variable is not sent to the oracle with `createOpenAiLlmCall`, but rather stored on the same contract. This is done by the helper function `createTextMessage`.
 
 The oracle will instead read `getMessageHistory` (next step) from this contract to retrieve the message history. This reading (instead of writing) will save on gas and storage.
 
-`createLlmCall` will call an oracle with the following parameters
+`createOpenAiLlmCall` will call an oracle with the following parameters
 
 - `0` an id to keep track of the message and it's response (`runId` in later tutorials)
 - `config` set in the constructor
@@ -180,7 +180,7 @@ The oracle will instead read `getMessageHistory` (next step) from this contract 
 ```solidity
 function sendMessage(string memory _message) public {
     message = createTextMessage("user", _message);
-    IOracle(oracleAddress).createLlmCall(0, config);
+    IOracle(oracleAddress).createOpenAiLlmCall(0, config);
 }
 ```
 ```solidity
