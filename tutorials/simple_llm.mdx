@@ -121,13 +121,13 @@ address private oracleAddress;
 The `message` variable will store the user input.
 
 ```solidity
-string message; // example: tell me about cats
+IOracle.Message public message; // example: tell me about cats
 ```
 
 The oracle will store the response in the `response` variable.
 
 ```solidity
-string response; // example: cats are...
+string public response; // example: cats are...
 ```
 
 The `config` variable will store the LLM configuration. The example uses configuration for OpenAI LLMs.
