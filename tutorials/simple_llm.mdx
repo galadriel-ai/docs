@@ -60,9 +60,9 @@ contract SimpleLLM {
     }
 
     // required for Oracle
-    function onOracleLlmResponse(
-        uint /*_runId*/,
-        IOracle.LlmResponse memory _response,
+    function onOracleOpenAiLlmResponse(
+        uint /*runId*/,
+        IOracle.OpenAiResponse memory _response,
         string memory _errorMessage
     ) public {
         require(msg.sender == oracleAddress, "Caller is not oracle");
@@ -222,17 +222,17 @@ In this example, the contract is returning a list of messages of length 1. To ha
 ### LLM Response Callback Function
 Once the oracle reads the message, it will forward it to teeML to get a response from the LLM.
 
-After LLM returns the response to teeML, it gets pushed on-chain back to oracle, and from there the oracle calls `onOracleLlmResponse` callback function in your contract.
+After LLM returns the response to teeML, it gets pushed on-chain back to oracle, and from there the oracle calls `onOracleOpenAiLlmResponse` callback function in your contract.
 
-- The funciont must be called `onOracleLlmResponse`
+- The funciont must be called `onOracleOpenAiLlmResponse`
 - Include `unint` parameter to keep track of the user message to respond to (we hardcoded this to `0`)
-- Includes parameter `IOracle.LlmResponse` with the correct response
+- Includes parameter `IOracle.OpenAiResponse` with the correct response
 - Includes parameter `errorMessage` if an error occurs
 
 ```solidity
-function onOracleLlmResponse(
-    uint /*_runId*/,
-    IOracle.LlmResponse memory _response,
+function onOracleOpenAiLlmResponse(
+    uint /*runId*/,
+    IOracle.OpenAiResponse memory _response,
     string memory _errorMessage
 ) public {
     require(msg.sender == oracleAddress, "Caller is not oracle");
