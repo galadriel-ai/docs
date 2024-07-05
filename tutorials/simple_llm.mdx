@@ -28,7 +28,7 @@ pragma solidity ^0.8.13;
 
 import "./interfaces/IOracle.sol";
 
-contract SimpleLLM {
+contract OpenAiSimpleLLM {
     address private oracleAddress; // use latest: https://docs.galadriel.com/oracle-address
     IOracle.Message public message;
     string public response;
@@ -102,11 +102,10 @@ contract SimpleLLM {
 To get started, import all of the required [interfaces](https://github.com/galadriel-ai/contracts/blob/main/contracts/contracts/interfaces/IOracle.sol). This gives the oracle the correct data structure. 
 
 ```solidity
-// import "https://github.com/galadriel-ai/contracts/blob/main/contracts/contracts/interfaces/IOracle.sol";
 import "./interfaces/IOracle.sol";
 ```
 <Info>
-GitHub import is commented out as it's not working with local developemnt using Hardhat.
+If you don't have the `IOracle.sol`locally, you can also import it via GitHub like this: `import "https://github.com/galadriel-ai/contracts/blob/main/contracts/contracts/interfaces/IOracle.sol";`
 </Info>
 ### Variables
 
