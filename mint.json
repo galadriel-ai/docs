@@ -53,7 +53,14 @@
       ]
     },
     {
-      "group": "For developers",
+      "group": "For Node Runners",
+      "pages": [
+        "node-quickstart",
+        "incentives"
+      ]
+    },
+    {
+      "group": "For Developers",
       "pages": [
         "quickstart",
         "how-it-works",
@@ -85,7 +92,7 @@
       ]
     },
     {
-      "group": "For users",
+      "group": "For Users",
       "pages": [
         "setting-up-a-wallet",
         "faucet",
