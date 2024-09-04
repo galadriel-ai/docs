@@ -1,18 +1,14 @@
-import {oracleAddress} from '/snippets/addresses.mdx';
-
-
 This quickstart covers two things:
 
-1. Deploying an AI app to the Galadriel devnet
-2. Calling your deployed AI app and viewing the results
+1. Downloading & starting the node client
+2. CLI commands to use client
 
 ### Prerequisites
 
-* A Galadriel devnet [account](/setting-up-a-wallet). We recommend creating a new EVM account for development purposes.
-* Some [devnet tokens](/faucet) on the account you are using.
+* [Requirements](/requirements)
 * `node` and `npm` installed on your machine.
 
-### Deploying a contract on Galadriel devnet
+### Run a GPU node on command line
 
 <Steps>
     <Step title="devnet tokens">
@@ -37,7 +33,7 @@ This quickstart covers two things:
 
     Then, modify the `.env` file:
     * Set `PRIVATE_KEY_GALADRIEL` to the private key of the account you want to use for deploying the contracts to Galadriel devnet.
-    * Set `ORACLE_ADDRESS` to the [current devnet oracle address](/oracle-address) provided by Galadriel team: **{oracleAddress}**.
+    * Set `ORACLE_ADDRESS` to the [current devnet oracle address](/oracle-address) provided by Galadriel team:
 
     </Step>
     <Step title="Install dependencies">
