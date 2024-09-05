@@ -6,84 +6,113 @@ This quickstart covers two things:
 ### Prerequisites
 
 * [Requirements](/requirements)
-* `node` and `npm` installed on your machine.
 
-### Run a GPU node on command line
-
+### Run the LLM
 <Steps>
-    <Step title="devnet tokens">
-    Get yourself some devnet tokens from the [faucet](/faucet).
-    </Step>
-    <Step title="Clone repository">
-    Clone the repo that contains Galadriel example contracts and the oracle implementation.
-
+  <Step title="Run the LLM">
+    Create a python environment
     ```bash
-    git clone https://github.com/galadriel-ai/contracts
-    cd contracts/contracts
+    python3 -m venv venv
+    source venv/bin/activate
     ```
-    </Step>
-    <Step title="Setup environment">
-
-    Use the `template.env` file to create a `.env` file:
-
+  </Step>
+  <Step title="Install vllm">
     ```bash
-    # Starting in repo root
-    cp template.env .env
+    pip install vllm==0.5.5
     ```
-
-    Then, modify the `.env` file:
-    * Set `PRIVATE_KEY_GALADRIEL` to the private key of the account you want to use for deploying the contracts to Galadriel devnet.
-    * Set `ORACLE_ADDRESS` to the [current devnet oracle address](/oracle-address) provided by Galadriel team:
-
-    </Step>
-    <Step title="Install dependencies">
-    Install the dependencies using npm:
-
+  </Step>
+  <Step title="Run vllm">
+    Replace `<HUGGING_FACE_TOKEN>` with your [huggingface](https://huggingface.co/) access token
     ```bash
-    # In repo root -> /contracts
-    npm install
-    ```
-    </Step>
-    <Step title="Deploy contract to devnet">
-    The [quickstart contract](https://github.com/galadriel-ai/contracts/blob/main/contracts/contracts/Quickstart.sol) can be deployed with a [simple script](https://github.com/galadriel-ai/contracts/blob/main/contracts/scripts/deployQuickstart.ts):
-
+    HUGGING_FACE_HUB_TOKEN=<HUGGING_FACE_TOKEN> \
+      nohup vllm serve neuralmagic/Meta-Llama-3.1-8B-Instruct-FP8 \
+      --revision 3aed33c3d2bfa212a137f6c855d79b5426862b24 \
+      --max-model-len 16384 \
+      --gpu-memory-utilization 1 \
+      --host localhost \
+      --disable-frontend-multiprocessing \
+      --port 11434 > logs_llm.log 2>&1 &
+      ```
+  </Step>
+  <Step title="Ensure vllm works">
+    Check the logs
     ```bash
-    npm run deployQuickstart
+    tail -f logs_llm.log
     ```
-
-    The output of the script will show the deployed contract address. Store this and export it in terminal to call the contract later:
-
+    Once you see the API is working try calling it
     ```bash
-    # Replace with your own contract address
-    export QUICKSTART_CONTRACT_ADDRESS=0x...
+    curl http://localhost:11434/v1/chat/completions \
+    -H "Content-Type: application/json" \
+    -H "Authorization: a" \
+    -d '{
+        "model": "neuralmagic/Meta-Llama-3.1-8B-Instruct-FP8",
+        "messages": [
+        {
+          "role": "system",
+          "content": "You are a helpful assistant."
+        },
+        {
+          "role": "user",
+          "content": "Hi, whats up?"
+        }
+      ],
+    }'
     ```
-    </Step>
+  </Step>
 </Steps>
 
-### Calling your contract
+### Run a GPU node from the command line
+
+<Steps>
+  <Step title="Run the LLM">
+    Create a (separate) python environment
+    ```bash
+    python3 -m venv venv
+    source venv/bin/activate
+    ```
+
+  </Step>
+  <Step title="Install galadriel">
+    ```bash
+    pip install galadriel-node
+    ```
+  </Step>
+  <Step title="Setup environment">
+    TODO: env setup command
+  </Step>
+  <Step title="Run the node in the background">
+    ```bash
+    nohup galadriel node run > logs.log 2>&1 &
+    ```
+    If this is your first time running the GPU node, it will perform hardware validation
+    and LLM benchmarking, to ensure your setup is working correctly and is fast enough.
+  </Step>
+  <Step title="Check the node status">
+    Check the logs
+    ```bash
+    tail -f logs.log
+    ```
+    Check the node status
+    ```bash
+    galadriel node status
+    ```
+    if the status is <span style={{color: "green"}}>online</span> you've successfully started your GPU node.
+
+  </Step>
+
+</Steps>
+
+### Checking node metrics
 
 Prerequisites:
-* You've deployed the quickstart contract in the previous step, and stored the contract address.
+* You've deployed the GPU node and its status is <span style={{ color: "green" }}>online</span>.
 
-<Steps>
-    <Step name="Make a call to the contract">
+To check the node stats
+```bash
+galadriel node stats
+```
 
-    Execute the following command to run a [script](https://github.com/galadriel-ai/contracts/blob/main/contracts/scripts/deployQuickstart.ts) that calls the deployed contract:
-
-    ```bash
-    npm run callQuickstart
-    ```
-
-    The script will interactively ask for the input (DALL-E prompt: what image should be generated) and then call the contract with the input. The output, when ready, will be printed to the console.
-
-    If this step fails, make sure you have set the `QUICKSTART_CONTRACT_ADDRESS` environment variable to the address of your deployed contract.
-    </Step>
-</Steps>
-
-You're done! You've successfully created and called your own on-chain AI app.
 
 What's next?
 
-* Continue developing your own contracts. See the [contracts readme](https://github.com/galadriel-ai/contracts/tree/main/contracts) and the [Solidity reference](/reference) for more.
-* Read [how Galadriel works](/how-it-works).
-* Explore [use cases](/use-cases) for inspiration and examples of full dApps including a frontend.
+* Keep the node running and earn [points](/incentives).
