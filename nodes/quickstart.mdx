@@ -69,6 +69,11 @@ This quickstart covers:
 ### Run the GPU node (CLI)
 
 <Steps>
+  <Step title="Sign up">
+    1. Create an account [here](https://dashboard.galadriel.com)
+    2. Create API key on the dashboard
+    3. Create a node on the dashboard
+  </Step>
   <Step title="Setup the environment">
     Create a (separate) python environment
     ```bash
@@ -85,11 +90,13 @@ This quickstart covers:
     ```
   </Step>
   <Step title="Setup the environment">
-    Set up the environment
+    Make sure to set the correct **API key** and **node-id** that you created on the dashboard.
+
+    Other values should be the default ones.
+
     ```
     galadriel init
     ```
-    Only update values that are not the default ones, and make sure to set the API key
   </Step>
   <Step title="Run the node">
     ```bash
