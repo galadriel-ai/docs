@@ -53,6 +53,14 @@
       ]
     },
     {
+      "group": "For nodes",
+      "pages": [
+        "nodes/requirements",
+        "nodes/quickstart",
+        "nodes/points"
+      ]
+    },
+    {
       "group": "For developers",
       "pages": [
         "quickstart",

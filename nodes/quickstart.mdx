@@ -1,0 +1,132 @@
+This quickstart covers:
+
+1. Downloading & running LLM in your machine
+2. Downloading & intializing the node client
+3. CLI commands to use client
+
+### Prerequisites
+
+* Please see [requirements](requirements)
+
+### Run the LLM
+<Steps>
+  <Step title="Create a python environment">
+    ```bash
+    python3 -m venv venv
+    source venv/bin/activate
+    ```
+  </Step>
+  <Step title="Install vllm">
+    ```bash
+    pip install vllm==0.5.5
+    ```
+  </Step>
+  <Step title="Run vllm">
+    - Replace `<HUGGING_FACE_TOKEN>` with your [huggingface](https://huggingface.co/) access token
+    - Downloads LLM to your machine (if not downloaded)
+    - Serves the LLM for inference
+    - LLM: `Meta-Llama-3.1-8B-Instruct-FP8`
+    ```bash
+    HUGGING_FACE_HUB_TOKEN=<HUGGING_FACE_TOKEN> \
+      nohup vllm serve neuralmagic/Meta-Llama-3.1-8B-Instruct-FP8 \
+      --revision 3aed33c3d2bfa212a137f6c855d79b5426862b24 \
+      --max-model-len 8192 \
+      --gpu-memory-utilization 1 \
+      --host 127.0.0.1 \
+      --disable-frontend-multiprocessing \
+      --port 11434 > logs_llm.log 2>&1 &
+      ```
+  </Step>
+  <Step title="Ensure vllm works">
+    Check the logs
+    ```bash
+    tail -f logs_llm.log
+    ```
+    Should see something like `INFO:     Uvicorn running on http://127.0.0.1:11434`
+
+    Once you see the API is working try calling it
+    ```bash
+    curl http://localhost:11434/v1/chat/completions \
+    -H "Content-Type: application/json" \
+    -H "Authorization: a" \
+    -d '{
+        "model": "neuralmagic/Meta-Llama-3.1-8B-Instruct-FP8",
+        "messages": [
+        {
+          "role": "system",
+          "content": "You are a helpful assistant."
+        },
+        {
+          "role": "user",
+          "content": "Hi, whats up?"
+        }
+      ]
+    }'
+    ```
+  </Step>
+</Steps>
+
+### Run the GPU node (CLI)
+
+<Steps>
+  <Step title="Setup the environment">
+    Create a (separate) python environment
+    ```bash
+    deactivate
+    mkdir galadriel
+    cd galadriel
+    python3 -m venv venv
+    source venv/bin/activate
+    ```
+  </Step>
+  <Step title="Install galadriel">
+    ```bash
+    pip install galadriel-node
+    ```
+  </Step>
+  <Step title="Setup the environment">
+    Set up the environment
+    ```
+    galadriel init
+    ```
+    Only update values that are not the default ones, and make sure to set the API key
+  </Step>
+  <Step title="Run the node">
+    ```bash
+    galadriel node run
+    ```
+    If this is your first time running the GPU node, it will perform hardware validation
+    and LLM benchmarking, to ensure your setup is working correctly and is fast enough.
+  </Step>
+  <Step title="Check node status">
+    ```bash
+    galadriel node status
+    ```
+    If the status is <span style={{color: "green"}}>online</span> you've successfully started your GPU node and it's serving LLM inference requests to the network.
+
+  </Step>
+
+</Steps>
+
+### Checking node stats
+
+Available if the GPU node is initialized and its status is <span style={{ color: "green" }}>online</span>.
+
+To check the node stats
+```bash
+galadriel node stats
+```
+
+### Checking network stats
+
+Available if the GPU node is initialized and its status is <span style={{ color: "green" }}>online</span>.
+
+To check the network stats
+```bash
+galadriel network stats
+```
+
+
+### What's next?
+
+* Get [rewards](points) for running the node and serving LLM inference to the network.
