@@ -16,54 +16,6 @@ This quickstart covers:
     source venv/bin/activate
     ```
   </Step>
-  <Step title="Install vllm">
-    ```bash
-    pip install vllm==0.5.5
-    ```
-  </Step>
-  <Step title="Run vllm">
-    - Replace `<HUGGING_FACE_TOKEN>` with your [huggingface](https://huggingface.co/) access token
-    - Downloads LLM to your machine (if not downloaded)
-    - Serves the LLM for inference
-    - LLM: `Meta-Llama-3.1-8B-Instruct-FP8`
-    ```bash
-    HUGGING_FACE_HUB_TOKEN=<HUGGING_FACE_TOKEN> \
-      nohup vllm serve neuralmagic/Meta-Llama-3.1-8B-Instruct-FP8 \
-      --revision 3aed33c3d2bfa212a137f6c855d79b5426862b24 \
-      --max-model-len 8192 \
-      --gpu-memory-utilization 1 \
-      --host 127.0.0.1 \
-      --disable-frontend-multiprocessing \
-      --port 11434 > logs_llm.log 2>&1 &
-      ```
-  </Step>
-  <Step title="Ensure vllm works">
-    Check the logs
-    ```bash
-    tail -f logs_llm.log
-    ```
-    Should see something like `INFO:     Uvicorn running on http://127.0.0.1:11434`
-
-    Once you see the API is working try calling it
-    ```bash
-    curl http://localhost:11434/v1/chat/completions \
-    -H "Content-Type: application/json" \
-    -H "Authorization: a" \
-    -d '{
-        "model": "neuralmagic/Meta-Llama-3.1-8B-Instruct-FP8",
-        "messages": [
-        {
-          "role": "system",
-          "content": "You are a helpful assistant."
-        },
-        {
-          "role": "user",
-          "content": "Hi, whats up?"
-        }
-      ]
-    }'
-    ```
-  </Step>
 </Steps>
 
 ### Run the GPU node (CLI)
