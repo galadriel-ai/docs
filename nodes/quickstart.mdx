@@ -8,16 +8,6 @@ This quickstart covers:
 
 * Please see [requirements](requirements)
 
-### Run the LLM
-<Steps>
-  <Step title="Create a python environment">
-    ```bash
-    python3 -m venv venv
-    source venv/bin/activate
-    ```
-  </Step>
-</Steps>
-
 ### Run the GPU node (CLI)
 
 <Steps>
@@ -25,16 +15,6 @@ This quickstart covers:
     1. Create an account [here](https://dashboard.galadriel.com)
     2. Create API key on the dashboard
     3. Create a node on the dashboard
-  </Step>
-  <Step title="Setup the environment">
-    Create a (separate) python environment
-    ```bash
-    deactivate
-    mkdir galadriel
-    cd galadriel
-    python3 -m venv venv
-    source venv/bin/activate
-    ```
   </Step>
   <Step title="Install galadriel">
     ```bash
@@ -58,6 +38,8 @@ This quickstart covers:
     and LLM benchmarking, to ensure your setup is working correctly and is fast enough.
   </Step>
   <Step title="Check node status">
+    In another terminal tab:
+
     ```bash
     galadriel node status
     ```
