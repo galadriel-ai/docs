@@ -1,0 +1,73 @@
+This quickstart covers:
+
+1. Downloading & running LLM in your machine
+2. Downloading & intializing the node client
+3. CLI commands to use client
+
+### Prerequisites
+
+* Please see [requirements](requirements)
+
+### Run the GPU node (CLI)
+
+<Steps>
+  <Step title="Sign up">
+    1. Create an account [here](https://dashboard.galadriel.com)
+    2. Create API key on the dashboard
+    3. Create a node on the dashboard
+  </Step>
+  <Step title="Install galadriel">
+    ```bash
+    pip install galadriel-node
+    ```
+  </Step>
+  <Step title="Setup the environment">
+    Make sure to set the correct **API key** and **node-id** that you created on the dashboard.
+
+    Other values should be the default ones.
+
+    ```
+    galadriel init
+    ```
+  </Step>
+  <Step title="Run the node">
+    ```bash
+    galadriel node run
+    ```
+    If this is your first time running the GPU node, it will perform hardware validation
+    and LLM benchmarking, to ensure your setup is working correctly and is fast enough.
+  </Step>
+  <Step title="Check node status">
+    In another terminal tab:
+
+    ```bash
+    galadriel node status
+    ```
+    If the status is <span style={{color: "green"}}>online</span> you've successfully started your GPU node and it's serving LLM inference requests to the network.
+
+  </Step>
+
+</Steps>
+
+### Checking node stats
+
+Available if the GPU node is initialized and its status is <span style={{ color: "green" }}>online</span>.
+
+To check the node stats
+```bash
+galadriel node stats
+```
+
+### Checking network stats
+
+Available if the GPU node is initialized and its status is <span style={{ color: "green" }}>online</span>.
+
+To check the network stats
+```bash
+galadriel network stats
+```
+
+
+### What's next?
+
+* Get [rewards](points) for running the node and serving LLM inference to the network.
