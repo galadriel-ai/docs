@@ -57,7 +57,8 @@
       "pages": [
         "nodes/requirements",
         "nodes/quickstart",
-        "nodes/incentives"
+        "nodes/incentives",
+        "nodes/update-node"
       ]
     },
     {
