@@ -143,7 +143,29 @@
             "model",
             "object"
           ],
-          "title": "ChatCompletion"
+          "title": "ChatCompletion",
+          "example": {
+            "id": "id",
+            "choices": [
+              {
+                "finish_reason": "stop",
+                "index": 0,
+                "logprobs": null,
+                "message": {
+                  "content": "Hello. It's nice to meet you. Is there something I can help you with or would you like to chat?",
+                  "refusal": null,
+                  "role": "assistant",
+                  "function_call": null,
+                  "tool_calls": null
+                }
+              }
+            ],
+            "created": 1728558433,
+            "model": "neuralmagic/Meta-Llama-3.1-70B-Instruct-FP8",
+            "object": "chat.completion",
+            "service_tier": null,
+            "system_fingerprint": null
+          }
         },
         "ChatCompletionMessage": {
           "properties": {
@@ -249,7 +271,8 @@
             "model": {
               "type": "string",
               "title": "Model",
-              "description": "ID of the model to use."
+              "description": "ID of the model to use. Get ID for available [models](models.mdx).",
+              "example": "asd"
             },
             "frequency_penalty": {
               "anyOf": [
@@ -429,18 +452,6 @@
               "title": "Top P",
               "description": "An alternative to sampling with temperature, called nucleus sampling, where the model considers the results of the tokens with top_p probability mass. So 0.1 means only the tokens comprising the top 10% probability mass are considered.",
               "default": 1
-            },
-            "user": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "title": "User",
-              "description": "A unique identifier representing your end-user, which can help OpenAI to monitor and detect abuse."
             }
           },
           "type": "object",
@@ -925,7 +936,8 @@
         "APIKeyHeader": {
           "type": "apiKey",
           "in": "header",
-          "name": "Authorization"
+          "name": "Authorization",
+          "description": "Bearer authentication header.\n\n  `Bearer Galadriel-API-key`\n\n  Get API key from [Galadriel dashboard](https://dashboard.galadriel.com/login)."
         }
       }
     },
