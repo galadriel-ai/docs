@@ -60,7 +60,7 @@
     {
       "group": "For developers",
       "pages": [
-        "chat-completion-API"
+        "api-reference/chat-completion-API"
       ]
     },
     {

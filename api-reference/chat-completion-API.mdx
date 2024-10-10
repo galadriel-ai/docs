@@ -1,0 +1,40 @@
+---
+title: Chat Completion API
+description: Tap into Galadriel's LLM inference network. Follows the exact schema as OpenAI's chat completion API.
+api: 'POST https://api.galadriel.com/v1/chat/completions'
+authMethod: "bearer"
+---
+
+{/* ## NB!
+**Required to fill in 'content' and 'role' under 'body' -> 'messages'.** */}
+
+<h3>Authorization</h3>
+<ResponseField name="Authorization" type="string" required>
+  Bearer authentication header.
+  
+  Bearer `'Galadriel-API-key'`
+  
+  Get API key from [Galadriel dashboard](https://dashboard.galadriel.com/login).
+</ResponseField>
+
+<h3>Body</h3>
+<ParamField body="model" initialValue="mistral-7b-instruct" type="string" required>ID of the model to use. Get ID for available [models](models.mdx).</ParamField>
+
+<ParamField body="messages" type="array" required>
+  A list of messages comprising the conversation so far.
+  <Expandable title="Message" defaultOpen>
+    <ParamField body="content" placeholder="Hello!" type="string" required>The contents of the message. `content is required for all messages, and may be null for assistant messages with function calls.</ParamField>
+    <ParamField body="role" placeholder="user" type="string" required>Role ["user", "assistant"]</ParamField>
+    <ParamField body="name" type="string">The name of the author of this message. name is required if role is function, and it should be the name of the function whose response is in the content. May contain a-z, A-Z, 0-9, and underscores, with a maximum length of 64 characters.</ParamField>
+  </Expandable>
+</ParamField>
+
+<ParamField body="max_tokens" type="integer">The maximum number of tokens to generate in the chat completion.</ParamField>
+{/* <ParamField body="user" type="string"></ParamField> */}
+<ParamField body="stream" type="boolean">If set, partial message deltas will be sent, like in ChatGPT.</ParamField>
+<ParamField body="temperture" type="number">What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic.</ParamField>
+<ParamField body="top_p" type="number">An alternative to sampling with temperature, called nucleus sampling, where the model considers the results of the tokens with top_p probability mass. So 0.1 means only the tokens comprising the top 10% probability mass are considered.</ParamField>
+<ParamField body="presence_penalty" type="number">Up to 4 sequences where the API will stop generating further tokens.</ParamField>
+<ParamField body="logit_bias" type="object">Modify the likelihood of specified tokens appearing in the completion.</ParamField>
+<ParamField body="frequency_penalty" type="string">Number between -2.0 and 2.0. Positive values penalize new tokens based on their existing frequency in the text so far, decreasing the model's likelihood to repeat the same line verbatim.</ParamField>
+<ParamField body="false" type="integer">How many chat completion choices to generate for each input message.</ParamField>
