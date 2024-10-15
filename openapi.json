@@ -1,0 +1,952 @@
+{
+    "openapi": "3.1.0",
+    "info": {
+      "title": "API",
+      "description": "API",
+      "version": "1.0.0",
+      "contact": {
+        "name": "",
+        "email": ""
+      },
+      "x-logo": {
+        "url": ""
+      }
+    },
+    "servers": [
+      {
+        "url": "https://api.galadriel.com"
+      }
+    ],
+    "paths": {
+      "/v1/chat/completions": {
+        "post": {
+          "tags": [
+            "Chat"
+          ],
+          "summary": "Creates a model response for the given chat conversation.",
+          "description": "Given a list of messages comprising a conversation, the model will return a response.",
+          "operationId": "completions_v1_chat_completions_post",
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChatCompletionRequest"
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "200": {
+              "description": "Returns a chat completion object, or a streamed sequence of chat completion chunk objects if the request is streamed.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ChatCompletion"
+                  }
+                }
+              }
+            },
+            "422": {
+              "description": "Validation Error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/HTTPValidationError"
+                  }
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "APIKeyHeader": []
+            }
+          ]
+        }
+      }
+    },
+    "components": {
+      "schemas": {
+        "ChatCompletion": {
+          "properties": {
+            "id": {
+              "type": "string",
+              "title": "Id"
+            },
+            "choices": {
+              "items": {
+                "$ref": "#/components/schemas/Choice"
+              },
+              "type": "array",
+              "title": "Choices"
+            },
+            "created": {
+              "type": "integer",
+              "title": "Created"
+            },
+            "model": {
+              "type": "string",
+              "title": "Model"
+            },
+            "object": {
+              "type": "string",
+              "enum": [
+                "chat.completion"
+              ],
+              "const": "chat.completion",
+              "title": "Object"
+            },
+            "service_tier": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "enum": [
+                    "scale",
+                    "default"
+                  ]
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Service Tier"
+            },
+            "system_fingerprint": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "System Fingerprint"
+            },
+            "usage": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/CompletionUsage"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          },
+          "additionalProperties": true,
+          "type": "object",
+          "required": [
+            "id",
+            "choices",
+            "created",
+            "model",
+            "object"
+          ],
+          "title": "ChatCompletion",
+          "example": {
+            "id": "id",
+            "choices": [
+              {
+                "finish_reason": "stop",
+                "index": 0,
+                "logprobs": null,
+                "message": {
+                  "content": "Hello. It's nice to meet you. Is there something I can help you with or would you like to chat?",
+                  "refusal": null,
+                  "role": "assistant",
+                  "function_call": null,
+                  "tool_calls": null
+                }
+              }
+            ],
+            "created": 1728558433,
+            "model": "neuralmagic/Meta-Llama-3.1-8B-Instruct-FP8",
+            "object": "chat.completion",
+            "service_tier": null,
+            "system_fingerprint": null
+          }
+        },
+        "ChatCompletionMessage": {
+          "properties": {
+            "content": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Content"
+            },
+            "refusal": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Refusal"
+            },
+            "role": {
+              "type": "string",
+              "enum": [
+                "assistant"
+              ],
+              "const": "assistant",
+              "title": "Role"
+            },
+            "function_call": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/FunctionCall-Output"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "tool_calls": {
+              "anyOf": [
+                {
+                  "items": {
+                    "$ref": "#/components/schemas/ChatCompletionMessageToolCall"
+                  },
+                  "type": "array"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Tool Calls"
+            }
+          },
+          "additionalProperties": true,
+          "type": "object",
+          "required": [
+            "role"
+          ],
+          "title": "ChatCompletionMessage"
+        },
+        "ChatCompletionMessageToolCall": {
+          "properties": {
+            "id": {
+              "type": "string",
+              "title": "Id"
+            },
+            "function": {
+              "$ref": "#/components/schemas/Function"
+            },
+            "type": {
+              "type": "string",
+              "enum": [
+                "function"
+              ],
+              "const": "function",
+              "title": "Type"
+            }
+          },
+          "additionalProperties": true,
+          "type": "object",
+          "required": [
+            "id",
+            "function",
+            "type"
+          ],
+          "title": "ChatCompletionMessageToolCall"
+        },
+        "ChatCompletionRequest": {
+          "properties": {
+            "messages": {
+              "items": {
+                "$ref": "#/components/schemas/Message"
+              },
+              "type": "array",
+              "title": "Messages",
+              "description": "A list of messages comprising the conversation so far. "
+            },
+            "model": {
+              "type": "string",
+              "title": "Model",
+              "description": "ID of the model to use. Get ID for available [models](/models).",
+              "example": "asd"
+            },
+            "frequency_penalty": {
+              "anyOf": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Frequency Penalty",
+              "description": "Number between -2.0 and 2.0. Positive values penalize new tokens based on their existing frequency in the text so far, decreasing the model's likelihood to repeat the same line verbatim."
+            },
+            "logit_bias": {
+              "anyOf": [
+                {
+                  "type": "object"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Logit Bias",
+              "description": "Modify the likelihood of specified tokens appearing in the completion."
+            },
+            "logprobs": {
+              "anyOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Logprobs",
+              "description": "Whether to return log probabilities of the output tokens or not. If true, returns the log probabilities of each output token returned in the `content` of `message`.",
+              "default": false
+            },
+            "top_logprobs": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Top Logprobs",
+              "description": "An integer between 0 and 20 specifying the number of most likely tokens to return at each token position, each with an associated log probability. `logprobs` must be set to `true` if this parameter is used."
+            },
+            "max_tokens": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Max Tokens",
+              "description": "The maximum number of tokens to generate in the chat completion."
+            },
+            "n": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "N",
+              "description": "How many chat completion choices to generate for each input message."
+            },
+            "presence_penalty": {
+              "anyOf": [
+                {
+                  "type": "number"
+                },
+                {
+                  "items": {},
+                  "type": "array"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Presence Penalty",
+              "description": "Number between -2.0 and 2.0. Positive values penalize new tokens based on whether they appear in the text so far, increasing the model's likelihood to talk about new topics.",
+              "default": 0
+            },
+            "response_format": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/ResponseFormat"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "An object specifying the format that the model must output. Compatible with GPT-4o, GPT-4o mini, GPT-4 Turbo and all GPT-3.5 Turbo models newer than gpt-3.5-turbo-1106."
+            },
+            "seed": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Seed",
+              "description": "This feature is in Beta. If specified, our system will make a best effort to sample deterministically, such that repeated requests with the same `seed` and parameters should return the same result. Determinism is not guaranteed, and you should refer to the `system_fingerprint` response parameter to monitor changes in the backend."
+            },
+            "stop": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "items": {},
+                  "type": "array"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Stop",
+              "description": "Up to 4 sequences where the API will stop generating further tokens."
+            },
+            "stream": {
+              "anyOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Stream",
+              "description": "If set, partial message deltas will be sent, like in ChatGPT.",
+              "default": false
+            },
+            "stream_options": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/StreamOptions"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Options for streaming response. Only set this when you set `stream: true`."
+            },
+            "temperature": {
+              "anyOf": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Temperature",
+              "description": "What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic.",
+              "default": 1
+            },
+            "top_p": {
+              "anyOf": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Top P",
+              "description": "An alternative to sampling with temperature, called nucleus sampling, where the model considers the results of the tokens with top_p probability mass. So 0.1 means only the tokens comprising the top 10% probability mass are considered.",
+              "default": 1
+            }
+          },
+          "type": "object",
+          "required": [
+            "messages",
+            "model"
+          ],
+          "title": "ChatCompletionRequest",
+          "example": {
+            "messages": [
+              {
+                "content": "You are a helpful assistant.",
+                "role": "system"
+              },
+              {
+                "content": "Hello!",
+                "role": "user"
+              }
+            ],
+            "model": "neuralmagic/Meta-Llama-3.1-8B-Instruct-FP8"
+          }
+        },
+        "ChatCompletionTokenLogprob": {
+          "properties": {
+            "token": {
+              "type": "string",
+              "title": "Token"
+            },
+            "bytes": {
+              "anyOf": [
+                {
+                  "items": {
+                    "type": "integer"
+                  },
+                  "type": "array"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Bytes"
+            },
+            "logprob": {
+              "type": "number",
+              "title": "Logprob"
+            },
+            "top_logprobs": {
+              "items": {
+                "$ref": "#/components/schemas/TopLogprob"
+              },
+              "type": "array",
+              "title": "Top Logprobs"
+            }
+          },
+          "additionalProperties": true,
+          "type": "object",
+          "required": [
+            "token",
+            "logprob",
+            "top_logprobs"
+          ],
+          "title": "ChatCompletionTokenLogprob"
+        },
+        "Choice": {
+          "properties": {
+            "finish_reason": {
+              "type": "string",
+              "enum": [
+                "stop",
+                "length",
+                "tool_calls",
+                "content_filter",
+                "function_call"
+              ],
+              "title": "Finish Reason"
+            },
+            "index": {
+              "type": "integer",
+              "title": "Index"
+            },
+            "logprobs": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/ChoiceLogprobs"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "message": {
+              "$ref": "#/components/schemas/ChatCompletionMessage"
+            }
+          },
+          "additionalProperties": true,
+          "type": "object",
+          "required": [
+            "finish_reason",
+            "index",
+            "message"
+          ],
+          "title": "Choice"
+        },
+        "ChoiceLogprobs": {
+          "properties": {
+            "content": {
+              "anyOf": [
+                {
+                  "items": {
+                    "$ref": "#/components/schemas/ChatCompletionTokenLogprob"
+                  },
+                  "type": "array"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Content"
+            },
+            "refusal": {
+              "anyOf": [
+                {
+                  "items": {
+                    "$ref": "#/components/schemas/ChatCompletionTokenLogprob"
+                  },
+                  "type": "array"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Refusal"
+            }
+          },
+          "additionalProperties": true,
+          "type": "object",
+          "title": "ChoiceLogprobs"
+        },
+        "CompletionUsage": {
+          "properties": {
+            "completion_tokens": {
+              "type": "integer",
+              "title": "Completion Tokens"
+            },
+            "prompt_tokens": {
+              "type": "integer",
+              "title": "Prompt Tokens"
+            },
+            "total_tokens": {
+              "type": "integer",
+              "title": "Total Tokens"
+            }
+          },
+          "additionalProperties": true,
+          "type": "object",
+          "required": [
+            "completion_tokens",
+            "prompt_tokens",
+            "total_tokens"
+          ],
+          "title": "CompletionUsage"
+        },
+        "CreateNodeRequest": {
+          "properties": {
+            "node_name": {
+              "type": "string",
+              "title": "Node Name",
+              "description": "User defined node name"
+            }
+          },
+          "type": "object",
+          "required": [
+            "node_name"
+          ],
+          "title": "CreateNodeRequest"
+        },
+        "CreateNodeResponse": {
+          "properties": {
+            "response": {
+              "type": "string",
+              "enum": [
+                "OK"
+              ],
+              "const": "OK",
+              "title": "Response",
+              "description": "Success response",
+              "default": "OK"
+            },
+            "node_id": {
+              "type": "string",
+              "title": "Node Id",
+              "description": "Unique ID of the Node"
+            }
+          },
+          "type": "object",
+          "required": [
+            "node_id"
+          ],
+          "title": "CreateNodeResponse"
+        },
+        "Function": {
+          "properties": {
+            "arguments": {
+              "type": "string",
+              "title": "Arguments"
+            },
+            "name": {
+              "type": "string",
+              "title": "Name"
+            }
+          },
+          "additionalProperties": true,
+          "type": "object",
+          "required": [
+            "arguments",
+            "name"
+          ],
+          "title": "Function"
+        },
+        "FunctionCall-Input": {
+          "properties": {
+            "arguments": {
+              "type": "string",
+              "title": "Arguments",
+              "description": "The name and arguments of a function that should be called, as generated by the model."
+            },
+            "name": {
+              "type": "string",
+              "title": "Name",
+              "description": "The name of the function to call."
+            }
+          },
+          "type": "object",
+          "required": [
+            "arguments",
+            "name"
+          ],
+          "title": "FunctionCall"
+        },
+        "FunctionCall-Output": {
+          "properties": {
+            "arguments": {
+              "type": "string",
+              "title": "Arguments"
+            },
+            "name": {
+              "type": "string",
+              "title": "Name"
+            }
+          },
+          "additionalProperties": true,
+          "type": "object",
+          "required": [
+            "arguments",
+            "name"
+          ],
+          "title": "FunctionCall"
+        },
+        "HTTPValidationError": {
+          "properties": {
+            "detail": {
+              "items": {
+                "$ref": "#/components/schemas/ValidationError"
+              },
+              "type": "array",
+              "title": "Detail"
+            }
+          },
+          "type": "object",
+          "title": "HTTPValidationError"
+        },
+        "JsonSchema": {
+          "properties": {
+            "description": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Description",
+              "description": "A description of what the response format is for, used by the model to determine how to respond in the format.",
+              "default": true
+            },
+            "name": {
+              "type": "string",
+              "title": "Name",
+              "description": "The name of the response format. Must be a-z, A-Z, 0-9, or contain underscores and dashes, with a maximum length of 64.",
+              "default": true
+            },
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "object"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Schema",
+              "description": "The schema for the response format, described as a JSON Schema object."
+            },
+            "strict": {
+              "anyOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Strict",
+              "description": "Whether to enable strict schema adherence when generating the output. If set to true, the model will always follow the exact schema defined in the schema field. Only a subset of JSON Schema is supported when `strict` is `true`."
+            }
+          },
+          "type": "object",
+          "title": "JsonSchema"
+        },
+        "Message": {
+          "properties": {
+            "content": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Content",
+              "description": "The contents of the message. `content is required for all messages, and may be null for assistant messages with function calls."
+            },
+            "function_call": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/FunctionCall-Input"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "The name and arguments of a function that should be called, as generated by the model."
+            },
+            "role": {
+              "type": "string",
+              "title": "Role",
+              "description": "Role"
+            },
+            "name": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Name",
+              "description": "The name of the author of this message. name is required if role is function, and it should be the name of the function whose response is in the content. May contain a-z, A-Z, 0-9, and underscores, with a maximum length of 64 characters."
+            }
+          },
+          "type": "object",
+          "required": [
+            "content",
+            "role"
+          ],
+          "title": "Message"
+        },
+        "ResponseFormat": {
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": [
+                "text",
+                "json_object",
+                "json_schema"
+              ],
+              "title": "Type",
+              "description": "The type of response format being defined: `text`"
+            },
+            "json_schema": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/JsonSchema"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          },
+          "type": "object",
+          "required": [
+            "type"
+          ],
+          "title": "ResponseFormat"
+        },
+        "StreamOptions": {
+          "properties": {
+            "include_usage": {
+              "type": "boolean",
+              "title": "Include Usage",
+              "description": "If set, an additional chunk will be streamed before the `data: [DONE]` message. The usage field on this chunk shows the token usage statistics for the entire request, and the choices field will always be an empty array. All other chunks will also include a usage field, but with a null value."
+            }
+          },
+          "type": "object",
+          "required": [
+            "include_usage"
+          ],
+          "title": "StreamOptions"
+        },
+        "TopLogprob": {
+          "properties": {
+            "token": {
+              "type": "string",
+              "title": "Token"
+            },
+            "bytes": {
+              "anyOf": [
+                {
+                  "items": {
+                    "type": "integer"
+                  },
+                  "type": "array"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Bytes"
+            },
+            "logprob": {
+              "type": "number",
+              "title": "Logprob"
+            }
+          },
+          "additionalProperties": true,
+          "type": "object",
+          "required": [
+            "token",
+            "logprob"
+          ],
+          "title": "TopLogprob"
+        },
+        "ValidationError": {
+          "properties": {
+            "loc": {
+              "items": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "integer"
+                  }
+                ]
+              },
+              "type": "array",
+              "title": "Location"
+            },
+            "msg": {
+              "type": "string",
+              "title": "Message"
+            },
+            "type": {
+              "type": "string",
+              "title": "Error Type"
+            }
+          },
+          "type": "object",
+          "required": [
+            "loc",
+            "msg",
+            "type"
+          ],
+          "title": "ValidationError"
+        }
+      },
+      "securitySchemes": {
+        "APIKeyHeader": {
+          "type": "apiKey",
+          "in": "header",
+          "name": "Authorization",
+          "description": "Bearer authentication header.\n\n  `Bearer Galadriel-API-key`\n\n  Get API key from [Galadriel dashboard](https://dashboard.galadriel.com/login)."
+        }
+      }
+    },
+    "x-readme": {
+      "samples-languages": [
+        "curl",
+        "node",
+        "javascript",
+        "python"
+      ]
+    }
+  }
