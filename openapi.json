@@ -161,7 +161,7 @@
               }
             ],
             "created": 1728558433,
-            "model": "neuralmagic/Meta-Llama-3.1-70B-Instruct-FP8",
+            "model": "neuralmagic/Meta-Llama-3.1-8B-Instruct-FP8",
             "object": "chat.completion",
             "service_tier": null,
             "system_fingerprint": null
@@ -271,7 +271,7 @@
             "model": {
               "type": "string",
               "title": "Model",
-              "description": "ID of the model to use. Get ID for available [models](models.mdx).",
+              "description": "ID of the model to use. Get ID for available [models](/models).",
               "example": "asd"
             },
             "frequency_penalty": {

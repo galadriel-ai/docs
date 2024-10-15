@@ -60,14 +60,15 @@
     {
       "group": "For developers",
       "pages": [
-        "api-reference/chat-completion-API"
+        "api-reference/chat-completion-API",
+        "models"
       ]
     },
     {
       "group": "Other",
       "pages": [
         "changelog",
-        "FAQ"        
+        "FAQ"
       ]
     }
   ],
