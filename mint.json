@@ -49,19 +49,21 @@
       ]
     },
     {
+      "group": "For developers",
+      "pages": [
+        "api-reference/quickstart",
+        "api-reference/models",
+        "api-reference/rate-limits",
+        "api-reference/chat-completion-API"
+      ]
+    },
+    {
       "group": "For nodes",
       "pages": [
         "nodes/requirements",
         "nodes/quickstart",
         "nodes/incentives",
         "nodes/update-node"
-      ]
-    },
-    {
-      "group": "For developers",
-      "pages": [
-        "api-reference/chat-completion-API",
-        "models"
       ]
     },
     {

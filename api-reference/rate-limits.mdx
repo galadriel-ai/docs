@@ -1,0 +1,26 @@
+#### The current rate limits
+
+The token limits include the input + output tokens
+- tokens per minute: 40 000
+- tokens per day: 1 000 000
+- requests per minute: 60
+- requests per day: 28 800
+
+<Note>If you need higher limits contact us</Note>
+
+#### Rate limit headers
+
+We set the following `x-ratelimit` headers to inform you on current rate limits applicable to you.
+
+The following headers are set (values are illustrative):
+| Header | Value | Notes |
+| --- | --- |--- |
+| retry-after | 2 | Seconds to wait until retrying* |
+| x-ratelimit-limit-requests | 28800 | Requests per day allowed |
+| x-ratelimit-limit-tokens | 40000 | Tokens per minute allowed |
+| x-ratelimit-remaining-requests | 123 | Requests remaining for the day |
+| x-ratelimit-remaining-tokens | 1337 | Tokens remaining for this minute |
+| x-ratelimit-reset-requests | 1337s | Seconds until the daily rate limit resets |
+| x-ratelimit-reset-tokens | 1s | Seconds until the minute based token limit resets |
+
+\* The `retry-after` header is only returned if the response status code is 429 and the request was rate limited
