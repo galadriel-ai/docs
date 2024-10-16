@@ -1,0 +1,56 @@
+---
+title: Quickstart
+description: Galadriel API is designed to be compatible with OpenAI's client libraries, making it easy to use your existing workflows
+---
+
+
+All you need is an API key from [here](https://dashboard.galadriel.com)
+and changing the API base url to `https://api.galadriel.com/v1`
+
+<CodeGroup>
+
+```python Python
+from openai import OpenAI
+
+client = OpenAI(
+    base_url="https://api.galadriel.com/v1",
+    api_key=os.environ.get("GALADRIEL_API_KEY")
+)
+
+completion = client.chat.completions.create(
+    model="neuralmagic/Meta-Llama-3.1-8B-Instruct-FP8",
+    messages=[
+        {"role": "system", "content": "You are a helpful assistant."},
+        {"role": "user", "content": "Hello!"}
+    ]
+)
+
+print(completion.choices[0].message)
+```
+
+```bash cURL
+curl -X 'POST' \
+  'https://api.galadriel.com/v1/chat/completions' \
+  -H 'accept: application/json' \
+  -H 'Authorization: Bearer $GALADRIEL_API_KEY' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "model": "neuralmagic/Meta-Llama-3.1-8B-Instruct-FP8",
+  "messages": [
+    {
+      "content": "You are a helpful assistant.",
+      "role": "system"
+    },
+    {
+      "content": "Hello!",
+      "role": "user"
+    }
+  ]
+}'
+```
+
+</CodeGroup>
+
+### What's next?
+* Check out the currently supported [models](/api-reference/models)
+* To see more details about the API check out the full [API docs](/api-reference/chat-completion-API)
