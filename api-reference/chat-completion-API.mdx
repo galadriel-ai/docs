@@ -5,3 +5,45 @@ openapi: post /v1/chat/completions
 api: 'POST https://api.galadriel.com/v1/chat/completions'
 authMethod: "bearer"
 ---
+
+<RequestExample>
+```bash cURL
+curl -X 'POST' \
+  'https://api.galadriel.com/v1/chat/completions' \
+  -H 'accept: application/json' \
+  -H 'Authorization: Bearer $GALADRIEL_API_KEY' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "model": "neuralmagic/Meta-Llama-3.1-8B-Instruct-FP8",
+  "messages": [
+    {
+      "content": "You are a helpful assistant.",
+      "role": "system"
+    },
+    {
+      "content": "Hello!",
+      "role": "user"
+    }
+  ]
+}'
+```
+
+```python Python
+from openai import OpenAI
+
+client = OpenAI(
+    base_url="https://api.galadriel.com/v1",
+    api_key=""
+)
+
+completion = client.chat.completions.create(
+    model="neuralmagic/Meta-Llama-3.1-8B-Instruct-FP8",
+    messages=[
+        {"role": "system", "content": "You are a helpful assistant."},
+        {"role": "user", "content": "Hello!"}
+    ]
+)
+
+print(completion.choices[0].message)
+```
+</RequestExample>
