@@ -41,6 +41,13 @@ This quickstart covers:
     ```bash
     galadriel node run
     ```
+    Or run the node in a background process
+    ```bash
+    nohup galadriel node run > logs.log 2>&1
+    # To shut it down
+    pgrep -af python
+    kill <PID>
+    ```
     If this is your first time running the GPU node, it will perform hardware validation
     and LLM benchmarking, to ensure your setup is working correctly and is fast enough.
   </Step>
