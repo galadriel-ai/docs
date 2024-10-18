@@ -162,7 +162,7 @@
               }
             ],
             "created": 1728558433,
-            "model": "neuralmagic/Meta-Llama-3.1-8B-Instruct-FP8",
+            "model": "llama3.1",
             "object": "chat.completion",
             "service_tier": null,
             "system_fingerprint": null
@@ -285,7 +285,7 @@
             "title": "Model",
             "description": "ID of the model to use. Get ID for available [models](/models).",
             "examples": [
-              "neuralmagic/Meta-Llama-3.1-8B-Instruct-FP8",
+              "llama3.1",
               "neuralmagic/Meta-Llama-3.1-70B-Instruct-quantized.w4a16",
               "neuralmagic/Meta-Llama-3.1-405B-Instruct-quantized.w4a16"
             ]
@@ -488,7 +488,7 @@
                 "role": "user"
               }
             ],
-            "model": "neuralmagic/Meta-Llama-3.1-8B-Instruct-FP8"
+            "model": "llama3.1"
           }
         ]
       },
