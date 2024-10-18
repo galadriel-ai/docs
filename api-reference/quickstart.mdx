@@ -19,7 +19,7 @@ client = OpenAI(
 )
 
 completion = client.chat.completions.create(
-    model="neuralmagic/Meta-Llama-3.1-8B-Instruct-FP8",
+    model="llama3.1",
     messages=[
         {"role": "system", "content": "You are a helpful assistant."},
         {"role": "user", "content": "Hello!"}
@@ -29,6 +29,28 @@ completion = client.chat.completions.create(
 print(completion.choices[0].message)
 ```
 
+```javascript Javascript
+import OpenAI from "openai";
+
+const openai = new OpenAI({
+  apiKey: process.env.GALADRIEL_API_KEY,
+  baseURL: "https://api.galadriel.com/v1"
+});
+
+const completion = await openai.chat.completions.create({
+  model: "llama3.1",
+  messages: [
+    {role: "system", content: "You are a helpful assistant."},
+    {
+      role: "user",
+      content: "Hello!",
+    },
+  ],
+});
+
+console.log(completion.choices[0].message);
+```
+
 ```bash cURL
 curl -X 'POST' \
   'https://api.galadriel.com/v1/chat/completions' \
@@ -36,7 +58,7 @@ curl -X 'POST' \
   -H 'Authorization: Bearer $GALADRIEL_API_KEY' \
   -H 'Content-Type: application/json' \
   -d '{
-  "model": "neuralmagic/Meta-Llama-3.1-8B-Instruct-FP8",
+  "model": "llama3.1",
   "messages": [
     {
       "content": "You are a helpful assistant.",
