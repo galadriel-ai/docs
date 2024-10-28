@@ -1,12 +1,24 @@
 #### The current rate limits
 
 The token limits include the input + output tokens
-- tokens per minute: 40 000
-- tokens per day: 1 000 000
-- requests per minute: 60
-- requests per day: 28 800
+| Model | Tier | Price per 1M tokens | RPM ¹ | RPD ² | TPM ³ | TPD ⁴ |
+| --- | --- | --- | --- | --- | --- | --- |
+| Llama 8B | "Free" | - | 60 | 28,800 | 40k | 5M |
+| Llama 8B | "Infinite" | $0.08/M | ထ | ထ | ထ | ထ |
+|  |  |  |  |  |  |  |
+| Llama 70B | "Free" | - | 60 | 28,800 | 40k | 5M |
+| Llama 70B | "Infinite" | $0.79/M | ထ | ထ | ထ | ထ |
+|  |  |  |  |  |  |  |
+| Llama 405B | "Free" | - | 12 | 6,800 | 40k | 1M |
+| Llama 405B | "Infinite" | $3.5/M | ထ | ထ | ထ | ထ |
 
-<Note>If you need higher limits contact us</Note>
+(1) RPM: Request Per Minute<br/>
+(2) RPD: Request Per Day<br/>
+(3) TPM: Tokens Per Minute<br/>
+(4) TPD: Tokens Per Day
+
+<Note>If you need higher limits [contact us](https://galadriel.com/pricing)</Note>
+
 
 #### Rate limit headers
 
@@ -14,7 +26,7 @@ We set the following `x-ratelimit` headers to inform you on current rate limits 
 
 The following headers are set (values are illustrative):
 | Header | Value | Notes |
-| --- | --- |--- |
+| --- | --- | --- |
 | retry-after | 2 | Seconds to wait until retrying* |
 | x-ratelimit-limit-requests | 28800 | Requests per day allowed |
 | x-ratelimit-limit-tokens | 40000 | Tokens per minute allowed |
