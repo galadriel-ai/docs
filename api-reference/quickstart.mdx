@@ -3,12 +3,14 @@ title: Quickstart
 description: Galadriel API is designed to be compatible with OpenAI's client libraries, making it easy to use your existing workflows
 ---
 
-
-All you need is an API key from [here](https://dashboard.galadriel.com)
-
-and changing the API base url to `https://api.galadriel.com/v1`
-
-<CodeGroup>
+<Steps>
+    <Step title="Sign up to get an API key">
+    1. Create an account [here](https://dashboard.galadriel.com)
+    2. Create an API key on the dashboard
+  </Step>
+    <Step title="Call the API">
+    Run the following code
+      <CodeGroup>
 
 ```python Python
 from openai import OpenAI
@@ -73,6 +75,8 @@ curl -X 'POST' \
 ```
 
 </CodeGroup>
+  </Step>
+</Steps>
 
 ### What's next?
 * Check out the currently supported [models](/api-reference/models)
