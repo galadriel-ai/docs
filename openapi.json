@@ -482,7 +482,7 @@
               }
             ],
             "title": "Tools",
-            "description": "**Currently the 8b model does not support tools.** A list of tools the model may call. Currently, only functions are supported as a tool. Use this to provide a list of functions the model may generate JSON inputs for. A max of 128 functions are supported."
+            "description": "**Currently the 8b model does not support tools.** A list of tools the model may call. Currently, only functions are supported as a tool. Use this to provide a list of functions the model may generate JSON inputs for."
           },
           "tool_choice": {
             "anyOf": [
