@@ -51,10 +51,16 @@
     {
       "group": "For developers",
       "pages": [
-        "api-reference/quickstart",
-        "api-reference/models",
-        "api-reference/rate-limits",
-        "api-reference/chat-completion-API"
+        "for-developers/quickstart",
+        "for-developers/models",
+        "for-developers/rate-limits"
+      ]
+    },
+    {
+      "group": "API docs",
+      "pages": [
+        "api-reference/chat-completion-API",
+        "api-reference/embedding-API"
       ]
     },
     {
