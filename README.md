@@ -24,6 +24,8 @@ Run the following to check for broken links (does not check headers and external
 npm run broken-links
 ```
 
+The openapi.json is exported from the distributed-inference repository and **MUST NOT** be manually edited.
+
 ### Deployment
 
 The `main` branch is automatically deployed to docs.galadriel.com.
