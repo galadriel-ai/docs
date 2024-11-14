@@ -53,7 +53,7 @@
       "pages": [
         "api-reference/quickstart",
         "api-reference/models",
-        "api-reference/pricing-and-rate-limits",
+        "api-reference/rate-limits",
         "api-reference/chat-completion-API"
       ]
     },
