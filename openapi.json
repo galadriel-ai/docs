@@ -2,11 +2,11 @@
   "openapi": "3.1.0",
   "info": {
     "title": "API",
-    "description": "API version 1.0.1",
+    "description": "API version 1.0.0",
     "version": "1.0.0",
     "contact": {
       "name": "",
-      "email": "kristjan@galadriel.com"
+      "email": ""
     },
     "x-logo": {
       "url": ""
@@ -60,14 +60,1072 @@
         },
         "security": [
           {
-            "bearerAuth": []
+            "APIKeyHeader": []
+          },
+          {
+            "APIKeyHeader": []
           }
         ]
+      }
+    },
+    "/v1/embeddings": {
+      "post": {
+        "tags": [
+          "Embeddings"
+        ],
+        "summary": "Creates an embedding vector representing the input text.",
+        "description": "Given a list of strings return embeddings for them.",
+        "operationId": "completions_v1_embeddings_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EmbeddingRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Returns a list of embeddings.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateEmbeddingResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ]
+      }
+    },
+    "/v1/tool/search": {
+      "post": {
+        "tags": [
+          "Tool"
+        ],
+        "summary": "Use web search.",
+        "description": "Given a search query find results from the web.",
+        "operationId": "search_v1_tool_search_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SearchRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Returns a list of search results.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SearchResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ]
+      }
+    },
+    "/v1/node/info": {
+      "get": {
+        "tags": [
+          "Node"
+        ],
+        "summary": "Node Info",
+        "operationId": "Node_Info_v1_node_info_get",
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "node_id",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "Node id",
+              "title": "Node Id"
+            },
+            "description": "Node id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetNodeInfoResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Node"
+        ],
+        "summary": "Node Info",
+        "operationId": "Node_Info_v1_node_info_post",
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PostNodeInfoRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PostNodeInfoResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/node/stats": {
+      "get": {
+        "tags": [
+          "Node"
+        ],
+        "summary": "Node Stats",
+        "operationId": "Node_Stats_v1_node_stats_get",
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "node_id",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "Node id",
+              "title": "Node Id"
+            },
+            "description": "Node id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetNodeStatsResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/node/benchmark": {
+      "get": {
+        "tags": [
+          "Node"
+        ],
+        "summary": "Node Benchmark",
+        "operationId": "Node_Benchmark_v1_node_benchmark_get",
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "node_id",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "Node id",
+              "title": "Node Id"
+            },
+            "description": "Node id"
+          },
+          {
+            "name": "model",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "Model name",
+              "title": "Model"
+            },
+            "description": "Model name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetNodeBenchmarkResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Node"
+        ],
+        "summary": "Node Benchmark",
+        "operationId": "Node_Benchmark_v1_node_benchmark_post",
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PostNodeBenchmarkRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PostNodeBenchmarkResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/network/stats": {
+      "get": {
+        "tags": [
+          "Network"
+        ],
+        "summary": "Network Stats",
+        "operationId": "Network_Stats_v1_network_stats_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NetworkStatsResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ]
+      }
+    },
+    "/v1/auth/signup": {
+      "post": {
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "Sign up new user",
+        "description": "Sign up new user with email, username and password",
+        "operationId": "signup_v1_auth_signup_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SignupRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Returns a session token, or a helpful error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SignupResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/auth/validate-email": {
+      "post": {
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "Validate user email.",
+        "description": "Validate user email.",
+        "operationId": "validate_email_v1_auth_validate_email_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ValidateEmailRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Returns status.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidateEmailResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/auth/reset_user_password": {
+      "post": {
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "Validate magic link and reset user password",
+        "description": "Validate magic link, after using the /signup endpoint and save user password.",
+        "operationId": "reset_user_password_v1_auth_reset_user_password_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ResetUserPasswordRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Returns a session token, or a helpful error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResetUserPasswordResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/auth/login": {
+      "post": {
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "Log in with password",
+        "description": "Validate password and log in.",
+        "operationId": "login_v1_auth_login_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Returns a session token, or a helpful error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoginResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/auth/profile": {
+      "post": {
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "Save profile",
+        "description": "Save user profile.",
+        "operationId": "profile_data_v1_auth_profile_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SetUserProfileDataRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SetUserProfileDataResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ]
+      }
+    },
+    "/v1/dashboard/user-node-stats": {
+      "get": {
+        "tags": [
+          "Dashboard Network"
+        ],
+        "summary": "Node Stats",
+        "operationId": "Node_Stats_v1_dashboard_user_node_stats_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetUserAggregatedStatsResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ]
+      }
+    },
+    "/v1/dashboard/network-stats": {
+      "get": {
+        "tags": [
+          "Dashboard Network"
+        ],
+        "summary": "Network Stats",
+        "operationId": "Network_Stats_v1_dashboard_network_stats_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NetworkStatsResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ]
+      }
+    },
+    "/v1/dashboard/api-key-example": {
+      "get": {
+        "tags": [
+          "Dashboard Network"
+        ],
+        "summary": "Api Key Example",
+        "operationId": "Api_key_example_v1_dashboard_api_key_example_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetUserApiKeyExampleResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ]
+      }
+    },
+    "/v1/dashboard/api-key": {
+      "get": {
+        "tags": [
+          "Dashboard Network"
+        ],
+        "summary": "Api Key",
+        "operationId": "Api_key_v1_dashboard_api_key_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetApiKeysResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Dashboard Network"
+        ],
+        "summary": "Api Key",
+        "operationId": "Api_key_v1_dashboard_api_key_post",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateApiKeyResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "Dashboard Network"
+        ],
+        "summary": "Api Key",
+        "operationId": "Api_key_v1_dashboard_api_key_delete",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeleteApiKeyRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteApiKeyResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ]
+      }
+    },
+    "/v1/dashboard/node": {
+      "put": {
+        "tags": [
+          "Dashboard Network"
+        ],
+        "summary": "Update Node",
+        "operationId": "Update_Node_v1_dashboard_node_put",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateNodeRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateNodeResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Dashboard Network"
+        ],
+        "summary": "Create Node",
+        "operationId": "Create_Node_v1_dashboard_node_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateNodeRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateNodeResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ]
+      }
+    },
+    "/v1/dashboard/nodes": {
+      "get": {
+        "tags": [
+          "Dashboard Network"
+        ],
+        "summary": "List All Nodes",
+        "operationId": "List_all_nodes_v1_dashboard_nodes_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListNodeResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ]
+      }
+    },
+    "/v1/dashboard/chat/completions": {
+      "post": {
+        "tags": [
+          "Dashboard Network"
+        ],
+        "summary": "Creates a model response for the given chat conversation.",
+        "description": "Given a list of messages comprising a conversation, the model will return a response.",
+        "operationId": "completions_v1_dashboard_chat_completions_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChatCompletionRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Returns a chat completion object, or a streamed sequence of chat completion chunk objects if the request is streamed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChatCompletion"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "APIKeyHeader": []
+          },
+          {
+            "APIKeyHeader": []
+          }
+        ]
+      }
+    },
+    "/v1/dashboard/graph": {
+      "get": {
+        "tags": [
+          "Dashboard Network"
+        ],
+        "summary": "Get Network/Node Graphs",
+        "operationId": "Get_network_node_graphs_v1_dashboard_graph_get",
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "graph_type",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "enum": [
+                "network",
+                "user",
+                "node"
+              ],
+              "type": "string",
+              "default": "network",
+              "title": "Graph Type"
+            }
+          },
+          {
+            "name": "node_name",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Node Name"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetGraphResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/dashboard/rate-limits": {
+      "get": {
+        "tags": [
+          "Dashboard Network"
+        ],
+        "summary": "Get Current Rate Limits And Usage",
+        "operationId": "Get_current_rate_limits_and_usage_v1_dashboard_rate_limits_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RateLimitResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ]
+      }
+    },
+    "/": {
+      "get": {
+        "summary": "Returns API information",
+        "description": "Returns API information",
+        "operationId": "root__get",
+        "responses": {
+          "200": {
+            "description": "API information with title and description.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiInfo"
+                }
+              }
+            }
+          }
+        }
       }
     }
   },
   "components": {
     "schemas": {
+      "ApiInfo": {
+        "properties": {
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "description": {
+            "type": "string",
+            "title": "Description"
+          }
+        },
+        "type": "object",
+        "required": [
+          "title",
+          "description"
+        ],
+        "title": "ApiInfo",
+        "example": {
+          "description": "Distributed inference",
+          "title": "Distributed inference"
+        }
+      },
       "ChatCompletion": {
         "properties": {
           "id": {
@@ -143,31 +1201,7 @@
           "model",
           "object"
         ],
-        "title": "ChatCompletion",
-        "examples": [
-          {
-            "id": "id",
-            "choices": [
-              {
-                "finish_reason": "stop",
-                "index": 0,
-                "logprobs": null,
-                "message": {
-                  "content": "Hello. It's nice to meet you. Is there something I can help you with or would you like to chat?",
-                  "refusal": null,
-                  "role": "assistant",
-                  "function_call": null,
-                  "tool_calls": null
-                }
-              }
-            ],
-            "created": 1728558433,
-            "model": "llama3.1:70b",
-            "object": "chat.completion",
-            "service_tier": null,
-            "system_fingerprint": null
-          }
-        ]
+        "title": "ChatCompletion"
       },
       "ChatCompletionMessage": {
         "properties": {
@@ -240,7 +1274,7 @@
             "title": "Id"
           },
           "function": {
-            "$ref": "#/components/schemas/Function"
+            "$ref": "#/components/schemas/Function-Output"
           },
           "type": {
             "type": "string",
@@ -268,27 +1302,12 @@
             },
             "type": "array",
             "title": "Messages",
-            "description": "A list of messages comprising the conversation so far. ",
-            "examples": [
-              {
-                "content": "You are a helpful assistant.",
-                "role": "system"
-              },
-              {
-                "content": "Hello!",
-                "role": "user"
-              }
-            ]
+            "description": "A list of messages comprising the conversation so far. "
           },
           "model": {
             "type": "string",
             "title": "Model",
-            "description": "ID of the model to use. Get ID for available [models](/models).",
-            "examples": [
-              "llama3.1:70b",
-              "neuralmagic/Meta-Llama-3.1-70B-Instruct-quantized.w4a16",
-              "neuralmagic/Meta-Llama-3.1-405B-Instruct-quantized.w4a16"
-            ]
+            "description": "ID of the model to use. Get ID for available [models](/for-developers/models)."
           },
           "frequency_penalty": {
             "anyOf": [
@@ -349,7 +1368,7 @@
               }
             ],
             "title": "Max Tokens",
-            "description": "The maximum number of tokens to generate in the chat completion."
+            "description": "The maximum number of tokens to generate in the chat completion. [Models](/for-developers/models) specific."
           },
           "n": {
             "anyOf": [
@@ -389,7 +1408,7 @@
                 "type": "null"
               }
             ],
-            "description": "An object specifying the format that the model must output. Compatible with GPT-4o, GPT-4o mini, GPT-4 Turbo and all GPT-3.5 Turbo models newer than gpt-3.5-turbo-1106."
+            "description": "An object specifying the format that the model must output."
           },
           "seed": {
             "anyOf": [
@@ -498,6 +1517,18 @@
             ],
             "title": "Tool Choice",
             "description": "Controls which (if any) tool is called by the model. none means the model will not call any tool and instead generates a message. auto means the model can pick between generating a message or calling one or more tools. required means the model must call one or more tools. Specifying a particular tool via `{\"type\": \"function\", \"function\": {\"name\": \"my_function\"}}` forces the model to call that tool."
+          },
+          "user": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "User",
+            "description": "A unique identifier representing your end-user, which can help OpenAI to monitor and detect abuse."
           }
         },
         "type": "object",
@@ -506,21 +1537,19 @@
           "model"
         ],
         "title": "ChatCompletionRequest",
-        "examples": [
-          {
-            "messages": [
-              {
-                "content": "You are a helpful assistant.",
-                "role": "system"
-              },
-              {
-                "content": "Hello!",
-                "role": "user"
-              }
-            ],
-            "model": "llama3.1:70b"
-          }
-        ]
+        "example": {
+          "messages": [
+            {
+              "content": "You are a helpful assistant.",
+              "role": "system"
+            },
+            {
+              "content": "Hello!",
+              "role": "user"
+            }
+          ],
+          "model": "llama3.1"
+        }
       },
       "ChatCompletionTokenLogprob": {
         "properties": {
@@ -662,6 +1691,67 @@
         ],
         "title": "CompletionUsage"
       },
+      "CreateApiKeyResponse": {
+        "properties": {
+          "api_key_id": {
+            "type": "string",
+            "title": "Api Key Id",
+            "description": "Unique ID of the API key"
+          },
+          "api_key": {
+            "type": "string",
+            "title": "Api Key",
+            "description": "Newly created API key"
+          },
+          "created_at": {
+            "type": "string",
+            "title": "Created At",
+            "description": "API key creation date in ISO 8601 format."
+          }
+        },
+        "type": "object",
+        "required": [
+          "api_key_id",
+          "api_key",
+          "created_at"
+        ],
+        "title": "CreateApiKeyResponse"
+      },
+      "CreateEmbeddingResponse": {
+        "properties": {
+          "data": {
+            "items": {
+              "$ref": "#/components/schemas/Embedding"
+            },
+            "type": "array",
+            "title": "Data"
+          },
+          "model": {
+            "type": "string",
+            "title": "Model"
+          },
+          "object": {
+            "type": "string",
+            "enum": [
+              "list"
+            ],
+            "const": "list",
+            "title": "Object"
+          },
+          "usage": {
+            "$ref": "#/components/schemas/Usage"
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "required": [
+          "data",
+          "model",
+          "object",
+          "usage"
+        ],
+        "title": "CreateEmbeddingResponse"
+      },
       "CreateNodeRequest": {
         "properties": {
           "node_name": {
@@ -700,223 +1790,80 @@
         ],
         "title": "CreateNodeResponse"
       },
-      "Function": {
+      "DeleteApiKeyRequest": {
         "properties": {
-          "arguments": {
+          "api_key_id": {
             "type": "string",
-            "title": "Arguments"
-          },
-          "name": {
-            "type": "string",
-            "title": "Name"
-          }
-        },
-        "additionalProperties": true,
-        "type": "object",
-        "required": [
-          "arguments",
-          "name"
-        ],
-        "title": "Function"
-      },
-      "FunctionCall-Input": {
-        "properties": {
-          "arguments": {
-            "type": "string",
-            "title": "Arguments",
-            "description": "The name and arguments of a function that should be called, as generated by the model."
-          },
-          "name": {
-            "type": "string",
-            "title": "Name",
-            "description": "The name of the function to call."
+            "title": "Api Key Id",
+            "description": "Unique ID of the API key"
           }
         },
         "type": "object",
         "required": [
-          "arguments",
-          "name"
+          "api_key_id"
         ],
-        "title": "FunctionCall"
+        "title": "DeleteApiKeyRequest"
       },
-      "FunctionCall-Output": {
+      "DeleteApiKeyResponse": {
         "properties": {
-          "arguments": {
-            "type": "string",
-            "title": "Arguments"
-          },
-          "name": {
-            "type": "string",
-            "title": "Name"
-          }
-        },
-        "additionalProperties": true,
-        "type": "object",
-        "required": [
-          "arguments",
-          "name"
-        ],
-        "title": "FunctionCall"
-      },
-      "HTTPValidationError": {
-        "properties": {
-          "detail": {
-            "items": {
-              "$ref": "#/components/schemas/ValidationError"
-            },
-            "type": "array",
-            "title": "Detail"
-          }
-        },
-        "type": "object",
-        "title": "HTTPValidationError"
-      },
-      "JsonSchema": {
-        "properties": {
-          "description": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Description",
-            "description": "A description of what the response format is for, used by the model to determine how to respond in the format.",
-            "default": true
-          },
-          "name": {
-            "type": "string",
-            "title": "Name",
-            "description": "The name of the response format. Must be a-z, A-Z, 0-9, or contain underscores and dashes, with a maximum length of 64.",
-            "default": true
-          },
-          "schema": {
-            "anyOf": [
-              {
-                "type": "object"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Schema",
-            "description": "The schema for the response format, described as a JSON Schema object."
-          },
-          "strict": {
-            "anyOf": [
-              {
-                "type": "boolean"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Strict",
-            "description": "Whether to enable strict schema adherence when generating the output. If set to true, the model will always follow the exact schema defined in the schema field. Only a subset of JSON Schema is supported when `strict` is `true`."
-          }
-        },
-        "type": "object",
-        "title": "JsonSchema"
-      },
-      "Message": {
-        "properties": {
-          "content": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Content",
-            "description": "The contents of the message. `content is required for all messages, and may be null for assistant messages with function calls."
-          },
-          "function_call": {
-            "anyOf": [
-              {
-                "$ref": "#/components/schemas/FunctionCall-Input"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "description": "The name and arguments of a function that should be called, as generated by the model."
-          },
-          "role": {
-            "type": "string",
-            "title": "Role",
-            "description": "One of: \"system\", \"assistant\", \"user\" or \"tool\""
-          },
-          "name": {
-            "type": [
-              "null",
-              "string"
-            ],
-            "title": "Name",
-            "description": "The name of the author of this message. name is required if role is function, and it should be the name of the function whose response is in the content. May contain a-z, A-Z, 0-9, and underscores, with a maximum length of 64 characters."
-          }
-        },
-        "type": "object",
-        "required": [
-          "content",
-          "role"
-        ],
-        "title": "Message"
-      },
-      "ResponseFormat": {
-        "properties": {
-          "type": {
+          "response": {
             "type": "string",
             "enum": [
-              "text",
-              "json_object",
-              "json_schema"
+              "OK"
             ],
-            "title": "Type",
-            "description": "The type of response format being defined: `text`"
+            "const": "OK",
+            "title": "Response",
+            "description": "Success response",
+            "default": "OK"
+          }
+        },
+        "type": "object",
+        "title": "DeleteApiKeyResponse"
+      },
+      "Embedding": {
+        "properties": {
+          "embedding": {
+            "items": {
+              "type": "number"
+            },
+            "type": "array",
+            "title": "Embedding"
           },
-          "json_schema": {
+          "index": {
+            "type": "integer",
+            "title": "Index"
+          },
+          "object": {
+            "type": "string",
+            "enum": [
+              "embedding"
+            ],
+            "const": "embedding",
+            "title": "Object"
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "required": [
+          "embedding",
+          "index",
+          "object"
+        ],
+        "title": "Embedding"
+      },
+      "EmbeddingRequest": {
+        "properties": {
+          "input": {
             "anyOf": [
               {
-                "$ref": "#/components/schemas/JsonSchema"
+                "type": "string"
               },
               {
-                "type": "null"
-              }
-            ]
-          }
-        },
-        "type": "object",
-        "required": [
-          "type"
-        ],
-        "title": "ResponseFormat"
-      },
-      "StreamOptions": {
-        "properties": {
-          "include_usage": {
-            "type": "boolean",
-            "title": "Include Usage",
-            "description": "If set, an additional chunk will be streamed before the `data: [DONE]` message. The usage field on this chunk shows the token usage statistics for the entire request, and the choices field will always be an empty array. All other chunks will also include a usage field, but with a null value."
-          }
-        },
-        "type": "object",
-        "required": [
-          "include_usage"
-        ],
-        "title": "StreamOptions"
-      },
-      "TopLogprob": {
-        "properties": {
-          "token": {
-            "type": "string",
-            "title": "Token"
-          },
-          "bytes": {
-            "anyOf": [
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
               {
                 "items": {
                   "type": "integer"
@@ -924,128 +1871,65 @@
                 "type": "array"
               },
               {
-                "type": "null"
-              }
-            ],
-            "title": "Bytes"
-          },
-          "logprob": {
-            "type": "number",
-            "title": "Logprob"
-          }
-        },
-        "additionalProperties": true,
-        "type": "object",
-        "required": [
-          "token",
-          "logprob"
-        ],
-        "title": "TopLogprob"
-      },
-      "ValidationError": {
-        "properties": {
-          "loc": {
-            "items": {
-              "anyOf": [
-                {
-                  "type": "string"
+                "items": {
+                  "items": {
+                    "type": "integer"
+                  },
+                  "type": "array"
                 },
-                {
-                  "type": "integer"
-                }
-              ]
-            },
-            "type": "array",
-            "title": "Location"
+                "type": "array"
+              }
+            ],
+            "title": "Input",
+            "description": "Input text to embed, encoded as a string or array of tokens. To embed multiple inputs in a single request, pass an array of strings or array of token arrays. The input must not exceed the max input tokens for the [model](/for-developers/models)."
           },
-          "msg": {
+          "model": {
             "type": "string",
-            "title": "Message"
+            "title": "Model",
+            "description": "ID of the model to use. Get ID for available [models](/for-developers/models)"
           },
-          "type": {
-            "type": "string",
-            "title": "Error Type"
-          }
-        },
-        "type": "object",
-        "required": [
-          "loc",
-          "msg",
-          "type"
-        ],
-        "title": "ValidationError"
-      },
-      "Tool": {
-        "properties": {
-          "type": {
+          "encoding_format": {
             "anyOf": [
               {
                 "type": "string",
                 "enum": [
-                  "function"
-                ],
-                "const": "function"
+                  "float",
+                  "base64"
+                ]
               },
               {
                 "type": "null"
               }
             ],
-            "title": "Type",
-            "description": "The type of the tool. Currently, only `function` is supported."
+            "title": "Encoding Format",
+            "description": "The format to return the embeddings in. Can be either `float` or `base64`."
           },
-          "function": {
-            "$ref": "#/components/schemas/Function-Input"
-          }
-        },
-        "type": "object",
-        "required": [
-          "type",
-          "function"
-        ],
-        "title": "Tool"
-      },
-      "ToolChoice": {
-        "properties": {
-          "type": {
+          "user": {
             "anyOf": [
               {
-                "type": "string",
-                "enum": [
-                  "function"
-                ],
-                "const": "function"
+                "type": "string"
               },
               {
                 "type": "null"
               }
             ],
-            "title": "Type",
-            "description": "The type of the tool. Currently, only `function` is supported."
-          },
-          "function": {
-            "$ref": "#/components/schemas/ToolChoiceFunction"
+            "title": "User",
+            "description": "A unique identifier representing your end-user"
           }
         },
         "type": "object",
         "required": [
-          "type",
-          "function"
+          "input",
+          "model"
         ],
-        "title": "ToolChoice"
-      },
-      "ToolChoiceFunction": {
-        "properties": {
-          "name": {
-            "type": "string",
-            "title": "Name",
-            "description": "The name of the function to call."
-          }
-        },
-        "type": "object",
-        "required": [
-          "name"
-        ],
-        "title": "ToolChoiceFunction"
+        "title": "EmbeddingRequest",
+        "example": {
+          "input": [
+            "My epic text number 1",
+            "My epic text number 2"
+          ],
+          "model": "gte-large-en-v1.5"
+        }
       },
       "Function-Input": {
         "properties": {
@@ -1149,13 +2033,1761 @@
           "name"
         ],
         "title": "FunctionCall"
+      },
+      "GetApiKeysResponse": {
+        "properties": {
+          "api_keys": {
+            "items": {
+              "$ref": "#/components/schemas/UserApiKey"
+            },
+            "type": "array",
+            "title": "Api Keys",
+            "description": "User API keys"
+          }
+        },
+        "type": "object",
+        "required": [
+          "api_keys"
+        ],
+        "title": "GetApiKeysResponse"
+      },
+      "GetGraphResponse": {
+        "properties": {
+          "timestamps": {
+            "items": {
+              "type": "integer"
+            },
+            "type": "array",
+            "title": "Timestamps",
+            "description": "Timestamps for the graph"
+          },
+          "values": {
+            "items": {
+              "type": "integer"
+            },
+            "type": "array",
+            "title": "Values",
+            "description": "Values for the corresponding timestamps"
+          }
+        },
+        "type": "object",
+        "required": [
+          "timestamps",
+          "values"
+        ],
+        "title": "GetGraphResponse"
+      },
+      "GetNodeBenchmarkResponse": {
+        "properties": {
+          "node_id": {
+            "type": "string",
+            "title": "Node Id",
+            "description": "Unique ID of the Node"
+          },
+          "model_name": {
+            "type": "string",
+            "title": "Model Name",
+            "description": "Model name"
+          },
+          "tokens_per_second": {
+            "type": "number",
+            "title": "Tokens Per Second",
+            "description": "Tokens per second"
+          }
+        },
+        "type": "object",
+        "required": [
+          "node_id",
+          "model_name",
+          "tokens_per_second"
+        ],
+        "title": "GetNodeBenchmarkResponse"
+      },
+      "GetNodeInfoResponse": {
+        "properties": {
+          "node_id": {
+            "type": "string",
+            "title": "Node Id",
+            "description": "Unique ID of the Node"
+          },
+          "gpu_model": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Gpu Model",
+            "description": "GPU model"
+          },
+          "vram": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Vram",
+            "description": "VRAM in MB"
+          },
+          "gpu_count": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Gpu Count",
+            "description": "GPU count"
+          },
+          "cpu_model": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Cpu Model",
+            "description": "CPU model"
+          },
+          "cpu_count": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Cpu Count",
+            "description": "CPU cores count"
+          },
+          "ram": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ram",
+            "description": "RAM in MB"
+          },
+          "network_download_speed": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Network Download Speed",
+            "description": "Network download speed in Mbps"
+          },
+          "network_upload_speed": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Network Upload Speed",
+            "description": "Network upload speed in Mbps"
+          },
+          "operating_system": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Operating System",
+            "description": "Operating system"
+          },
+          "version": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Version",
+            "description": "Node version"
+          },
+          "name_alias": {
+            "type": "string",
+            "title": "Name Alias",
+            "description": "User defined name for the node"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "online",
+              "offline"
+            ],
+            "title": "Status",
+            "description": "Node status"
+          },
+          "run_duration_seconds": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Run Duration Seconds",
+            "description": "Run duration in seconds since connecting"
+          },
+          "node_created_at": {
+            "type": "integer",
+            "title": "Node Created At",
+            "description": "UNIX timestamp of node first registration"
+          }
+        },
+        "type": "object",
+        "required": [
+          "node_id",
+          "operating_system",
+          "name_alias",
+          "status",
+          "node_created_at"
+        ],
+        "title": "GetNodeInfoResponse"
+      },
+      "GetNodeStatsResponse": {
+        "properties": {
+          "requests_served": {
+            "type": "integer",
+            "title": "Requests Served",
+            "description": "Total inference requests served by the node",
+            "default": 0
+          },
+          "requests_served_day": {
+            "type": "integer",
+            "title": "Requests Served Day",
+            "description": "Total inference requests served by the node past 24 hours",
+            "default": 0
+          },
+          "average_time_to_first_token": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Average Time To First Token",
+            "description": "Average time to first token for the node",
+            "default": 0
+          },
+          "benchmark_tokens_per_second": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Benchmark Tokens Per Second",
+            "description": "Node benchmark generated tokens per second",
+            "default": 0
+          },
+          "benchmark_model_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Benchmark Model Name",
+            "description": "Node benchmark model name"
+          },
+          "benchmark_created_at": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Benchmark Created At",
+            "description": "UNIX timestamp of node benchmark creation",
+            "default": 0
+          },
+          "completed_inferences": {
+            "items": {
+              "$ref": "#/components/schemas/InferenceStats"
+            },
+            "type": "array",
+            "title": "Completed Inferences",
+            "description": "Last 10 processed inference calls"
+          }
+        },
+        "type": "object",
+        "title": "GetNodeStatsResponse"
+      },
+      "GetUserAggregatedStatsResponse": {
+        "properties": {
+          "total_requests_served": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Total Requests Served",
+            "description": "User total requests served"
+          },
+          "requests_served_day": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Requests Served Day",
+            "description": "User total requests served in the past 24h"
+          },
+          "average_time_to_first_token": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Average Time To First Token",
+            "description": "User average time to first token across all their nodes"
+          },
+          "benchmark_total_tokens_per_second": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Benchmark Total Tokens Per Second",
+            "description": "User max theoretical tokens per second across all their nodes"
+          }
+        },
+        "type": "object",
+        "required": [
+          "total_requests_served",
+          "requests_served_day",
+          "average_time_to_first_token",
+          "benchmark_total_tokens_per_second"
+        ],
+        "title": "GetUserAggregatedStatsResponse"
+      },
+      "GetUserApiKeyExampleResponse": {
+        "properties": {
+          "api_key": {
+            "type": "string",
+            "title": "Api Key",
+            "description": "Example user API key"
+          }
+        },
+        "type": "object",
+        "required": [
+          "api_key"
+        ],
+        "title": "GetUserApiKeyExampleResponse"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "InferenceStats": {
+        "properties": {
+          "model_name": {
+            "type": "string",
+            "title": "Model Name",
+            "description": "Model name for the given inference"
+          },
+          "prompt_tokens": {
+            "type": "integer",
+            "title": "Prompt Tokens",
+            "description": "Prompt tokens count"
+          },
+          "completion_tokens": {
+            "type": "integer",
+            "title": "Completion Tokens",
+            "description": "Completion tokens count"
+          },
+          "total_tokens": {
+            "type": "integer",
+            "title": "Total Tokens",
+            "description": "Total tokens count"
+          },
+          "created_at": {
+            "type": "integer",
+            "title": "Created At",
+            "description": "UNIX timestamp of the inference completion"
+          }
+        },
+        "type": "object",
+        "required": [
+          "model_name",
+          "prompt_tokens",
+          "completion_tokens",
+          "total_tokens",
+          "created_at"
+        ],
+        "title": "InferenceStats"
+      },
+      "JsonSchema": {
+        "properties": {
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Description",
+            "description": "A description of what the response format is for, used by the model to determine how to respond in the format.",
+            "default": true
+          },
+          "name": {
+            "type": "string",
+            "title": "Name",
+            "description": "The name of the response format. Must be a-z, A-Z, 0-9, or contain underscores and dashes, with a maximum length of 64.",
+            "default": true
+          },
+          "schema": {
+            "anyOf": [
+              {
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Schema",
+            "description": "The schema for the response format, described as a JSON Schema object."
+          },
+          "strict": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Strict",
+            "description": "Whether to enable strict schema adherence when generating the output. If set to true, the model will always follow the exact schema defined in the schema field. Only a subset of JSON Schema is supported when `strict` is `true`."
+          }
+        },
+        "type": "object",
+        "title": "JsonSchema"
+      },
+      "ListNodeRequestNode": {
+        "properties": {
+          "node_id": {
+            "type": "string",
+            "title": "Node Id",
+            "description": "Unique ID of the Node"
+          },
+          "gpu_model": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Gpu Model",
+            "description": "GPU model"
+          },
+          "vram": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Vram",
+            "description": "VRAM in MB"
+          },
+          "gpu_count": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Gpu Count",
+            "description": "GPU count"
+          },
+          "cpu_model": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Cpu Model",
+            "description": "CPU model"
+          },
+          "cpu_count": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Cpu Count",
+            "description": "CPU cores count"
+          },
+          "ram": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ram",
+            "description": "RAM in MB"
+          },
+          "network_download_speed": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Network Download Speed",
+            "description": "Network download speed in Mbps"
+          },
+          "network_upload_speed": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Network Upload Speed",
+            "description": "Network upload speed in Mbps"
+          },
+          "operating_system": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Operating System",
+            "description": "Operating system"
+          },
+          "version": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Version",
+            "description": "Node version"
+          },
+          "name_alias": {
+            "type": "string",
+            "title": "Name Alias",
+            "description": "User defined name for the Node"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "online",
+              "offline"
+            ],
+            "title": "Status",
+            "description": "Node status"
+          },
+          "run_duration_seconds": {
+            "type": "integer",
+            "title": "Run Duration Seconds",
+            "description": "Run duration in seconds since connecting",
+            "default": 0
+          },
+          "total_uptime_seconds": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Total Uptime Seconds",
+            "description": "Node total uptime in seconds"
+          },
+          "requests_served": {
+            "type": "integer",
+            "title": "Requests Served",
+            "description": "Total inference requests served by the node",
+            "default": 0
+          },
+          "requests_served_day": {
+            "type": "integer",
+            "title": "Requests Served Day",
+            "description": "Total inference requests served by the node past 24 hours",
+            "default": 0
+          },
+          "benchmark_tokens_per_second": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Benchmark Tokens Per Second",
+            "description": "Theoretical max tokens per second for the node"
+          },
+          "is_archived": {
+            "type": "boolean",
+            "title": "Is Archived",
+            "description": "true if a node is archived"
+          },
+          "node_created_at": {
+            "type": "integer",
+            "title": "Node Created At",
+            "description": "UNIX timestamp of node first registration"
+          }
+        },
+        "type": "object",
+        "required": [
+          "node_id",
+          "operating_system",
+          "name_alias",
+          "status",
+          "benchmark_tokens_per_second",
+          "is_archived",
+          "node_created_at"
+        ],
+        "title": "ListNodeRequestNode"
+      },
+      "ListNodeResponse": {
+        "properties": {
+          "response": {
+            "type": "string",
+            "enum": [
+              "OK"
+            ],
+            "const": "OK",
+            "title": "Response",
+            "description": "Success response",
+            "default": "OK"
+          },
+          "nodes": {
+            "items": {
+              "$ref": "#/components/schemas/ListNodeRequestNode"
+            },
+            "type": "array",
+            "title": "Nodes",
+            "description": "User nodes"
+          }
+        },
+        "type": "object",
+        "required": [
+          "nodes"
+        ],
+        "title": "ListNodeResponse"
+      },
+      "LoginRequest": {
+        "properties": {
+          "email": {
+            "type": "string",
+            "title": "Email",
+            "description": "Email"
+          },
+          "password": {
+            "type": "string",
+            "title": "Password",
+            "description": "User password"
+          }
+        },
+        "type": "object",
+        "required": [
+          "email",
+          "password"
+        ],
+        "title": "LoginRequest"
+      },
+      "LoginResponse": {
+        "properties": {
+          "response": {
+            "type": "string",
+            "enum": [
+              "OK"
+            ],
+            "const": "OK",
+            "title": "Response",
+            "description": "Success response",
+            "default": "OK"
+          },
+          "session_token": {
+            "type": "string",
+            "title": "Session Token",
+            "description": "Session token"
+          },
+          "onboarding_completed": {
+            "type": "boolean",
+            "title": "Onboarding Completed",
+            "description": "Onboarding status"
+          },
+          "user_uid": {
+            "type": "string",
+            "title": "User Uid",
+            "default": "User unique identifier"
+          },
+          "email": {
+            "type": "string",
+            "title": "Email",
+            "default": "User email address"
+          }
+        },
+        "type": "object",
+        "required": [
+          "session_token",
+          "onboarding_completed"
+        ],
+        "title": "LoginResponse"
+      },
+      "Message": {
+        "properties": {
+          "content": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Content",
+            "description": "The contents of the message. `content` is required for all messages, and may be null for assistant messages with function calls."
+          },
+          "function_call": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/FunctionCall-Input"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The name and arguments of a function that should be called, as generated by the model."
+          },
+          "role": {
+            "type": "string",
+            "title": "Role",
+            "description": "One of: `system`, `assistant`, `user` or `tool`"
+          },
+          "name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name",
+            "description": "The name of the author of this message. `name` is required if `role` is `function`, and it should be the name of the function whose response is in the content. May contain a-z, A-Z, 0-9, and underscores, with a maximum length of 64 characters."
+          }
+        },
+        "type": "object",
+        "required": [
+          "content",
+          "role"
+        ],
+        "title": "Message"
+      },
+      "ModelUsage": {
+        "properties": {
+          "model": {
+            "type": "string",
+            "title": "Model",
+            "default": "Model name"
+          },
+          "full_model": {
+            "type": "string",
+            "title": "Full Model",
+            "default": "Full model name"
+          },
+          "price_per_million_tokens": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Price Per Million Tokens",
+            "default": "Price per one million tokens"
+          },
+          "max_requests_per_day": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Max Requests Per Day",
+            "default": "Max requests allowed per day"
+          },
+          "max_requests_per_minute": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Max Requests Per Minute",
+            "default": "Max requests allowed per minute"
+          },
+          "max_tokens_per_day": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Max Tokens Per Day",
+            "default": "Max tokens allowed per day"
+          },
+          "max_tokens_per_minute": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Max Tokens Per Minute",
+            "default": "Max tokens allowed per minute"
+          },
+          "requests_left_day": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Requests Left Day",
+            "default": "Requests left for the day"
+          },
+          "requests_used_day": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Requests Used Day",
+            "default": "Requests used for the day"
+          },
+          "tokens_left_day": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Tokens Left Day",
+            "default": "Tokens left for the day"
+          },
+          "tokens_used_day": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Tokens Used Day",
+            "default": "Tokens used for the day"
+          }
+        },
+        "type": "object",
+        "title": "ModelUsage"
+      },
+      "NetworkModelStats": {
+        "properties": {
+          "model_name": {
+            "type": "string",
+            "title": "Model Name",
+            "description": "Model name"
+          },
+          "throughput": {
+            "type": "string",
+            "title": "Throughput",
+            "description": "Throughput in tokens/second"
+          }
+        },
+        "type": "object",
+        "required": [
+          "model_name",
+          "throughput"
+        ],
+        "title": "NetworkModelStats"
+      },
+      "NetworkStatsResponse": {
+        "properties": {
+          "nodes_count": {
+            "type": "integer",
+            "title": "Nodes Count",
+            "description": "Total registered nodes count"
+          },
+          "connected_nodes_count": {
+            "type": "integer",
+            "title": "Connected Nodes Count",
+            "description": "Currently connected nodes count"
+          },
+          "network_throughput": {
+            "type": "string",
+            "title": "Network Throughput",
+            "description": "Current network throughput in tokens/second"
+          },
+          "inference_count_day": {
+            "type": "integer",
+            "title": "Inference Count Day",
+            "description": "Inferences count in the past 24 hours"
+          },
+          "network_models_stats": {
+            "items": {
+              "$ref": "#/components/schemas/NetworkModelStats"
+            },
+            "type": "array",
+            "title": "Network Models Stats",
+            "description": "Current network throughput per model in tokens/second"
+          }
+        },
+        "type": "object",
+        "required": [
+          "nodes_count",
+          "connected_nodes_count",
+          "network_throughput",
+          "inference_count_day",
+          "network_models_stats"
+        ],
+        "title": "NetworkStatsResponse"
+      },
+      "PostNodeBenchmarkRequest": {
+        "properties": {
+          "node_id": {
+            "type": "string",
+            "title": "Node Id",
+            "description": "Unique ID of the Node"
+          },
+          "model_name": {
+            "type": "string",
+            "title": "Model Name",
+            "description": "Model name"
+          },
+          "tokens_per_second": {
+            "type": "number",
+            "title": "Tokens Per Second",
+            "description": "Tokens per second"
+          }
+        },
+        "type": "object",
+        "required": [
+          "node_id",
+          "model_name",
+          "tokens_per_second"
+        ],
+        "title": "PostNodeBenchmarkRequest"
+      },
+      "PostNodeBenchmarkResponse": {
+        "properties": {
+          "response": {
+            "type": "string",
+            "enum": [
+              "OK"
+            ],
+            "const": "OK",
+            "title": "Response",
+            "description": "Success response",
+            "default": "OK"
+          }
+        },
+        "type": "object",
+        "title": "PostNodeBenchmarkResponse"
+      },
+      "PostNodeInfoRequest": {
+        "properties": {
+          "node_id": {
+            "type": "string",
+            "title": "Node Id",
+            "description": "Unique ID of the Node"
+          },
+          "gpu_model": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Gpu Model",
+            "description": "GPU model"
+          },
+          "vram": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Vram",
+            "description": "VRAM in MB"
+          },
+          "gpu_count": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Gpu Count",
+            "description": "GPU count"
+          },
+          "cpu_model": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Cpu Model",
+            "description": "CPU model"
+          },
+          "cpu_count": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Cpu Count",
+            "description": "CPU cores count"
+          },
+          "ram": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ram",
+            "description": "RAM in MB"
+          },
+          "network_download_speed": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Network Download Speed",
+            "description": "Network download speed in Mbps"
+          },
+          "network_upload_speed": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Network Upload Speed",
+            "description": "Network upload speed in Mbps"
+          },
+          "operating_system": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Operating System",
+            "description": "Operating system"
+          },
+          "version": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Version",
+            "description": "Node version"
+          }
+        },
+        "type": "object",
+        "required": [
+          "node_id",
+          "operating_system"
+        ],
+        "title": "PostNodeInfoRequest"
+      },
+      "PostNodeInfoResponse": {
+        "properties": {
+          "response": {
+            "type": "string",
+            "enum": [
+              "OK"
+            ],
+            "const": "OK",
+            "title": "Response",
+            "description": "Success response",
+            "default": "OK"
+          }
+        },
+        "type": "object",
+        "title": "PostNodeInfoResponse"
+      },
+      "RateLimitResponse": {
+        "properties": {
+          "usage_tier_name": {
+            "type": "string",
+            "title": "Usage Tier Name",
+            "description": "Current API usage tier name"
+          },
+          "usage_tier_description": {
+            "type": "string",
+            "title": "Usage Tier Description",
+            "description": "Current API usage tier description"
+          },
+          "credits_balance": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Credits Balance",
+            "description": "User credits balance if user has or ever had a balance"
+          },
+          "usages": {
+            "items": {
+              "$ref": "#/components/schemas/ModelUsage"
+            },
+            "type": "array",
+            "title": "Usages",
+            "description": "Model max usage and usage stats"
+          }
+        },
+        "type": "object",
+        "required": [
+          "usage_tier_name",
+          "usage_tier_description",
+          "credits_balance",
+          "usages"
+        ],
+        "title": "RateLimitResponse"
+      },
+      "ResetUserPasswordRequest": {
+        "properties": {
+          "token": {
+            "type": "string",
+            "title": "Token",
+            "description": "Token gotten from magic link in email from /signup request"
+          },
+          "password": {
+            "type": "string",
+            "title": "Password",
+            "description": "User password"
+          }
+        },
+        "type": "object",
+        "required": [
+          "token",
+          "password"
+        ],
+        "title": "ResetUserPasswordRequest"
+      },
+      "ResetUserPasswordResponse": {
+        "properties": {
+          "response": {
+            "type": "string",
+            "enum": [
+              "OK"
+            ],
+            "const": "OK",
+            "title": "Response",
+            "description": "Success response",
+            "default": "OK"
+          },
+          "email": {
+            "type": "string",
+            "title": "Email",
+            "description": "User email"
+          },
+          "user_uid": {
+            "type": "string",
+            "title": "User Uid",
+            "default": "User unique identifier"
+          },
+          "session_token": {
+            "type": "string",
+            "title": "Session Token",
+            "description": "Session token"
+          }
+        },
+        "type": "object",
+        "required": [
+          "email",
+          "session_token"
+        ],
+        "title": "ResetUserPasswordResponse"
+      },
+      "ResponseFormat": {
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "text",
+              "json_object",
+              "json_schema"
+            ],
+            "title": "Type",
+            "description": "The type of response format being defined: `text`"
+          },
+          "json_schema": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/JsonSchema"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "type"
+        ],
+        "title": "ResponseFormat"
+      },
+      "SearchRequest": {
+        "properties": {
+          "query": {
+            "type": "string",
+            "title": "Query",
+            "description": "Search query"
+          },
+          "max_results": {
+            "type": "integer",
+            "title": "Max Results",
+            "description": "Search query",
+            "default": 5,
+            "max": 10,
+            "min": 1
+          }
+        },
+        "type": "object",
+        "required": [
+          "query"
+        ],
+        "title": "SearchRequest"
+      },
+      "SearchResponse": {
+        "properties": {
+          "results": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array",
+            "title": "Results",
+            "description": "Search results"
+          }
+        },
+        "type": "object",
+        "required": [
+          "results"
+        ],
+        "title": "SearchResponse"
+      },
+      "SetUserProfileDataRequest": {
+        "properties": {
+          "data": {
+            "type": "object",
+            "title": "Data",
+            "description": "User profile data"
+          }
+        },
+        "type": "object",
+        "required": [
+          "data"
+        ],
+        "title": "SetUserProfileDataRequest"
+      },
+      "SetUserProfileDataResponse": {
+        "properties": {
+          "response": {
+            "type": "string",
+            "enum": [
+              "OK"
+            ],
+            "const": "OK",
+            "title": "Response",
+            "description": "Success response",
+            "default": "OK"
+          }
+        },
+        "type": "object",
+        "title": "SetUserProfileDataResponse"
+      },
+      "SignupRequest": {
+        "properties": {
+          "email": {
+            "type": "string",
+            "title": "Email",
+            "description": "User email"
+          },
+          "password": {
+            "type": "string",
+            "title": "Password",
+            "description": "User password"
+          }
+        },
+        "type": "object",
+        "required": [
+          "email",
+          "password"
+        ],
+        "title": "SignupRequest"
+      },
+      "SignupResponse": {
+        "properties": {
+          "response": {
+            "type": "string",
+            "enum": [
+              "OK"
+            ],
+            "const": "OK",
+            "title": "Response",
+            "description": "Success response",
+            "default": "OK"
+          },
+          "email": {
+            "type": "string",
+            "title": "Email",
+            "description": "User email"
+          },
+          "user_uid": {
+            "type": "string",
+            "title": "User Uid",
+            "default": "User unique identifier"
+          },
+          "session_token": {
+            "type": "string",
+            "title": "Session Token",
+            "description": "Session token"
+          }
+        },
+        "type": "object",
+        "required": [
+          "email",
+          "session_token"
+        ],
+        "title": "SignupResponse"
+      },
+      "StreamOptions": {
+        "properties": {
+          "include_usage": {
+            "type": "boolean",
+            "title": "Include Usage",
+            "description": "If set, an additional chunk will be streamed before the `data: [DONE]` message. The usage field on this chunk shows the token usage statistics for the entire request, and the choices field will always be an empty array. All other chunks will also include a usage field, but with a null value."
+          }
+        },
+        "type": "object",
+        "required": [
+          "include_usage"
+        ],
+        "title": "StreamOptions"
+      },
+      "Tool": {
+        "properties": {
+          "type": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "function"
+                ],
+                "const": "function"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Type",
+            "description": "The type of the tool. Currently, only `function` is supported."
+          },
+          "function": {
+            "$ref": "#/components/schemas/Function-Input"
+          }
+        },
+        "type": "object",
+        "required": [
+          "type",
+          "function"
+        ],
+        "title": "Tool"
+      },
+      "ToolChoice": {
+        "properties": {
+          "type": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "function"
+                ],
+                "const": "function"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Type",
+            "description": "The type of the tool. Currently, only `function` is supported."
+          },
+          "function": {
+            "$ref": "#/components/schemas/ToolChoiceFunction"
+          }
+        },
+        "type": "object",
+        "required": [
+          "type",
+          "function"
+        ],
+        "title": "ToolChoice"
+      },
+      "ToolChoiceFunction": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name",
+            "description": "The name of the function to call."
+          }
+        },
+        "type": "object",
+        "required": [
+          "name"
+        ],
+        "title": "ToolChoiceFunction"
+      },
+      "TopLogprob": {
+        "properties": {
+          "token": {
+            "type": "string",
+            "title": "Token"
+          },
+          "bytes": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "integer"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Bytes"
+          },
+          "logprob": {
+            "type": "number",
+            "title": "Logprob"
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "required": [
+          "token",
+          "logprob"
+        ],
+        "title": "TopLogprob"
+      },
+      "UpdateNodeRequest": {
+        "properties": {
+          "node_id": {
+            "type": "string",
+            "title": "Node Id",
+            "description": "Unique ID of the Node"
+          },
+          "node_name": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 40,
+                "minLength": 3
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Node Name",
+            "description": "User defined node name to use as the new value"
+          },
+          "is_archived": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Is Archived",
+            "description": "New node archival status"
+          }
+        },
+        "type": "object",
+        "required": [
+          "node_id"
+        ],
+        "title": "UpdateNodeRequest"
+      },
+      "UpdateNodeResponse": {
+        "properties": {
+          "is_name_updated": {
+            "type": "boolean",
+            "title": "Is Name Updated",
+            "description": "Shows if the name was updated"
+          },
+          "is_archival_status_updated": {
+            "type": "boolean",
+            "title": "Is Archival Status Updated",
+            "description": "Shows if the archival status was updated"
+          }
+        },
+        "type": "object",
+        "required": [
+          "is_name_updated",
+          "is_archival_status_updated"
+        ],
+        "title": "UpdateNodeResponse"
+      },
+      "Usage": {
+        "properties": {
+          "prompt_tokens": {
+            "type": "integer",
+            "title": "Prompt Tokens"
+          },
+          "total_tokens": {
+            "type": "integer",
+            "title": "Total Tokens"
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "required": [
+          "prompt_tokens",
+          "total_tokens"
+        ],
+        "title": "Usage"
+      },
+      "UserApiKey": {
+        "properties": {
+          "api_key_id": {
+            "type": "string",
+            "title": "Api Key Id",
+            "description": "Unique ID of the API key"
+          },
+          "api_key_prefix": {
+            "type": "string",
+            "title": "Api Key Prefix",
+            "description": "Partially revealed API key"
+          },
+          "created_at": {
+            "type": "string",
+            "title": "Created At",
+            "description": "API key creation date in ISO 8601 format."
+          }
+        },
+        "type": "object",
+        "required": [
+          "api_key_id",
+          "api_key_prefix",
+          "created_at"
+        ],
+        "title": "UserApiKey"
+      },
+      "ValidateEmailRequest": {
+        "properties": {
+          "email": {
+            "type": "string",
+            "title": "Email",
+            "description": "User email"
+          }
+        },
+        "type": "object",
+        "required": [
+          "email"
+        ],
+        "title": "ValidateEmailRequest"
+      },
+      "ValidateEmailResponse": {
+        "properties": {
+          "response": {
+            "type": "string",
+            "enum": [
+              "OK"
+            ],
+            "const": "OK",
+            "title": "Response",
+            "description": "Success response",
+            "default": "OK"
+          }
+        },
+        "type": "object",
+        "title": "ValidateEmailResponse"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
       }
     },
     "securitySchemes": {
-      "bearerAuth": {
-        "type": "http",
-        "scheme": "bearer",
-        "description": "Bearer authentication header.\n\n  `Bearer Galadriel-API-key`\n\n  Get API key from [Galadriel dashboard](https://dashboard.galadriel.com/login)."
+      "APIKeyHeader": {
+        "type": "apiKey",
+        "description": "Bearer authentication header.\n\nexample value: `Bearer Galadriel-API-key`\n\nGet API key from Galadriel dashboard.",
+        "in": "header",
+        "name": "Authorization"
       }
     }
   },
