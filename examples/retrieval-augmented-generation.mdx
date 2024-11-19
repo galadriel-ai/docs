@@ -22,7 +22,7 @@ embeddings, gotten from the Galadriel API.
     2. Create an API key on the dashboard
   </Step>
   <Step title="Setup the environment">
-    1. create a filed called `.env`, and add your API key there:
+    1. create a file called `.env`, and add your API key there, together with the LLM to be used:
     ```bash
     GALADRIEL_API_KEY="YOUR GALADRIEL API KEY HERE"
     MODEL="llama3.1-70b"
@@ -43,7 +43,7 @@ embeddings, gotten from the Galadriel API.
 
 ### Load the variables
 
-First, in our Python file, we must import the dependencies and load the environment variables
+First, in our Python file, we must load the environment variables
 
 ```python
 import os
@@ -67,7 +67,7 @@ EMBEDDING_MODEL = "gte-large-en-v1.5"
 
 ### Create a vector datastore
 
-Next, we can create a vector datastore, which we will
+Next, we can download the dataset and create a vector datastore, which we will
 be using later for storing our embeddings and querying the relevant context.
 
 ```python
@@ -180,7 +180,7 @@ print(response.choices[0].message.content)
 
 ```
 
-Should see something like this, when running the code:
+You should see something like this, when running the code:
 ```
 ==== Got LLM response: ====
 There are three approaches to task decomposition:
