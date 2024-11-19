@@ -64,6 +64,12 @@
       ]
     },
     {
+      "group": "Examples",
+      "pages": [
+        "examples/retrieval-augmented-generation"
+      ]
+    },
+    {
       "group": "For nodes",
       "pages": [
         "nodes/requirements",

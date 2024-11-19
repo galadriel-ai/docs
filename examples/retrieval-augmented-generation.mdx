@@ -1,0 +1,332 @@
+---
+title: Retrieval-Augmented Generation
+description: Galadriel API provides an embedding endpoint, that can be used for Retrieval-Augmented Generation (RAG)
+---
+
+Retrieval-Augmented Generation (RAG) is a technique in natural language processing
+that combines retrieval systems with generative models to improve the accuracy and
+relevance of generated content. It is particularly useful for tasks that require up-to-date
+or domain-specific knowledge not included in the generative model's training data.
+
+
+This example demonstrates how to use the Galadriel API to perform embeddings and LLM inference for question-answering tasks.
+We will be using [Lanchain](https://python.langchain.com/) to load and format a dataset, and
+[ChromaDB](https://docs.trychroma.com/), which is an open-source vector database, for storing and querying the
+embeddings, gotten from the Galadriel API.
+
+
+### First set up the required project requirements
+<Steps>
+  <Step title="Sign up to get an API key">
+    1. Create an account [here](https://dashboard.galadriel.com)
+    2. Create an API key on the dashboard
+  </Step>
+  <Step title="Setup the environment">
+    1. create a filed called `.env`, and add your API key there:
+    ```bash
+    GALADRIEL_API_KEY="YOUR GALADRIEL API KEY HERE"
+    MODEL="llama3.1-70b"
+    API_URL="https://api.galadriel.com/v1"
+    ```
+    2. Create a python environment
+    ```bash
+    python3 -m venv venv
+    source venv/bin/activate
+    ```
+    3. Install the required dependencies
+    ```bash
+    pip install openai==1.42.0 chromadb==0.5.18 python-dotenv==1.0.1 langchain==0.3.7 langchain_chroma==0.1.4
+    langchain_community==0.3.7 bs4==0.0.2
+    ```
+  </Step>
+</Steps>
+
+### Load the variables
+
+First, in our Python file, we must import the dependencies and load the environment variables
+
+```python
+import os
+from pathlib import Path
+
+from dotenv import load_dotenv
+
+# Load .env variables and ensure they are set correctly
+env_path = Path(".env")
+load_dotenv(dotenv_path=env_path)
+
+MODEL = os.getenv("MODEL")
+assert MODEL is not None, "MODEL missing from .env"
+API_KEY = os.getenv("GALADRIEL_API_KEY")
+assert API_KEY is not None, "GALADRIEL_API_KEY missing from .env"
+API_URL = os.getenv("API_URL")
+assert API_URL is not None, "API_URL missing from .env"
+
+EMBEDDING_MODEL = "gte-large-en-v1.5"
+```
+
+### Create a vector datastore
+
+Next, we can create a vector datastore, which we will
+be using later for storing our embeddings and querying the relevant context.
+
+```python
+import bs4
+import chromadb
+from langchain_community.document_loaders import WebBaseLoader
+from langchain_text_splitters import RecursiveCharacterTextSplitter
+
+
+def _load_dataset():
+    loader = WebBaseLoader(
+        web_paths=("https://lilianweng.github.io/posts/2023-06-23-agent/",),
+        bs_kwargs=dict(
+            parse_only=bs4.SoupStrainer(
+                class_=("post-content", "post-title", "post-header")
+            )
+        ),
+    )
+    docs = loader.load()
+    text_splitter = RecursiveCharacterTextSplitter(
+        chunk_size=1000, chunk_overlap=200)
+    return text_splitter.split_documents(docs)
+
+
+def _create_vector_db():
+    chroma_client = chromadb.Client()
+    collection = chroma_client.create_collection(
+        name="my_collection")
+    return collection
+
+
+dataset = _load_dataset()
+collection = _create_vector_db()
+```
+
+### Create embeddings
+
+Now we can create embeddings for our dataset and store them in our vector datastore.
+We can also create embeddings for our search query.
+
+```python
+from openai import OpenAI
+
+QUERY = "What are the approaches to Task Decomposition?"
+
+client = OpenAI(
+    base_url=API_URL,
+    api_key=API_KEY,
+)
+print("Creating embeddings...")
+embeddings = client.embeddings.create(
+    model="gte-large-en-v1.5",
+    input=[s.page_content for s in dataset],
+    encoding_format="float"
+)
+
+print("Saving embeddings to the vector datastore...\n")
+collection.add(
+    documents=[s.page_content for s in dataset],
+    embeddings=[e.embedding for e in embeddings.data],
+    ids=[f"id{i}" for i, _ in enumerate(dataset)],
+)
+
+print(f"Querying vector datastore with user query: {QUERY}\n")
+# Create embeddings for the query
+query_embeddings = client.embeddings.create(
+    model=EMBEDDING_MODEL,
+    input=["What are the approaches to Task Decomposition?"],
+    encoding_format="float"
+)
+# Query the vector datastore with the query embeddings
+results = collection.query(
+    query_embeddings=query_embeddings.data[0].embedding,
+    n_results=2
+)
+```
+
+### Call the LLM
+
+To call the LLM, we need to format the prompt, so it includes the user query, and the relevant context
+retrieved from the vector datastore.
+
+```python
+# LLM prompt, where context will be added
+PROMPT = """You are an assistant for question-answering tasks. Use the following pieces of retrieved context to answer the question. If you don't know the answer, just say that you don't know. Use three sentences maximum and keep the answer concise.
+Question: {question}
+Context: {context}
+Answer:"""
+
+# Format the query results
+context = "\n".join([d for d in results["documents"][0]])
+# Add the formatted query results to the prompt
+formatted_prompt = PROMPT \
+    .replace("{question}", QUERY) \
+    .replace("{context}", context)
+
+print("Calling LLM with formatted prompt:")
+print(formatted_prompt)
+print("\n")
+response = client.chat.completions.create(
+    model=MODEL,
+    temperature=0,
+    messages=[
+        {"role": "system", "content": "You are a helpful assistant."},
+        {"role": "user", "content": formatted_prompt},
+    ],
+)
+print("==== Got LLM response: ====")
+print(response.choices[0].message.content)
+
+```
+
+Should see something like this, when running the code:
+```
+==== Got LLM response: ====
+There are three approaches to task decomposition:
+(1) using a large language model (LLM) with simple prompting,
+(2) using task-specific instructions, and
+(3) with human inputs.
+Additionally, techniques like Chain of Thought (CoT) and
+Tree of Thoughts can be employed to break down complex
+tasks into smaller, manageable steps.
+These methods transform big tasks into multiple simpler tasks,
+providing insight into the model's thinking process.
+```
+
+The output of the code also shows the full prompt that was used, which contains
+the relevant context queried from the datastore!
+
+### Conclusion
+
+The above example shows how to build a RAG (Retrieval-Augmented Generation) system using Galadriel, Langchain and ChromaDB.
+This can be used to build powerful LLM powered systems that have access to real-time data!
+
+### Full code example
+
+```python
+import os
+from pathlib import Path
+from typing import List
+
+import bs4
+import chromadb
+from chromadb.api.models.Collection import Collection
+from dotenv import load_dotenv
+from langchain_community.document_loaders import WebBaseLoader
+from langchain_core.documents import Document
+from langchain_text_splitters import RecursiveCharacterTextSplitter
+from openai import OpenAI
+
+# Load .env variables and ensure they are set correctly
+env_path = Path(".env")
+load_dotenv(dotenv_path=env_path)
+
+MODEL = os.getenv("MODEL")
+assert MODEL is not None, "MODEL missing from .env"
+API_KEY = os.getenv("GALADRIEL_API_KEY")
+assert API_KEY is not None, "GALADRIEL_API_KEY missing from .env"
+API_URL = os.getenv("API_URL")
+assert API_URL is not None, "API_URL missing from .env"
+
+EMBEDDING_MODEL = "gte-large-en-v1.5"
+
+# LLM prompt, where context will be added
+PROMPT = """You are an assistant for question-answering tasks. Use the following pieces of retrieved context to answer the question. If you don't know the answer, just say that you don't know. Use three sentences maximum and keep the answer concise.
+Question: {question}
+Context: {context}
+Answer:"""
+QUERY = "What is task decomposition?"
+
+
+def main():
+    client = OpenAI(
+        base_url=API_URL,
+        api_key=API_KEY,
+    )
+
+    print("Loading dataset...")
+    splits = _load_dataset()
+    print(f"Got dataset, with {len(splits)} documents.\n")
+
+    collection = _create_vector_db()
+
+    print("Creating embeddings...")
+    embeddings = client.embeddings.create(
+        model="gte-large-en-v1.5",
+        input=[s.page_content for s in splits],
+        encoding_format="float"
+    )
+
+    print("Saving embeddings to the vector datastore...\n")
+    collection.add(
+        documents=[s.page_content for s in splits],
+        embeddings=[e.embedding for e in embeddings.data],
+        ids=[f"id{i}" for i, _ in enumerate(splits)],
+    )
+
+    print(f"Querying vector datastore with user query: {QUERY}\n")
+    # Create embeddings for the query
+    query_embeddings = client.embeddings.create(
+        model=EMBEDDING_MODEL,
+        input=["What are the approaches to Task Decomposition?"],
+        encoding_format="float"
+    )
+    # Query the vector datastore with the query embeddings
+    results = collection.query(
+        query_embeddings=query_embeddings.data[0].embedding,
+        n_results=2
+    )
+    # Format the query results
+    context = "\n".join([d for d in results["documents"][0]])
+    # Add the formatted query results to the prompt
+    formatted_prompt = PROMPT \
+        .replace("{question}", QUERY) \
+        .replace("{context}", context)
+
+    print("Calling LLM with formatted prompt:")
+    print(formatted_prompt)
+    print("\n")
+    response = client.chat.completions.create(
+        model=MODEL,
+        temperature=0,
+        messages=[
+            {"role": "system", "content": "You are a helpful assistant."},
+            {"role": "user", "content": formatted_prompt},
+        ],
+    )
+    print("==== Got LLM response: ====")
+    print(response.choices[0].message.content)
+
+
+def _load_dataset() -> List[Document]:
+    loader = WebBaseLoader(
+        web_paths=("https://lilianweng.github.io/posts/2023-06-23-agent/",),
+        bs_kwargs=dict(
+            parse_only=bs4.SoupStrainer(
+                class_=("post-content", "post-title", "post-header")
+            )
+        ),
+    )
+    docs = loader.load()
+    text_splitter = RecursiveCharacterTextSplitter(
+        chunk_size=1000, chunk_overlap=200)
+    return text_splitter.split_documents(docs)
+
+
+def _create_vector_db() -> Collection:
+    chroma_client = chromadb.Client()
+    collection = chroma_client.create_collection(
+        name="my_collection")
+    return collection
+
+
+def format_docs(docs):
+    return "\n\n".join(doc.page_content for doc in docs)
+
+
+if __name__ == '__main__':
+    main()
+
+```
+
