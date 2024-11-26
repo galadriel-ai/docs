@@ -1,29 +1,20 @@
-# Supported models
+## Large language models
 
 The chat API currently supports these models:
 
-### Llama3.1 8B
-- Model id: `llama3.1` or `llama3.1:8b`
-- Full model name: `neuralmagic/Meta-Llama-3.1-8B-Instruct-FP8`
-- Context length: 8192 tokens
+| Model         | Full model name                                          | Supported context length  |
+|---------------|----------------------------------------------------------|---------------------------|
+| llama3.1      | neuralmagic/Meta-Llama-3.1-8B-Instruct-FP8               | 8192 tokens               |
+| llama3.1:70b  | neuralmagic/Meta-Llama-3.1-70B-Instruct-quantized.w4a16  | 128k (131 072) tokens     |
+| llama3.1:405b | neuralmagic/Meta-Llama-3.1-405B-Instruct-quantized.w4a16 | 128k (131 072) tokens     |
+| mistral-nemo  | neuralmagic/Mistral-Nemo-Instruct-2407-quantized.w4a16   | 128k (128 000) tokens     |
 
-### Llama3.1 70B
-- Model id: `llama3.1:70b`
-- Full model name: `neuralmagic/Meta-Llama-3.1-70B-Instruct-quantized.w4a16`
-- Context length: 128k (131072) tokens
-
-### Llama3.1 405B
-- Model id: `llama3.1:405b`
-- Full model name: `neuralmagic/Meta-Llama-3.1-405B-Instruct-quantized.w4a16`
-- Context length: 128k (131072) tokens
 
 
 ## Embedding models
 
 The embeddings API currently supports these models:
 
-### gte-large-en-v1.5
-- Model id: `gte-large-en-v1.5`
-- Full model name: `Alibaba-NLP/gte-large-en-v1.5`
-- Max input token count: 8192
-- Output dimensions: 1024
+| Model             | Full model name               | Supported context length | Output dimensions |
+|-------------------|-------------------------------|--------------------------|-------------------|
+| gte-large-en-v1.5 | Alibaba-NLP/gte-large-en-v1.5 | 8192 tokens              | 1024              |
