@@ -1609,7 +1609,7 @@
         },
         "example": {
           "image": "@image.jpg",
-          "prompt": "A painting of a beautiful sunset over the ocean.",
+          "prompt": "A highly detailed cartoon-style portrait of a young man, anime-inspired, with soft shading and vibrant colors, maintaining realistic facial proportions, cheerful expression, and minimal background.",
           "model": "stabilityai/stable-diffusion-xl-base-1.0"
         }
       },
