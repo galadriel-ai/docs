@@ -188,24 +188,24 @@
                 }
               }
             }
-          }
-        },
-        "422": {
-          "description": "Validation Error",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/HTTPValidationError"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
               }
             }
           }
-        }
-      },
-      "security": [
-        {
-          "APIKeyHeader": []
-        }
-      ]
+        },
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ]
+      }
     },
     "/v1/tool/search": {
       "post": {
