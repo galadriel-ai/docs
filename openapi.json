@@ -115,6 +115,98 @@
         ]
       }
     },
+    "/v1/images/edits": {
+      "post": {
+        "tags": [
+          "Images"
+        ],
+        "summary": "Creates an edited or extended image given an original image and a prompt.",
+        "operationId": "images_v1_edits",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/ImageEditRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ImagesResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ]
+      }
+    },
+    "/v1/images/generations": {
+      "post": {
+        "tags": [
+          "Images"
+        ],
+        "summary": "Creates an image given a prompt.",
+        "operationId": "images_v1_generations",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ImageGenerationRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ImagesResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ]
+      }
+    },
     "/v1/tool/search": {
       "post": {
         "tags": [
@@ -1417,6 +1509,133 @@
             "My epic text number 2"
           ],
           "model": "gte-large-en-v1.5"
+        }
+      },
+      "ImageGenerationRequest": {
+        "type": "object",
+        "required": [
+          "prompt",
+          "model"
+        ],
+        "properties": {
+          "prompt": {
+            "type": "string",
+            "description": "Text description of the desired image(s)"
+          },
+          "model": {
+            "type": "string",
+            "description": "The model to use for image generation"
+          },
+          "n": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 10,
+            "default": 1,
+            "description": "The number of images to generate"
+          },
+          "response_format": {
+            "type": "string",
+            "enum": [
+              "url",
+              "b64_json"
+            ],
+            "default": "url",
+            "description": "The format in which the generated images are returned"
+          }
+        },
+        "example": {
+          "prompt": "A painting of a beautiful sunset over the ocean.",
+          "model": "stabilityai/stable-diffusion-xl-base-1.0"
+        }
+      },
+      "ImageEditRequest": {
+        "type": "object",
+        "required": [
+          "image",
+          "prompt",
+          "model"
+        ],
+        "properties": {
+          "image": {
+            "type": "string",
+            "description": "The image to edit."
+          },
+          "prompt": {
+            "type": "string",
+            "description": "A text description of the desired image(s)."
+          },
+          "mask": {
+            "type": "string",
+            "description": "The mask to apply to the image.",
+            "nullable": true,
+            "default": null
+          },
+          "model": {
+            "type": "string",
+            "description": "The model to use for image editing."
+          },
+          "n": {
+            "type": "integer",
+            "description": "The number of images to generate. Must be between 1 and 10.",
+            "minimum": 1,
+            "maximum": 10,
+            "default": 1
+          },
+          "response_format": {
+            "type": "string",
+            "enum": [
+              "url",
+              "b64_json"
+            ],
+            "default": "url",
+            "description": "The format in which the generated images are returned."
+          },
+          "size": {
+            "type": "string",
+            "enum": [
+              "256x256",
+              "512x512",
+              "1024x1024"
+            ],
+            "default": "1024x1024",
+            "description": "The size of the generated images."
+          },
+          "user": {
+            "type": "string",
+            "description": "A unique identifier representing your end-user",
+            "nullable": true,
+            "default": null
+          }
+        },
+        "example": {
+          "image": "@image.jpg",
+          "prompt": "A highly detailed cartoon-style portrait of a young man, anime-inspired, with soft shading and vibrant colors, maintaining realistic facial proportions, cheerful expression, and minimal background.",
+          "model": "stabilityai/stable-diffusion-xl-base-1.0"
+        }
+      },
+      "ImagesResponse": {
+        "type": "object",
+        "properties": {
+          "created": {
+            "type": "integer",
+            "description": "The number of images generated"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "url": {
+                  "type": "string",
+                  "description": "The URL of the generated image"
+                },
+                "b64_json": {
+                  "type": "string",
+                  "description": "Base64 encoded image data"
+                }
+              }
+            }
+          }
         }
       },
       "Function-Input": {

@@ -8,7 +8,8 @@
   },
   "dependencies": {
     "mintlify": "^4.0.135",
-    "sharp": "^0.33.3"
+    "sharp": "^0.33.3",
+    "swagger-cli": "^4.0.4"
   },
   "homepage": "https://docs.galadriel.com"
 }

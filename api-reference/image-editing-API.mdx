@@ -1,0 +1,61 @@
+---
+title: Image Editing API
+description: Tap into Galadriel's image generation network. Follows the same schema as OpenAI's image generation API.
+openapi: post /v1/images/edits
+api: 'POST https://api.galadriel.com/v1/images/edits'
+authMethod: "bearer"
+---
+
+<ResponseExample>
+
+```json 200
+{
+    "created": 1,
+    "data": [
+        {
+            "b64_json": null,
+            "revised_prompt": null,
+            "url": "https://example.com/image"
+        }
+    ]
+}
+```
+
+```json 422
+{
+  "detail": [
+    {
+      "loc": [
+        "<string>"
+      ],
+      "msg": "<string>",
+      "type": "<string>"
+    }
+  ]
+}
+```
+
+```json 429
+{
+  "response": "NOK",
+  "error": {
+    "status_code": 429,
+    "code": "rate_limit_exceeded",
+    "message": "Rate limit exceeded"
+  }
+}
+```
+
+
+```json 503
+{
+  "response": "NOK",
+  "error": {
+    "status_code": 503,
+    "code": "no_available_inference_nodes",
+    "message": "No available inference nodes to process the request."
+  }
+}
+```
+
+</ResponseExample>

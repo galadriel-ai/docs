@@ -60,7 +60,9 @@
       "group": "API docs",
       "pages": [
         "api-reference/chat-completion-API",
-        "api-reference/embedding-API"
+        "api-reference/embedding-API",
+        "api-reference/image-generation-API",
+        "api-reference/image-editing-API"
       ]
     },
     {
