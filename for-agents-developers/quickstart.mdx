@@ -3,6 +3,10 @@ title: Quickstart
 description: Galadriel API is designed to be compatible with OpenAI's client libraries, making it easy to use your existing workflows
 ---
 
+<Info>
+  Make sure each agent uses a separate API key.
+</Info>
+
 <Steps>
     <Step title="Sign up to get an API key">
     1. Create an account [here](https://dashboard.galadriel.com)
@@ -42,17 +46,14 @@ import OpenAI from "openai";
 
 const openai = new OpenAI({
   apiKey: process.env.GALADRIEL_API_KEY,
-  baseURL: "https://api.galadriel.com/v1/verified"
+  baseURL: "https://api.galadriel.com/v1/verified",
 });
 
 const completion = await openai.chat.completions.create({
-  model: "llama3.1",
+  model: "gpt-4o",
   messages: [
-    {role: "system", content: "You are a helpful assistant."},
-    {
-      role: "user",
-      content: "Hello!",
-    },
+    { role: "system", content: "You are a helpful assistant." },
+    { role: "user", content: "Hello!" },
   ],
 });
 
@@ -66,12 +67,12 @@ console.log(`Attestation: ${completion.attestation}`);
 
 ```bash cURL
 curl -X 'POST' \
-  'https://api.galadriel.com/v1/chat/completions' \
+  'https://api.galadriel.com/v1/verified/chat/completions' \
   -H 'accept: application/json' \
   -H 'Authorization: Bearer $GALADRIEL_API_KEY' \
   -H 'Content-Type: application/json' \
   -d '{
-  "model": "llama3.1",
+  "model": "gpt-4o",
   "messages": [
     {
       "content": "You are a helpful assistant.",
