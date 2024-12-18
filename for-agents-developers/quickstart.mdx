@@ -1,0 +1,94 @@
+---
+title: Quickstart
+description: Galadriel API is designed to be compatible with OpenAI's client libraries, making it easy to use your existing workflows
+---
+
+<Steps>
+    <Step title="Sign up to get an API key">
+    1. Create an account [here](https://dashboard.galadriel.com)
+    2. Create an API key on the dashboard
+  </Step>
+    <Step title="Call the API">
+    Run the following code
+      <CodeGroup>
+
+```python Python
+from openai import OpenAI
+
+client = OpenAI(
+    base_url="https://api.galadriel.com/v1/verified",
+    api_key=GALADRIEL_API_KEY
+)
+
+completion = client.chat.completions.create(
+    model="gpt-4o",
+    messages=[
+        {"role": "system", "content": "You are a helpful assistant."},
+        {"role": "user", "content": "Hello!"}
+    ]
+)
+
+print(f"Message: {completion.choices[0].message}")
+print(f"Hash: {completion.hash}")
+print(f"Signed public key: {completion.public_key}")
+print(f"Signature: {completion.signature}")
+print(f"Tx hash: {completion.tx_hash}")
+print(f"Attestation: {completion.attestation}")
+
+```
+
+```javascript Javascript
+import OpenAI from "openai";
+
+const openai = new OpenAI({
+  apiKey: process.env.GALADRIEL_API_KEY,
+  baseURL: "https://api.galadriel.com/v1/verified"
+});
+
+const completion = await openai.chat.completions.create({
+  model: "llama3.1",
+  messages: [
+    {role: "system", content: "You are a helpful assistant."},
+    {
+      role: "user",
+      content: "Hello!",
+    },
+  ],
+});
+
+console.log(`Message: ${completion.choices[0].message}`);
+console.log(`Hash: ${completion.hash}`);
+console.log(`Signed public key: ${completion.public_key}`);
+console.log(`Signature: ${completion.signature}`);
+console.log(`Tx hash: ${completion.tx_hash}`);
+console.log(`Attestation: ${completion.attestation}`);
+```
+
+```bash cURL
+curl -X 'POST' \
+  'https://api.galadriel.com/v1/chat/completions' \
+  -H 'accept: application/json' \
+  -H 'Authorization: Bearer $GALADRIEL_API_KEY' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "model": "llama3.1",
+  "messages": [
+    {
+      "content": "You are a helpful assistant.",
+      "role": "system"
+    },
+    {
+      "content": "Hello!",
+      "role": "user"
+    }
+  ]
+}'
+```
+
+</CodeGroup>
+  </Step>
+</Steps>
+
+### What's next?
+* Check out the currently supported [models](/api-reference/models)
+* To see more details about the API check out the full [API docs](/api-reference/chat-completion-API)

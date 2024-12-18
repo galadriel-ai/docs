@@ -1,0 +1,76 @@
+---
+title: Chat Completion API
+description: Tap into Galadriel's verified inference which powers Daige's Proof of Sentience. Follows the same schema as OpenAI's chat completion API.
+
+<Info>
+  Make sure you use different Galadriel's API Key for every agent.
+</Info>
+
+openapi: post /v1/verified/chat/completions
+api: 'POST https://api.galadriel.com/v1/verified/chat/completions'
+authMethod: "bearer"
+---
+
+<ResponseExample>
+
+```json 200
+{
+  "id": "id",
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "message": {
+        "content": "Hello! How can I assist you today?",
+        "refusal": null,
+        "role": "assistant",
+        "function_call": null,
+        "tool_calls": null,
+        "audio": null
+      }
+    }
+  ],
+  "created": 1728558433,
+  "model": "gpt-4o-2024-08-06",
+  "object": "chat.completion",
+  "service_tier": null,
+  "system_fingerprint": "fp_9faba9f038",
+  "usage": {
+    "completion_tokens": 9,
+    "prompt_tokens": 19,
+    "total_tokens": 28,
+    "completion_tokens_details": {
+      "accepted_prediction_tokens": 0,
+      "audio_tokens": 0,
+      "reasoning_tokens": 0,
+      "rejected_prediction_tokens": 0
+    },
+    "prompt_tokens_details": {
+      "audio_tokens": 0,
+      "cached_tokens": 0
+    }
+  },
+  "hash": "2c88aacb88de8b85a23e648eff20941285c16bb63cf9467811ee15bb64a40445",
+  "public_key": "Dp2k554Ebsij5RjuhjsZujVW2bJnQzfb43VYZSQ4NZo1",
+  "signature": "f298c3b1294221d1200041993818cfbfec66f33d1071ea821e5068978099cd60179dbf66839570dd9ada5f661e7d8475a03b536f42e540db3bed6f21d5741301",
+  "tx_hash": "e495424c395c501fb8fc013738fb481be85c1fbce9e595c308c31792983b2ffa10eca9c7dda0c8768ce12d0ff49a089cd5068d847eea8ae7544d5435d7f6010d",
+  "attestation": "enclave attestation"
+}
+```
+
+```json 422
+{
+  "detail": [
+    {
+      "loc": [
+        "string",
+        0
+      ],
+      "msg": "string",
+      "type": "string"
+    }
+  ]
+}
+
+</ResponseExample>
