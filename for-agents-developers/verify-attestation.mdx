@@ -1,0 +1,64 @@
+---
+title: Verify Attestation
+description: Galadriel Verified Inference API provides LLM inferences results that are signed by the TEE private key. This page goes over the details on how to validate if the signatures are correct.
+---
+
+<Info>
+    Please see the [quickstart](quickstart) to get an LLM inference response
+</Info>
+<Info>
+    Please see the [verify-signatures](verify-signatures) to see how to verify
+    just the signature
+</Info>
+
+<Steps>
+    <Step title="Get the LLM inference response as in quickstart">
+        This is the example response with some information redacted:
+
+```json
+{
+  "id": "chatcmpl-AgAQhAGTZKog9p0wPC7aVOXT44046",
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "message": {
+        "content": "Hello! How can I assist you today?",
+        "refusal": null,
+        "role": "assistant",
+        "function_call": null,
+        "tool_calls": null,
+        "audio": null
+      }
+    }
+  ],
+  "hash": "fa1eb8b9c330cf13f3643d46bc7e10510fa207a4e80645c795f82c3ddf9806ad",
+  "public_key": "Dp2k554Ebsij5RjuhjsZujVW2bJnQzfb43VYZSQ4NZo1",
+  "tx_hash": "a2553b4928459771c4764c27f95e7d6a312f6281da30b74cdbe857ca282548685fc041f24c788a62e87c929a9ca19a28b3f303510bb189042bdb6032bcf02d01"
+}
+```
+
+    </Step>
+    <Step title="Clone the TEE repo">
+        ```shell
+        git clone git@github.com:galadriel-ai/better-tee.git
+        cd better-tee/verify
+        ```
+    </Step>
+    <Step title="Install deps">
+        ```shell
+        # Optional
+        python3 -m venv venv
+        source venv/bin/activate
+
+        pip install -r requirements.txt
+        ```
+    </Step>
+    <Step title="Verify attestation">
+        Take the attestation from the LLM inference response
+        ```shell
+        python verify.py --pcr0_hash a3575880471781514c83935ee77dd8fc710512daf5d306ccee2c2abb0985e35fea0843f0e950a74f8d17541fc66dd0e4 --attestation insert-your-attestation
+        ```
+    </Step>
+</Steps>

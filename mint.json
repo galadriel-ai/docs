@@ -51,7 +51,9 @@
     {
       "group": "For agents developers",
       "pages": [
-        "for-agents-developers/quickstart"
+        "for-agents-developers/quickstart",
+        "for-agents-developers/verify-signatures",
+        "for-agents-developers/verify-attestation"
       ]
     },
     {

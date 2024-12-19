@@ -1,0 +1,112 @@
+---
+title: Verify Signatures
+description: Galadriel Verified Inference API provides LLM inferences results that are signed by the TEE private key. This page goes over the details on how to validate if the signatures are correct.
+---
+
+<Info>
+  Please see the [quickstart](quickstart) to get an LLM inference response
+</Info>
+
+<Steps>
+    <Step title="Get the LLM inference response as in quickstart">
+        This is the example response with some information redacted:
+
+```json
+{
+  "id": "chatcmpl-AgAQhAGTZKog9p0wPC7aVOXT44046",
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "message": {
+        "content": "Hello! How can I assist you today?",
+        "refusal": null,
+        "role": "assistant",
+        "function_call": null,
+        "tool_calls": null,
+        "audio": null
+      }
+    }
+  ],
+    ...redacted...
+  "hash": "fa1eb8b9c330cf13f3643d46bc7e10510fa207a4e80645c795f82c3ddf9806ad",
+  "public_key": "Dp2k554Ebsij5RjuhjsZujVW2bJnQzfb43VYZSQ4NZo1",
+  "signature": "2386393752ede1ade2a2ef8f46847ffbb11ab3f03ce5773d68391906b5c03ca7346bda7458df1c3f4fbe6df8a6774e2af791a3ede203cacd852ec819c818dc05"
+}
+```
+
+  </Step>
+    <Step title="Call the verification code">
+    Run the following code
+      <CodeGroup>
+
+```python Python
+# pip install base58 pynacl
+# python verify.py
+import binascii
+import base58
+import nacl.signing
+import nacl.exceptions
+
+# Given values
+# TODO: change to your values
+hash_hex = "fa1eb8b9c330cf13f3643d46bc7e10510fa207a4e80645c795f82c3ddf9806ad"
+signature_hex = "2386393752ede1ade2a2ef8f46847ffbb11ab3f03ce5773d68391906b5c03ca7346bda7458df1c3f4fbe6df8a6774e2af791a3ede203cacd852ec819c818dc05"
+public_key_b58 = "Dp2k554Ebsij5RjuhjsZujVW2bJnQzfb43VYZSQ4NZo1"
+
+# Decode the public key from base58 into raw bytes
+public_key_bytes = base58.b58decode(public_key_b58)
+
+# Decode the hash (message) and signature from hex
+message_bytes = binascii.unhexlify(hash_hex)
+signature_bytes = binascii.unhexlify(signature_hex)
+
+# Create a VerifyKey object from the public key bytes
+verify_key = nacl.signing.VerifyKey(public_key_bytes)
+
+try:
+    # If verify() does not raise an exception, the signature is valid.
+    verify_key.verify(message_bytes, signature_bytes)
+    print("Signature is valid!")
+except nacl.exceptions.BadSignatureError:
+    print("Signature is invalid!")
+```
+
+```javascript Javascript
+// npm install tweetnacl bs58
+// node verify.js
+import nacl from 'tweetnacl';
+import bs58 from 'bs58';
+
+// Given values
+// TODO: change to your values
+const hashHex = "fa1eb8b9c330cf13f3643d46bc7e10510fa207a4e80645c795f82c3ddf9806ad";
+const signatureHex = "2386393752ede1ade2a2ef8f46847ffbb11ab3f03ce5773d68391906b5c03ca7346bda7458df1c3f4fbe6df8a6774e2af791a3ede203cacd852ec819c818dc05";
+const publicKeyBase58 = "Dp2k554Ebsij5RjuhjsZujVW2bJnQzfb43VYZSQ4NZo1";
+
+// Decode the public key from Base58
+const publicKeyBytes = bs58.decode(publicKeyBase58);
+
+// Decode the message (hash) and signature from hex
+const messageBytes = Buffer.from(hashHex, 'hex');
+const signatureBytes = Buffer.from(signatureHex, 'hex');
+
+// Verify the signature
+const isValid = nacl.sign.detached.verify(messageBytes, signatureBytes, publicKeyBytes);
+
+if (isValid) {
+  console.log("Signature is valid!");
+} else {
+  console.log("Signature is invalid!");
+}
+```
+
+</CodeGroup>
+  </Step>
+</Steps>
+
+### What's next?
+TODO
+* Check out the currently supported [models](/api-reference/models)
+* To see more details about the API check out the full [API docs](/api-reference/chat-completion-API)
