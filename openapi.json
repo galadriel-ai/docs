@@ -6,7 +6,7 @@
     "version": "1.0.0",
     "contact": {
       "name": "",
-      "email": "kristjan@galadriel.com"
+      "email": ""
     },
     "x-logo": {
       "url": ""
@@ -30,7 +30,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/ChatCompletionRequest"
+                "$ref": "#/components/schemas/distributedinference__service__completions__entities__ChatCompletionRequest"
               }
             }
           },
@@ -42,7 +42,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ChatCompletion"
+                  "$ref": "#/components/schemas/distributedinference__service__completions__entities__ChatCompletion"
                 }
               }
             }
@@ -62,6 +62,100 @@
           {
             "APIKeyHeader": []
           },
+          {
+            "APIKeyHeader": []
+          }
+        ]
+      }
+    },
+    "/v1/images/generations": {
+      "post": {
+        "tags": [
+          "Images"
+        ],
+        "summary": "Creates an image given a prompt.",
+        "description": "Given a prompt, the model will generate a image.",
+        "operationId": "generations_v1_images_generations_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ImageGenerationRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Returns a list of image objects.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ImagesResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ]
+      }
+    },
+    "/v1/images/edits": {
+      "post": {
+        "tags": [
+          "Images"
+        ],
+        "summary": "Creates an edited or extended image given an original image and a prompt.",
+        "description": "Given a prompt and an original image, the model will generate a new image.",
+        "operationId": "edits_v1_images_edits_post",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_edits_v1_images_edits_post"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Returns a list of image objects.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ImagesResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
           {
             "APIKeyHeader": []
           }
@@ -93,98 +187,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/CreateEmbeddingResponse"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "APIKeyHeader": []
-          }
-        ]
-      }
-    },
-    "/v1/images/edits": {
-      "post": {
-        "tags": [
-          "Images"
-        ],
-        "summary": "Creates an edited or extended image given an original image and a prompt.",
-        "operationId": "images_v1_edits",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "multipart/form-data": {
-              "schema": {
-                "$ref": "#/components/schemas/ImageEditRequest"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ImagesResponse"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "APIKeyHeader": []
-          }
-        ]
-      }
-    },
-    "/v1/images/generations": {
-      "post": {
-        "tags": [
-          "Images"
-        ],
-        "summary": "Creates an image given a prompt.",
-        "operationId": "images_v1_generations",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ImageGenerationRequest"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ImagesResponse"
                 }
               }
             }
@@ -654,7 +656,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/ChatCompletionRequest"
+                "$ref": "#/components/schemas/distributedinference__service__completions__entities__ChatCompletionRequest"
               }
             }
           },
@@ -666,7 +668,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ChatCompletion"
+                  "$ref": "#/components/schemas/distributedinference__service__completions__entities__ChatCompletion"
                 }
               }
             }
@@ -706,6 +708,74 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/RateLimitResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ]
+      }
+    },
+    "/v1/models": {
+      "get": {
+        "tags": [
+          "Models"
+        ],
+        "summary": "Returns available models.",
+        "operationId": "models_v1_models_get",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ModelsResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/verified/chat/completions": {
+      "post": {
+        "tags": [
+          "Verified Chat"
+        ],
+        "summary": "Creates a model response for the given chat conversation.",
+        "description": "Given a list of messages comprising a conversation, the model will return a response.",
+        "operationId": "completions_v1_verified_chat_completions_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/distributedinference__service__verified_completions__entities__ChatCompletionRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Returns a chat completion object, or a streamed sequence of chat completion chunk objects if the request is streamed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/distributedinference__service__verified_completions__entities__ChatCompletion"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
                 }
               }
             }
@@ -762,7 +832,2128 @@
           "title": "Distributed inference"
         }
       },
-      "ChatCompletion": {
+      "Body_edits_v1_images_edits_post": {
+        "properties": {
+          "image": {
+            "type": "string",
+            "format": "binary",
+            "title": "Image",
+            "description": "The image to be edited."
+          },
+          "prompt": {
+            "type": "string",
+            "title": "Prompt",
+            "description": "A text description of the desired image(s)."
+          },
+          "model": {
+            "type": "string",
+            "title": "Model",
+            "description": "The model to use for image editing."
+          },
+          "n": {
+            "type": "integer",
+            "maximum": 10.0,
+            "minimum": 1.0,
+            "title": "N",
+            "description": "The number of images to generate. Must be between 1 and 10.",
+            "default": 1
+          },
+          "response_format": {
+            "type": "string",
+            "enum": [
+              "url",
+              "b64_json"
+            ],
+            "title": "Response Format",
+            "description": "The format in which the generated images are returned.",
+            "default": "url"
+          },
+          "size": {
+            "type": "string",
+            "enum": [
+              "256x256",
+              "512x512",
+              "1024x1024"
+            ],
+            "title": "Size",
+            "description": "The size of the generated images.",
+            "default": "1024x1024"
+          },
+          "user": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "User",
+            "description": "A unique identifier representing your end-user"
+          }
+        },
+        "type": "object",
+        "required": [
+          "image",
+          "prompt",
+          "model"
+        ],
+        "title": "Body_edits_v1_images_edits_post"
+      },
+      "ChatCompletionMessage": {
+        "properties": {
+          "content": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Content"
+          },
+          "refusal": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Refusal"
+          },
+          "role": {
+            "type": "string",
+            "const": "assistant",
+            "title": "Role"
+          },
+          "function_call": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/FunctionCall-Output"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "tool_calls": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/ChatCompletionMessageToolCall"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Tool Calls"
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "required": [
+          "role"
+        ],
+        "title": "ChatCompletionMessage"
+      },
+      "ChatCompletionMessageToolCall": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "function": {
+            "$ref": "#/components/schemas/Function-Output"
+          },
+          "type": {
+            "type": "string",
+            "const": "function",
+            "title": "Type"
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "required": [
+          "id",
+          "function",
+          "type"
+        ],
+        "title": "ChatCompletionMessageToolCall"
+      },
+      "ChatCompletionTokenLogprob": {
+        "properties": {
+          "token": {
+            "type": "string",
+            "title": "Token"
+          },
+          "bytes": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "integer"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Bytes"
+          },
+          "logprob": {
+            "type": "number",
+            "title": "Logprob"
+          },
+          "top_logprobs": {
+            "items": {
+              "$ref": "#/components/schemas/TopLogprob"
+            },
+            "type": "array",
+            "title": "Top Logprobs"
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "required": [
+          "token",
+          "logprob",
+          "top_logprobs"
+        ],
+        "title": "ChatCompletionTokenLogprob"
+      },
+      "Choice": {
+        "properties": {
+          "finish_reason": {
+            "type": "string",
+            "enum": [
+              "stop",
+              "length",
+              "tool_calls",
+              "content_filter",
+              "function_call"
+            ],
+            "title": "Finish Reason"
+          },
+          "index": {
+            "type": "integer",
+            "title": "Index"
+          },
+          "logprobs": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ChoiceLogprobs"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "message": {
+            "$ref": "#/components/schemas/ChatCompletionMessage"
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "required": [
+          "finish_reason",
+          "index",
+          "message"
+        ],
+        "title": "Choice"
+      },
+      "ChoiceLogprobs": {
+        "properties": {
+          "content": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/ChatCompletionTokenLogprob"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Content"
+          },
+          "refusal": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/ChatCompletionTokenLogprob"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Refusal"
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "title": "ChoiceLogprobs"
+      },
+      "CompletionUsage": {
+        "properties": {
+          "completion_tokens": {
+            "type": "integer",
+            "title": "Completion Tokens"
+          },
+          "prompt_tokens": {
+            "type": "integer",
+            "title": "Prompt Tokens"
+          },
+          "total_tokens": {
+            "type": "integer",
+            "title": "Total Tokens"
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "required": [
+          "completion_tokens",
+          "prompt_tokens",
+          "total_tokens"
+        ],
+        "title": "CompletionUsage"
+      },
+      "CreateEmbeddingResponse": {
+        "properties": {
+          "data": {
+            "items": {
+              "$ref": "#/components/schemas/Embedding"
+            },
+            "type": "array",
+            "title": "Data"
+          },
+          "model": {
+            "type": "string",
+            "title": "Model"
+          },
+          "object": {
+            "type": "string",
+            "const": "list",
+            "title": "Object"
+          },
+          "usage": {
+            "$ref": "#/components/schemas/Usage"
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "required": [
+          "data",
+          "model",
+          "object",
+          "usage"
+        ],
+        "title": "CreateEmbeddingResponse"
+      },
+      "CreateNodeRequest": {
+        "properties": {
+          "node_name": {
+            "type": "string",
+            "title": "Node Name",
+            "description": "User defined node name"
+          }
+        },
+        "type": "object",
+        "required": [
+          "node_name"
+        ],
+        "title": "CreateNodeRequest"
+      },
+      "CreateNodeResponse": {
+        "properties": {
+          "response": {
+            "type": "string",
+            "const": "OK",
+            "title": "Response",
+            "description": "Success response",
+            "default": "OK"
+          },
+          "node_id": {
+            "type": "string",
+            "title": "Node Id",
+            "description": "Unique ID of the Node"
+          }
+        },
+        "type": "object",
+        "required": [
+          "node_id"
+        ],
+        "title": "CreateNodeResponse"
+      },
+      "Embedding": {
+        "properties": {
+          "embedding": {
+            "items": {
+              "type": "number"
+            },
+            "type": "array",
+            "title": "Embedding"
+          },
+          "index": {
+            "type": "integer",
+            "title": "Index"
+          },
+          "object": {
+            "type": "string",
+            "const": "embedding",
+            "title": "Object"
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "required": [
+          "embedding",
+          "index",
+          "object"
+        ],
+        "title": "Embedding"
+      },
+      "EmbeddingRequest": {
+        "properties": {
+          "input": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "items": {
+                  "type": "integer"
+                },
+                "type": "array"
+              },
+              {
+                "items": {
+                  "items": {
+                    "type": "integer"
+                  },
+                  "type": "array"
+                },
+                "type": "array"
+              }
+            ],
+            "title": "Input",
+            "description": "Input text to embed, encoded as a string or array of tokens. To embed multiple inputs in a single request, pass an array of strings or array of token arrays. The input must not exceed the max input tokens for the [model](/for-developers/models)."
+          },
+          "model": {
+            "type": "string",
+            "title": "Model",
+            "description": "ID of the model to use. Get ID for available [models](/for-developers/models)"
+          },
+          "encoding_format": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "float",
+                  "base64"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Encoding Format",
+            "description": "The format to return the embeddings in. Can be either `float` or `base64`."
+          },
+          "user": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "User",
+            "description": "A unique identifier representing your end-user"
+          }
+        },
+        "type": "object",
+        "required": [
+          "input",
+          "model"
+        ],
+        "title": "EmbeddingRequest",
+        "example": {
+          "input": [
+            "My epic text number 1",
+            "My epic text number 2"
+          ],
+          "model": "gte-large-en-v1.5"
+        }
+      },
+      "Function-Output": {
+        "properties": {
+          "arguments": {
+            "type": "string",
+            "title": "Arguments"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "required": [
+          "arguments",
+          "name"
+        ],
+        "title": "Function"
+      },
+      "FunctionCall-Input": {
+        "properties": {
+          "arguments": {
+            "type": "string",
+            "title": "Arguments",
+            "description": "The name and arguments of a function that should be called, as generated by the model."
+          },
+          "name": {
+            "type": "string",
+            "title": "Name",
+            "description": "The name of the function to call."
+          }
+        },
+        "type": "object",
+        "required": [
+          "arguments",
+          "name"
+        ],
+        "title": "FunctionCall"
+      },
+      "FunctionCall-Output": {
+        "properties": {
+          "arguments": {
+            "type": "string",
+            "title": "Arguments"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "required": [
+          "arguments",
+          "name"
+        ],
+        "title": "FunctionCall"
+      },
+      "GetNodeBenchmarkResponse": {
+        "properties": {
+          "node_id": {
+            "type": "string",
+            "title": "Node Id",
+            "description": "Unique ID of the Node"
+          },
+          "model_name": {
+            "type": "string",
+            "title": "Model Name",
+            "description": "Model name"
+          },
+          "tokens_per_second": {
+            "type": "number",
+            "title": "Tokens Per Second",
+            "description": "Tokens per second"
+          }
+        },
+        "type": "object",
+        "required": [
+          "node_id",
+          "model_name",
+          "tokens_per_second"
+        ],
+        "title": "GetNodeBenchmarkResponse"
+      },
+      "GetNodeInfoResponse": {
+        "properties": {
+          "node_id": {
+            "type": "string",
+            "title": "Node Id",
+            "description": "Unique ID of the Node"
+          },
+          "gpu_model": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Gpu Model",
+            "description": "GPU model"
+          },
+          "vram": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Vram",
+            "description": "VRAM in MB"
+          },
+          "gpu_count": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Gpu Count",
+            "description": "GPU count"
+          },
+          "cpu_model": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Cpu Model",
+            "description": "CPU model"
+          },
+          "cpu_count": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Cpu Count",
+            "description": "CPU cores count"
+          },
+          "ram": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ram",
+            "description": "RAM in MB"
+          },
+          "power_limit": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Power Limit",
+            "description": "GPU power limit in Watts"
+          },
+          "network_download_speed": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Network Download Speed",
+            "description": "Network download speed in Mbps"
+          },
+          "network_upload_speed": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Network Upload Speed",
+            "description": "Network upload speed in Mbps"
+          },
+          "operating_system": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Operating System",
+            "description": "Operating system"
+          },
+          "version": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Version",
+            "description": "Node version"
+          },
+          "name_alias": {
+            "type": "string",
+            "title": "Name Alias",
+            "description": "User defined name for the node"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status",
+            "description": "Node status"
+          },
+          "run_duration_seconds": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Run Duration Seconds",
+            "description": "Run duration in seconds since connecting"
+          },
+          "node_created_at": {
+            "type": "integer",
+            "title": "Node Created At",
+            "description": "UNIX timestamp of node first registration"
+          }
+        },
+        "type": "object",
+        "required": [
+          "node_id",
+          "operating_system",
+          "name_alias",
+          "status",
+          "node_created_at"
+        ],
+        "title": "GetNodeInfoResponse"
+      },
+      "GetNodeStatsResponse": {
+        "properties": {
+          "requests_served": {
+            "type": "integer",
+            "title": "Requests Served",
+            "description": "Total inference requests served by the node",
+            "default": 0
+          },
+          "requests_served_day": {
+            "type": "integer",
+            "title": "Requests Served Day",
+            "description": "Total inference requests served by the node past 24 hours",
+            "default": 0
+          },
+          "average_time_to_first_token": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Average Time To First Token",
+            "description": "Average time to first token for the node",
+            "default": 0
+          },
+          "benchmark_tokens_per_second": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Benchmark Tokens Per Second",
+            "description": "Node benchmark generated tokens per second",
+            "default": 0
+          },
+          "benchmark_model_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Benchmark Model Name",
+            "description": "Node benchmark model name"
+          },
+          "benchmark_created_at": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Benchmark Created At",
+            "description": "UNIX timestamp of node benchmark creation",
+            "default": 0
+          },
+          "completed_inferences": {
+            "items": {
+              "$ref": "#/components/schemas/InferenceStats"
+            },
+            "type": "array",
+            "title": "Completed Inferences",
+            "description": "Last 10 processed inference calls",
+            "default": []
+          }
+        },
+        "type": "object",
+        "title": "GetNodeStatsResponse"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "Image": {
+        "properties": {
+          "b64_json": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "B64 Json"
+          },
+          "revised_prompt": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Revised Prompt"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Url"
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "title": "Image"
+      },
+      "ImageGenerationRequest": {
+        "properties": {
+          "prompt": {
+            "type": "string",
+            "title": "Prompt",
+            "description": "text description of the desired image(s)."
+          },
+          "model": {
+            "type": "string",
+            "title": "Model",
+            "description": "The model to use for image generation."
+          },
+          "n": {
+            "type": "integer",
+            "maximum": 10.0,
+            "minimum": 1.0,
+            "title": "N",
+            "description": "The number of images to generate. Must be between 1 and 10.",
+            "default": 1
+          },
+          "quality": {
+            "type": "string",
+            "enum": [
+              "standard",
+              "hd"
+            ],
+            "title": "Quality",
+            "description": "The quality of the image that will be generated.",
+            "default": "standard"
+          },
+          "response_format": {
+            "type": "string",
+            "enum": [
+              "url",
+              "b64_json"
+            ],
+            "title": "Response Format",
+            "description": "The format in which the generated images are returned.",
+            "default": "url"
+          },
+          "size": {
+            "type": "string",
+            "enum": [
+              "256x256",
+              "512x512",
+              "1024x1024"
+            ],
+            "title": "Size",
+            "description": "The size of the generated images.",
+            "default": "1024x1024"
+          },
+          "style": {
+            "type": "string",
+            "enum": [
+              "vivid",
+              "natural"
+            ],
+            "title": "Style",
+            "description": "The style of the generated images.",
+            "default": "vivid"
+          },
+          "user": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "User",
+            "description": "A unique identifier representing your end-user"
+          }
+        },
+        "type": "object",
+        "required": [
+          "prompt",
+          "model"
+        ],
+        "title": "ImageGenerationRequest",
+        "example": {
+          "model": "dall-e-3",
+          "n": 1,
+          "prompt": "a red apple",
+          "quality": "standard",
+          "response_format": "url",
+          "size": "1024x1024",
+          "style": "vivid",
+          "user": "user123"
+        }
+      },
+      "ImagesResponse": {
+        "properties": {
+          "created": {
+            "type": "integer",
+            "title": "Created"
+          },
+          "data": {
+            "items": {
+              "$ref": "#/components/schemas/Image"
+            },
+            "type": "array",
+            "title": "Data"
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "required": [
+          "created",
+          "data"
+        ],
+        "title": "ImagesResponse"
+      },
+      "InferenceStats": {
+        "properties": {
+          "model_name": {
+            "type": "string",
+            "title": "Model Name",
+            "description": "Model name for the given inference"
+          },
+          "prompt_tokens": {
+            "type": "integer",
+            "title": "Prompt Tokens",
+            "description": "Prompt tokens count"
+          },
+          "completion_tokens": {
+            "type": "integer",
+            "title": "Completion Tokens",
+            "description": "Completion tokens count"
+          },
+          "total_tokens": {
+            "type": "integer",
+            "title": "Total Tokens",
+            "description": "Total tokens count"
+          },
+          "created_at": {
+            "type": "integer",
+            "title": "Created At",
+            "description": "UNIX timestamp of the inference completion"
+          }
+        },
+        "type": "object",
+        "required": [
+          "model_name",
+          "prompt_tokens",
+          "completion_tokens",
+          "total_tokens",
+          "created_at"
+        ],
+        "title": "InferenceStats"
+      },
+      "JsonSchema": {
+        "properties": {
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Description",
+            "description": "A description of what the response format is for, used by the model to determine how to respond in the format."
+          },
+          "name": {
+            "type": "string",
+            "title": "Name",
+            "description": "The name of the response format. Must be a-z, A-Z, 0-9, or contain underscores and dashes, with a maximum length of 64."
+          },
+          "schema": {
+            "anyOf": [
+              {
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Schema",
+            "description": "The schema for the response format, described as a JSON Schema object."
+          },
+          "strict": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Strict",
+            "description": "Whether to enable strict schema adherence when generating the output. If set to true, the model will always follow the exact schema defined in the schema field. Only a subset of JSON Schema is supported when `strict` is `true`."
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "schema"
+        ],
+        "title": "JsonSchema"
+      },
+      "ListNodeRequestNode": {
+        "properties": {
+          "node_id": {
+            "type": "string",
+            "title": "Node Id",
+            "description": "Unique ID of the Node"
+          },
+          "gpu_model": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Gpu Model",
+            "description": "GPU model"
+          },
+          "vram": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Vram",
+            "description": "VRAM in MB"
+          },
+          "gpu_count": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Gpu Count",
+            "description": "GPU count"
+          },
+          "cpu_model": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Cpu Model",
+            "description": "CPU model"
+          },
+          "cpu_count": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Cpu Count",
+            "description": "CPU cores count"
+          },
+          "ram": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ram",
+            "description": "RAM in MB"
+          },
+          "power_limit": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Power Limit",
+            "description": "GPU power limit in Watts"
+          },
+          "network_download_speed": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Network Download Speed",
+            "description": "Network download speed in Mbps"
+          },
+          "network_upload_speed": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Network Upload Speed",
+            "description": "Network upload speed in Mbps"
+          },
+          "operating_system": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Operating System",
+            "description": "Operating system"
+          },
+          "version": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Version",
+            "description": "Node version"
+          },
+          "name_alias": {
+            "type": "string",
+            "title": "Name Alias",
+            "description": "User defined name for the Node"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status",
+            "description": "Node status"
+          },
+          "run_duration_seconds": {
+            "type": "integer",
+            "title": "Run Duration Seconds",
+            "description": "Run duration in seconds since connecting",
+            "default": 0
+          },
+          "total_uptime_seconds": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Total Uptime Seconds",
+            "description": "Node total uptime in seconds"
+          },
+          "requests_served": {
+            "type": "integer",
+            "title": "Requests Served",
+            "description": "Total inference requests served by the node",
+            "default": 0
+          },
+          "requests_served_day": {
+            "type": "integer",
+            "title": "Requests Served Day",
+            "description": "Total inference requests served by the node past 24 hours",
+            "default": 0
+          },
+          "benchmark_tokens_per_second": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Benchmark Tokens Per Second",
+            "description": "Theoretical max tokens per second for the node"
+          },
+          "is_archived": {
+            "type": "boolean",
+            "title": "Is Archived",
+            "description": "true if a node is archived"
+          },
+          "node_created_at": {
+            "type": "integer",
+            "title": "Node Created At",
+            "description": "UNIX timestamp of node first registration"
+          }
+        },
+        "type": "object",
+        "required": [
+          "node_id",
+          "operating_system",
+          "name_alias",
+          "status",
+          "benchmark_tokens_per_second",
+          "is_archived",
+          "node_created_at"
+        ],
+        "title": "ListNodeRequestNode"
+      },
+      "ListNodeResponse": {
+        "properties": {
+          "response": {
+            "type": "string",
+            "const": "OK",
+            "title": "Response",
+            "description": "Success response",
+            "default": "OK"
+          },
+          "nodes": {
+            "items": {
+              "$ref": "#/components/schemas/ListNodeRequestNode"
+            },
+            "type": "array",
+            "title": "Nodes",
+            "description": "User nodes"
+          }
+        },
+        "type": "object",
+        "required": [
+          "nodes"
+        ],
+        "title": "ListNodeResponse"
+      },
+      "Message": {
+        "properties": {
+          "content": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Content",
+            "description": "The contents of the message. `content` is required for all messages, and may be null for assistant messages with function calls."
+          },
+          "function_call": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/FunctionCall-Input"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The name and arguments of a function that should be called, as generated by the model."
+          },
+          "role": {
+            "type": "string",
+            "title": "Role",
+            "description": "One of: `system`, `assistant`, `user` or `tool`"
+          },
+          "name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name",
+            "description": "The name of the author of this message. `name` is required if `role` is `function`, and it should be the name of the function whose response is in the content. May contain a-z, A-Z, 0-9, and underscores, with a maximum length of 64 characters."
+          }
+        },
+        "type": "object",
+        "required": [
+          "content",
+          "role"
+        ],
+        "title": "Message"
+      },
+      "ModelPricingResponse": {
+        "properties": {
+          "prompt": {
+            "type": "string",
+            "title": "Prompt",
+            "description": "Prompt pricing"
+          },
+          "completion": {
+            "type": "string",
+            "title": "Completion",
+            "description": "Completion pricing"
+          },
+          "image": {
+            "type": "string",
+            "title": "Image",
+            "description": "Image pricing"
+          },
+          "request": {
+            "type": "string",
+            "title": "Request",
+            "description": "Request pricing"
+          }
+        },
+        "type": "object",
+        "required": [
+          "prompt",
+          "completion",
+          "image",
+          "request"
+        ],
+        "title": "ModelPricingResponse",
+        "example": {
+          "completion": "0.0001",
+          "image": "0",
+          "prompt": "0.0001",
+          "request": "0"
+        }
+      },
+      "ModelResponse": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id",
+            "description": "Model ID"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name",
+            "description": "Model name"
+          },
+          "context_length": {
+            "type": "integer",
+            "title": "Context Length",
+            "description": "Context length"
+          },
+          "max_completion_tokens": {
+            "type": "integer",
+            "title": "Max Completion Tokens",
+            "description": "Max completion tokens"
+          },
+          "pricing": {
+            "$ref": "#/components/schemas/ModelPricingResponse",
+            "description": "Model pricing"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "context_length",
+          "max_completion_tokens",
+          "pricing"
+        ],
+        "title": "ModelResponse",
+        "example": {
+          "context_length": 131072,
+          "id": "meta/llama3.1-70b-instruct",
+          "max_completion_tokens": 2048,
+          "name": "meta/llama3.1-70b-instruct",
+          "pricing": {
+            "completion": "0.0001",
+            "image": "0",
+            "prompt": "0.0001",
+            "request": "0"
+          }
+        }
+      },
+      "ModelUsage": {
+        "properties": {
+          "model": {
+            "type": "string",
+            "title": "Model",
+            "description": "Model name"
+          },
+          "full_model": {
+            "type": "string",
+            "title": "Full Model",
+            "description": "Full model name"
+          },
+          "price_per_million_tokens": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Price Per Million Tokens",
+            "description": "Price per one million tokens"
+          },
+          "max_requests_per_day": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Max Requests Per Day",
+            "description": "Max requests allowed per day"
+          },
+          "max_requests_per_minute": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Max Requests Per Minute",
+            "description": "Max requests allowed per minute"
+          },
+          "max_tokens_per_day": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Max Tokens Per Day",
+            "description": "Max tokens allowed per day"
+          },
+          "max_tokens_per_minute": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Max Tokens Per Minute",
+            "description": "Max tokens allowed per minute"
+          },
+          "requests_left_day": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Requests Left Day",
+            "description": "Requests left for the day"
+          },
+          "requests_used_day": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Requests Used Day",
+            "description": "Requests used for the day"
+          },
+          "tokens_left_day": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Tokens Left Day",
+            "description": "Tokens left for the day"
+          },
+          "tokens_used_day": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Tokens Used Day",
+            "description": "Tokens used for the day"
+          }
+        },
+        "type": "object",
+        "required": [
+          "model",
+          "full_model",
+          "price_per_million_tokens",
+          "max_requests_per_day",
+          "max_requests_per_minute",
+          "max_tokens_per_day",
+          "max_tokens_per_minute",
+          "requests_left_day",
+          "requests_used_day",
+          "tokens_left_day",
+          "tokens_used_day"
+        ],
+        "title": "ModelUsage"
+      },
+      "ModelsResponse": {
+        "properties": {
+          "data": {
+            "items": {
+              "$ref": "#/components/schemas/ModelResponse"
+            },
+            "type": "array",
+            "title": "Data",
+            "description": "List of models"
+          }
+        },
+        "type": "object",
+        "required": [
+          "data"
+        ],
+        "title": "ModelsResponse",
+        "example": {
+          "data": [
+            {
+              "context_length": 131072,
+              "id": "meta/llama3.1-70b-instruct",
+              "max_completion_tokens": 2048,
+              "name": "meta/llama3.1-70b-instruct",
+              "pricing": {
+                "completion": "0.0001",
+                "image": "0",
+                "prompt": "0.0001",
+                "request": "0"
+              }
+            }
+          ]
+        }
+      },
+      "NetworkModelStats": {
+        "properties": {
+          "model_name": {
+            "type": "string",
+            "title": "Model Name",
+            "description": "Model name"
+          },
+          "throughput": {
+            "type": "string",
+            "title": "Throughput",
+            "description": "Throughput in tokens/second"
+          }
+        },
+        "type": "object",
+        "required": [
+          "model_name",
+          "throughput"
+        ],
+        "title": "NetworkModelStats"
+      },
+      "NetworkStatsResponse": {
+        "properties": {
+          "nodes_count": {
+            "type": "integer",
+            "title": "Nodes Count",
+            "description": "Total registered nodes count"
+          },
+          "connected_nodes_count": {
+            "type": "integer",
+            "title": "Connected Nodes Count",
+            "description": "Currently connected nodes count"
+          },
+          "network_throughput": {
+            "type": "string",
+            "title": "Network Throughput",
+            "description": "Current network throughput in tokens/second"
+          },
+          "inference_count_day": {
+            "type": "integer",
+            "title": "Inference Count Day",
+            "description": "Inferences count in the past 24 hours"
+          },
+          "network_models_stats": {
+            "items": {
+              "$ref": "#/components/schemas/NetworkModelStats"
+            },
+            "type": "array",
+            "title": "Network Models Stats",
+            "description": "Current network throughput per model in tokens/second"
+          }
+        },
+        "type": "object",
+        "required": [
+          "nodes_count",
+          "connected_nodes_count",
+          "network_throughput",
+          "inference_count_day",
+          "network_models_stats"
+        ],
+        "title": "NetworkStatsResponse"
+      },
+      "PostNodeBenchmarkRequest": {
+        "properties": {
+          "node_id": {
+            "type": "string",
+            "title": "Node Id",
+            "description": "Unique ID of the Node"
+          },
+          "model_name": {
+            "type": "string",
+            "title": "Model Name",
+            "description": "Model name"
+          },
+          "tokens_per_second": {
+            "type": "number",
+            "title": "Tokens Per Second",
+            "description": "Tokens per second"
+          }
+        },
+        "type": "object",
+        "required": [
+          "node_id",
+          "model_name",
+          "tokens_per_second"
+        ],
+        "title": "PostNodeBenchmarkRequest"
+      },
+      "PostNodeBenchmarkResponse": {
+        "properties": {
+          "response": {
+            "type": "string",
+            "const": "OK",
+            "title": "Response",
+            "description": "Success response",
+            "default": "OK"
+          }
+        },
+        "type": "object",
+        "title": "PostNodeBenchmarkResponse"
+      },
+      "PostNodeInfoRequest": {
+        "properties": {
+          "node_id": {
+            "type": "string",
+            "title": "Node Id",
+            "description": "Unique ID of the Node"
+          },
+          "gpu_model": {
+            "type": "string",
+            "title": "Gpu Model",
+            "description": "GPU model"
+          },
+          "vram": {
+            "type": "integer",
+            "title": "Vram",
+            "description": "VRAM in MB"
+          },
+          "gpu_count": {
+            "type": "integer",
+            "title": "Gpu Count",
+            "description": "GPU count"
+          },
+          "cpu_model": {
+            "type": "string",
+            "title": "Cpu Model",
+            "description": "CPU model"
+          },
+          "cpu_count": {
+            "type": "integer",
+            "title": "Cpu Count",
+            "description": "CPU cores count"
+          },
+          "ram": {
+            "type": "integer",
+            "title": "Ram",
+            "description": "RAM in MB"
+          },
+          "power_limit": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Power Limit",
+            "description": "Power limit in Watts"
+          },
+          "network_download_speed": {
+            "type": "number",
+            "title": "Network Download Speed",
+            "description": "Network download speed in Mbps"
+          },
+          "network_upload_speed": {
+            "type": "number",
+            "title": "Network Upload Speed",
+            "description": "Network upload speed in Mbps"
+          },
+          "operating_system": {
+            "type": "string",
+            "title": "Operating System",
+            "description": "Operating system"
+          },
+          "version": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Version",
+            "description": "Node version"
+          }
+        },
+        "type": "object",
+        "required": [
+          "node_id",
+          "gpu_model",
+          "vram",
+          "gpu_count",
+          "cpu_model",
+          "cpu_count",
+          "ram",
+          "network_download_speed",
+          "network_upload_speed",
+          "operating_system"
+        ],
+        "title": "PostNodeInfoRequest"
+      },
+      "PostNodeInfoResponse": {
+        "properties": {
+          "response": {
+            "type": "string",
+            "const": "OK",
+            "title": "Response",
+            "description": "Success response",
+            "default": "OK"
+          }
+        },
+        "type": "object",
+        "title": "PostNodeInfoResponse"
+      },
+      "RateLimitResponse": {
+        "properties": {
+          "usage_tier_name": {
+            "type": "string",
+            "title": "Usage Tier Name",
+            "description": "Current API usage tier name"
+          },
+          "usage_tier_description": {
+            "type": "string",
+            "title": "Usage Tier Description",
+            "description": "Current API usage tier description"
+          },
+          "credits_balance": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Credits Balance",
+            "description": "User credits balance if user has or ever had a balance"
+          },
+          "usages": {
+            "items": {
+              "$ref": "#/components/schemas/ModelUsage"
+            },
+            "type": "array",
+            "title": "Usages",
+            "description": "Model max usage and usage stats"
+          }
+        },
+        "type": "object",
+        "required": [
+          "usage_tier_name",
+          "usage_tier_description",
+          "credits_balance",
+          "usages"
+        ],
+        "title": "RateLimitResponse"
+      },
+      "ResponseFormat": {
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "text",
+              "json_object",
+              "json_schema"
+            ],
+            "title": "Type",
+            "description": "The type of response format being defined: `text`"
+          },
+          "json_schema": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/JsonSchema"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "type"
+        ],
+        "title": "ResponseFormat"
+      },
+      "SearchRequest": {
+        "properties": {
+          "query": {
+            "type": "string",
+            "title": "Query",
+            "description": "Search query"
+          },
+          "max_results": {
+            "type": "integer",
+            "maximum": 10.0,
+            "minimum": 1.0,
+            "title": "Max Results",
+            "description": "Search query",
+            "default": 5
+          }
+        },
+        "type": "object",
+        "required": [
+          "query"
+        ],
+        "title": "SearchRequest"
+      },
+      "SearchResponse": {
+        "properties": {
+          "results": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array",
+            "title": "Results",
+            "description": "Search results"
+          }
+        },
+        "type": "object",
+        "required": [
+          "results"
+        ],
+        "title": "SearchResponse"
+      },
+      "StreamOptions": {
+        "properties": {
+          "include_usage": {
+            "type": "boolean",
+            "title": "Include Usage",
+            "description": "If set, an additional chunk will be streamed before the `data: [DONE]` message. The usage field on this chunk shows the token usage statistics for the entire request, and the choices field will always be an empty array. All other chunks will also include a usage field, but with a null value."
+          }
+        },
+        "type": "object",
+        "required": [
+          "include_usage"
+        ],
+        "title": "StreamOptions"
+      },
+      "ToolChoice": {
+        "properties": {
+          "type": {
+            "anyOf": [
+              {
+                "type": "string",
+                "const": "function"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Type",
+            "description": "The type of the tool. Currently, only `function` is supported."
+          },
+          "function": {
+            "$ref": "#/components/schemas/ToolChoiceFunction"
+          }
+        },
+        "type": "object",
+        "required": [
+          "type",
+          "function"
+        ],
+        "title": "ToolChoice"
+      },
+      "ToolChoiceFunction": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name",
+            "description": "The name of the function to call."
+          }
+        },
+        "type": "object",
+        "required": [
+          "name"
+        ],
+        "title": "ToolChoiceFunction"
+      },
+      "TopLogprob": {
+        "properties": {
+          "token": {
+            "type": "string",
+            "title": "Token"
+          },
+          "bytes": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "integer"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Bytes"
+          },
+          "logprob": {
+            "type": "number",
+            "title": "Logprob"
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "required": [
+          "token",
+          "logprob"
+        ],
+        "title": "TopLogprob"
+      },
+      "UpdateNodeRequest": {
+        "properties": {
+          "node_id": {
+            "type": "string",
+            "title": "Node Id",
+            "description": "Unique ID of the Node"
+          },
+          "node_name": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 40,
+                "minLength": 3
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Node Name",
+            "description": "User defined node name to use as the new value"
+          },
+          "is_archived": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Is Archived",
+            "description": "New node archival status"
+          }
+        },
+        "type": "object",
+        "required": [
+          "node_id"
+        ],
+        "title": "UpdateNodeRequest"
+      },
+      "UpdateNodeResponse": {
+        "properties": {
+          "is_name_updated": {
+            "type": "boolean",
+            "title": "Is Name Updated",
+            "description": "Shows if the name was updated"
+          },
+          "is_archival_status_updated": {
+            "type": "boolean",
+            "title": "Is Archival Status Updated",
+            "description": "Shows if the archival status was updated"
+          }
+        },
+        "type": "object",
+        "required": [
+          "is_name_updated",
+          "is_archival_status_updated"
+        ],
+        "title": "UpdateNodeResponse"
+      },
+      "Usage": {
+        "properties": {
+          "prompt_tokens": {
+            "type": "integer",
+            "title": "Prompt Tokens"
+          },
+          "total_tokens": {
+            "type": "integer",
+            "title": "Total Tokens"
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "required": [
+          "prompt_tokens",
+          "total_tokens"
+        ],
+        "title": "Usage"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      },
+      "distributedinference__service__completions__entities__ChatCompletion": {
         "properties": {
           "id": {
             "type": "string",
@@ -785,9 +2976,6 @@
           },
           "object": {
             "type": "string",
-            "enum": [
-              "chat.completion"
-            ],
             "const": "chat.completion",
             "title": "Object"
           },
@@ -839,98 +3027,7 @@
         ],
         "title": "ChatCompletion"
       },
-      "ChatCompletionMessage": {
-        "properties": {
-          "content": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Content"
-          },
-          "refusal": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Refusal"
-          },
-          "role": {
-            "type": "string",
-            "enum": [
-              "assistant"
-            ],
-            "const": "assistant",
-            "title": "Role"
-          },
-          "function_call": {
-            "anyOf": [
-              {
-                "$ref": "#/components/schemas/FunctionCall-Output"
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "tool_calls": {
-            "anyOf": [
-              {
-                "items": {
-                  "$ref": "#/components/schemas/ChatCompletionMessageToolCall"
-                },
-                "type": "array"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Tool Calls"
-          }
-        },
-        "additionalProperties": true,
-        "type": "object",
-        "required": [
-          "role"
-        ],
-        "title": "ChatCompletionMessage"
-      },
-      "ChatCompletionMessageToolCall": {
-        "properties": {
-          "id": {
-            "type": "string",
-            "title": "Id"
-          },
-          "function": {
-            "$ref": "#/components/schemas/Function-Output"
-          },
-          "type": {
-            "type": "string",
-            "enum": [
-              "function"
-            ],
-            "const": "function",
-            "title": "Type"
-          }
-        },
-        "additionalProperties": true,
-        "type": "object",
-        "required": [
-          "id",
-          "function",
-          "type"
-        ],
-        "title": "ChatCompletionMessageToolCall"
-      },
-      "ChatCompletionRequest": {
+      "distributedinference__service__completions__entities__ChatCompletionRequest": {
         "properties": {
           "messages": {
             "items": {
@@ -1128,7 +3225,7 @@
             "anyOf": [
               {
                 "items": {
-                  "$ref": "#/components/schemas/Tool"
+                  "$ref": "#/components/schemas/distributedinference__service__completions__entities__Tool"
                 },
                 "type": "array"
               },
@@ -1187,458 +3284,7 @@
           "model": "llama3.1"
         }
       },
-      "ChatCompletionTokenLogprob": {
-        "properties": {
-          "token": {
-            "type": "string",
-            "title": "Token"
-          },
-          "bytes": {
-            "anyOf": [
-              {
-                "items": {
-                  "type": "integer"
-                },
-                "type": "array"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Bytes"
-          },
-          "logprob": {
-            "type": "number",
-            "title": "Logprob"
-          },
-          "top_logprobs": {
-            "items": {
-              "$ref": "#/components/schemas/TopLogprob"
-            },
-            "type": "array",
-            "title": "Top Logprobs"
-          }
-        },
-        "additionalProperties": true,
-        "type": "object",
-        "required": [
-          "token",
-          "logprob",
-          "top_logprobs"
-        ],
-        "title": "ChatCompletionTokenLogprob"
-      },
-      "Choice": {
-        "properties": {
-          "finish_reason": {
-            "type": "string",
-            "enum": [
-              "stop",
-              "length",
-              "tool_calls",
-              "content_filter",
-              "function_call"
-            ],
-            "title": "Finish Reason"
-          },
-          "index": {
-            "type": "integer",
-            "title": "Index"
-          },
-          "logprobs": {
-            "anyOf": [
-              {
-                "$ref": "#/components/schemas/ChoiceLogprobs"
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "message": {
-            "$ref": "#/components/schemas/ChatCompletionMessage"
-          }
-        },
-        "additionalProperties": true,
-        "type": "object",
-        "required": [
-          "finish_reason",
-          "index",
-          "message"
-        ],
-        "title": "Choice"
-      },
-      "ChoiceLogprobs": {
-        "properties": {
-          "content": {
-            "anyOf": [
-              {
-                "items": {
-                  "$ref": "#/components/schemas/ChatCompletionTokenLogprob"
-                },
-                "type": "array"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Content"
-          },
-          "refusal": {
-            "anyOf": [
-              {
-                "items": {
-                  "$ref": "#/components/schemas/ChatCompletionTokenLogprob"
-                },
-                "type": "array"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Refusal"
-          }
-        },
-        "additionalProperties": true,
-        "type": "object",
-        "title": "ChoiceLogprobs"
-      },
-      "CompletionUsage": {
-        "properties": {
-          "completion_tokens": {
-            "type": "integer",
-            "title": "Completion Tokens"
-          },
-          "prompt_tokens": {
-            "type": "integer",
-            "title": "Prompt Tokens"
-          },
-          "total_tokens": {
-            "type": "integer",
-            "title": "Total Tokens"
-          }
-        },
-        "additionalProperties": true,
-        "type": "object",
-        "required": [
-          "completion_tokens",
-          "prompt_tokens",
-          "total_tokens"
-        ],
-        "title": "CompletionUsage"
-      },
-      "CreateEmbeddingResponse": {
-        "properties": {
-          "data": {
-            "items": {
-              "$ref": "#/components/schemas/Embedding"
-            },
-            "type": "array",
-            "title": "Data"
-          },
-          "model": {
-            "type": "string",
-            "title": "Model"
-          },
-          "object": {
-            "type": "string",
-            "enum": [
-              "list"
-            ],
-            "const": "list",
-            "title": "Object"
-          },
-          "usage": {
-            "$ref": "#/components/schemas/Usage"
-          }
-        },
-        "additionalProperties": true,
-        "type": "object",
-        "required": [
-          "data",
-          "model",
-          "object",
-          "usage"
-        ],
-        "title": "CreateEmbeddingResponse"
-      },
-      "CreateNodeRequest": {
-        "properties": {
-          "node_name": {
-            "type": "string",
-            "title": "Node Name",
-            "description": "User defined node name"
-          }
-        },
-        "type": "object",
-        "required": [
-          "node_name"
-        ],
-        "title": "CreateNodeRequest"
-      },
-      "CreateNodeResponse": {
-        "properties": {
-          "response": {
-            "type": "string",
-            "enum": [
-              "OK"
-            ],
-            "const": "OK",
-            "title": "Response",
-            "description": "Success response",
-            "default": "OK"
-          },
-          "node_id": {
-            "type": "string",
-            "title": "Node Id",
-            "description": "Unique ID of the Node"
-          }
-        },
-        "type": "object",
-        "required": [
-          "node_id"
-        ],
-        "title": "CreateNodeResponse"
-      },
-      "Embedding": {
-        "properties": {
-          "embedding": {
-            "items": {
-              "type": "number"
-            },
-            "type": "array",
-            "title": "Embedding"
-          },
-          "index": {
-            "type": "integer",
-            "title": "Index"
-          },
-          "object": {
-            "type": "string",
-            "enum": [
-              "embedding"
-            ],
-            "const": "embedding",
-            "title": "Object"
-          }
-        },
-        "additionalProperties": true,
-        "type": "object",
-        "required": [
-          "embedding",
-          "index",
-          "object"
-        ],
-        "title": "Embedding"
-      },
-      "EmbeddingRequest": {
-        "properties": {
-          "input": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "items": {
-                  "type": "string"
-                },
-                "type": "array"
-              },
-              {
-                "items": {
-                  "type": "integer"
-                },
-                "type": "array"
-              },
-              {
-                "items": {
-                  "items": {
-                    "type": "integer"
-                  },
-                  "type": "array"
-                },
-                "type": "array"
-              }
-            ],
-            "title": "Input",
-            "description": "Input text to embed, encoded as a string or array of tokens. To embed multiple inputs in a single request, pass an array of strings or array of token arrays. The input must not exceed the max input tokens for the [model](/for-developers/models)."
-          },
-          "model": {
-            "type": "string",
-            "title": "Model",
-            "description": "ID of the model to use. Get ID for available [models](/for-developers/models)"
-          },
-          "encoding_format": {
-            "anyOf": [
-              {
-                "type": "string",
-                "enum": [
-                  "float",
-                  "base64"
-                ]
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Encoding Format",
-            "description": "The format to return the embeddings in. Can be either `float` or `base64`."
-          },
-          "user": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "User",
-            "description": "A unique identifier representing your end-user"
-          }
-        },
-        "type": "object",
-        "required": [
-          "input",
-          "model"
-        ],
-        "title": "EmbeddingRequest",
-        "example": {
-          "input": [
-            "My epic text number 1",
-            "My epic text number 2"
-          ],
-          "model": "gte-large-en-v1.5"
-        }
-      },
-      "ImageGenerationRequest": {
-        "type": "object",
-        "required": [
-          "prompt",
-          "model"
-        ],
-        "properties": {
-          "prompt": {
-            "type": "string",
-            "description": "Text description of the desired image(s)"
-          },
-          "model": {
-            "type": "string",
-            "description": "The model to use for image generation"
-          },
-          "n": {
-            "type": "integer",
-            "minimum": 1,
-            "maximum": 10,
-            "default": 1,
-            "description": "The number of images to generate"
-          },
-          "response_format": {
-            "type": "string",
-            "enum": [
-              "url",
-              "b64_json"
-            ],
-            "default": "url",
-            "description": "The format in which the generated images are returned"
-          }
-        },
-        "example": {
-          "prompt": "A painting of a beautiful sunset over the ocean.",
-          "model": "stabilityai/stable-diffusion-xl-base-1.0"
-        }
-      },
-      "ImageEditRequest": {
-        "type": "object",
-        "required": [
-          "image",
-          "prompt",
-          "model"
-        ],
-        "properties": {
-          "image": {
-            "type": "string",
-            "description": "The image to edit."
-          },
-          "prompt": {
-            "type": "string",
-            "description": "A text description of the desired image(s)."
-          },
-          "mask": {
-            "type": "string",
-            "description": "The mask to apply to the image.",
-            "nullable": true,
-            "default": null
-          },
-          "model": {
-            "type": "string",
-            "description": "The model to use for image editing."
-          },
-          "n": {
-            "type": "integer",
-            "description": "The number of images to generate. Must be between 1 and 10.",
-            "minimum": 1,
-            "maximum": 10,
-            "default": 1
-          },
-          "response_format": {
-            "type": "string",
-            "enum": [
-              "url",
-              "b64_json"
-            ],
-            "default": "url",
-            "description": "The format in which the generated images are returned."
-          },
-          "size": {
-            "type": "string",
-            "enum": [
-              "256x256",
-              "512x512",
-              "1024x1024"
-            ],
-            "default": "1024x1024",
-            "description": "The size of the generated images."
-          },
-          "user": {
-            "type": "string",
-            "description": "A unique identifier representing your end-user",
-            "nullable": true,
-            "default": null
-          }
-        },
-        "example": {
-          "image": "@image.jpg",
-          "prompt": "A highly detailed cartoon-style portrait of a young man, anime-inspired, with soft shading and vibrant colors, maintaining realistic facial proportions, cheerful expression, and minimal background.",
-          "model": "stabilityai/stable-diffusion-xl-base-1.0"
-        }
-      },
-      "ImagesResponse": {
-        "type": "object",
-        "properties": {
-          "created": {
-            "type": "integer",
-            "description": "The number of images generated"
-          },
-          "data": {
-            "type": "array",
-            "items": {
-              "type": "object",
-              "properties": {
-                "url": {
-                  "type": "string",
-                  "description": "The URL of the generated image"
-                },
-                "b64_json": {
-                  "type": "string",
-                  "description": "Base64 encoded image data"
-                }
-              }
-            }
-          }
-        }
-      },
-      "Function-Input": {
+      "distributedinference__service__completions__entities__Function": {
         "properties": {
           "description": {
             "anyOf": [
@@ -1683,388 +3329,383 @@
         ],
         "title": "Function"
       },
-      "Function-Output": {
+      "distributedinference__service__completions__entities__Tool": {
         "properties": {
-          "arguments": {
-            "type": "string",
-            "title": "Arguments"
+          "type": {
+            "anyOf": [
+              {
+                "type": "string",
+                "const": "function"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Type",
+            "description": "The type of the tool. Currently, only `function` is supported."
           },
-          "name": {
+          "function": {
+            "$ref": "#/components/schemas/distributedinference__service__completions__entities__Function"
+          }
+        },
+        "type": "object",
+        "required": [
+          "type",
+          "function"
+        ],
+        "title": "Tool"
+      },
+      "distributedinference__service__verified_completions__entities__ChatCompletion": {
+        "properties": {
+          "id": {
             "type": "string",
-            "title": "Name"
+            "title": "Id"
+          },
+          "choices": {
+            "items": {
+              "$ref": "#/components/schemas/Choice"
+            },
+            "type": "array",
+            "title": "Choices"
+          },
+          "created": {
+            "type": "integer",
+            "title": "Created"
+          },
+          "model": {
+            "type": "string",
+            "title": "Model"
+          },
+          "object": {
+            "type": "string",
+            "const": "chat.completion",
+            "title": "Object"
+          },
+          "service_tier": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "scale",
+                  "default"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Service Tier"
+          },
+          "system_fingerprint": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "System Fingerprint"
+          },
+          "usage": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/CompletionUsage"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "hash": {
+            "type": "string",
+            "title": "Hash",
+            "description": "The SHA-256 hash of the request and response"
+          },
+          "public_key": {
+            "type": "string",
+            "title": "Public Key",
+            "description": "Signer public key"
+          },
+          "signature": {
+            "type": "string",
+            "title": "Signature",
+            "description": "The signature of the hash, signed by the Solana account in hex format."
+          },
+          "attestation": {
+            "type": "string",
+            "title": "Attestation",
+            "description": "The attestation document."
           }
         },
         "additionalProperties": true,
         "type": "object",
         "required": [
-          "arguments",
-          "name"
+          "id",
+          "choices",
+          "created",
+          "model",
+          "object",
+          "hash",
+          "public_key",
+          "signature",
+          "attestation"
         ],
-        "title": "Function"
+        "title": "ChatCompletion"
       },
-      "FunctionCall-Input": {
+      "distributedinference__service__verified_completions__entities__ChatCompletionRequest": {
         "properties": {
-          "arguments": {
-            "type": "string",
-            "title": "Arguments",
-            "description": "The name and arguments of a function that should be called, as generated by the model."
-          },
-          "name": {
-            "type": "string",
-            "title": "Name",
-            "description": "The name of the function to call."
-          }
-        },
-        "type": "object",
-        "required": [
-          "arguments",
-          "name"
-        ],
-        "title": "FunctionCall"
-      },
-      "FunctionCall-Output": {
-        "properties": {
-          "arguments": {
-            "type": "string",
-            "title": "Arguments"
-          },
-          "name": {
-            "type": "string",
-            "title": "Name"
-          }
-        },
-        "additionalProperties": true,
-        "type": "object",
-        "required": [
-          "arguments",
-          "name"
-        ],
-        "title": "FunctionCall"
-      },
-      "GetNodeBenchmarkResponse": {
-        "properties": {
-          "node_id": {
-            "type": "string",
-            "title": "Node Id",
-            "description": "Unique ID of the Node"
-          },
-          "model_name": {
-            "type": "string",
-            "title": "Model Name",
-            "description": "Model name"
-          },
-          "tokens_per_second": {
-            "type": "number",
-            "title": "Tokens Per Second",
-            "description": "Tokens per second"
-          }
-        },
-        "type": "object",
-        "required": [
-          "node_id",
-          "model_name",
-          "tokens_per_second"
-        ],
-        "title": "GetNodeBenchmarkResponse"
-      },
-      "GetNodeInfoResponse": {
-        "properties": {
-          "node_id": {
-            "type": "string",
-            "title": "Node Id",
-            "description": "Unique ID of the Node"
-          },
-          "gpu_model": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Gpu Model",
-            "description": "GPU model"
-          },
-          "vram": {
-            "anyOf": [
-              {
-                "type": "integer"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Vram",
-            "description": "VRAM in MB"
-          },
-          "gpu_count": {
-            "anyOf": [
-              {
-                "type": "integer"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Gpu Count",
-            "description": "GPU count"
-          },
-          "cpu_model": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Cpu Model",
-            "description": "CPU model"
-          },
-          "cpu_count": {
-            "anyOf": [
-              {
-                "type": "integer"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Cpu Count",
-            "description": "CPU cores count"
-          },
-          "ram": {
-            "anyOf": [
-              {
-                "type": "integer"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Ram",
-            "description": "RAM in MB"
-          },
-          "network_download_speed": {
-            "anyOf": [
-              {
-                "type": "number"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Network Download Speed",
-            "description": "Network download speed in Mbps"
-          },
-          "network_upload_speed": {
-            "anyOf": [
-              {
-                "type": "number"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Network Upload Speed",
-            "description": "Network upload speed in Mbps"
-          },
-          "operating_system": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Operating System",
-            "description": "Operating system"
-          },
-          "version": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Version",
-            "description": "Node version"
-          },
-          "name_alias": {
-            "type": "string",
-            "title": "Name Alias",
-            "description": "User defined name for the node"
-          },
-          "status": {
-            "type": "string",
-            "enum": [
-              "online",
-              "offline"
-            ],
-            "title": "Status",
-            "description": "Node status"
-          },
-          "run_duration_seconds": {
-            "anyOf": [
-              {
-                "type": "integer"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Run Duration Seconds",
-            "description": "Run duration in seconds since connecting"
-          },
-          "node_created_at": {
-            "type": "integer",
-            "title": "Node Created At",
-            "description": "UNIX timestamp of node first registration"
-          }
-        },
-        "type": "object",
-        "required": [
-          "node_id",
-          "operating_system",
-          "name_alias",
-          "status",
-          "node_created_at"
-        ],
-        "title": "GetNodeInfoResponse"
-      },
-      "GetNodeStatsResponse": {
-        "properties": {
-          "requests_served": {
-            "type": "integer",
-            "title": "Requests Served",
-            "description": "Total inference requests served by the node",
-            "default": 0
-          },
-          "requests_served_day": {
-            "type": "integer",
-            "title": "Requests Served Day",
-            "description": "Total inference requests served by the node past 24 hours",
-            "default": 0
-          },
-          "average_time_to_first_token": {
-            "anyOf": [
-              {
-                "type": "number"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Average Time To First Token",
-            "description": "Average time to first token for the node",
-            "default": 0
-          },
-          "benchmark_tokens_per_second": {
-            "anyOf": [
-              {
-                "type": "number"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Benchmark Tokens Per Second",
-            "description": "Node benchmark generated tokens per second",
-            "default": 0
-          },
-          "benchmark_model_name": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Benchmark Model Name",
-            "description": "Node benchmark model name"
-          },
-          "benchmark_created_at": {
-            "anyOf": [
-              {
-                "type": "integer"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Benchmark Created At",
-            "description": "UNIX timestamp of node benchmark creation",
-            "default": 0
-          },
-          "completed_inferences": {
+          "messages": {
             "items": {
-              "$ref": "#/components/schemas/InferenceStats"
+              "$ref": "#/components/schemas/Message"
             },
             "type": "array",
-            "title": "Completed Inferences",
-            "description": "Last 10 processed inference calls"
-          }
-        },
-        "type": "object",
-        "title": "GetNodeStatsResponse"
-      },
-      "HTTPValidationError": {
-        "properties": {
-          "detail": {
-            "items": {
-              "$ref": "#/components/schemas/ValidationError"
-            },
-            "type": "array",
-            "title": "Detail"
-          }
-        },
-        "type": "object",
-        "title": "HTTPValidationError"
-      },
-      "InferenceStats": {
-        "properties": {
-          "model_name": {
+            "title": "Messages",
+            "description": "A list of messages comprising the conversation so far. "
+          },
+          "model": {
             "type": "string",
-            "title": "Model Name",
-            "description": "Model name for the given inference"
+            "title": "Model",
+            "description": "ID of the model to use. Get ID for available [models](/for-developers/models)."
           },
-          "prompt_tokens": {
-            "type": "integer",
-            "title": "Prompt Tokens",
-            "description": "Prompt tokens count"
+          "frequency_penalty": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Frequency Penalty",
+            "description": "Number between -2.0 and 2.0. Positive values penalize new tokens based on their existing frequency in the text so far, decreasing the model's likelihood to repeat the same line verbatim."
           },
-          "completion_tokens": {
-            "type": "integer",
-            "title": "Completion Tokens",
-            "description": "Completion tokens count"
+          "logit_bias": {
+            "anyOf": [
+              {
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Logit Bias",
+            "description": "Modify the likelihood of specified tokens appearing in the completion."
           },
-          "total_tokens": {
-            "type": "integer",
-            "title": "Total Tokens",
-            "description": "Total tokens count"
+          "logprobs": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Logprobs",
+            "description": "Whether to return log probabilities of the output tokens or not. If true, returns the log probabilities of each output token returned in the `content` of `message`."
           },
-          "created_at": {
-            "type": "integer",
-            "title": "Created At",
-            "description": "UNIX timestamp of the inference completion"
+          "top_logprobs": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Top Logprobs",
+            "description": "An integer between 0 and 20 specifying the number of most likely tokens to return at each token position, each with an associated log probability. `logprobs` must be set to `true` if this parameter is used."
+          },
+          "max_tokens": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Max Tokens",
+            "description": "The maximum number of tokens to generate in the chat completion. [Models](/for-developers/models) specific."
+          },
+          "n": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "N",
+            "description": "How many chat completion choices to generate for each input message."
+          },
+          "presence_penalty": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "items": {},
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Presence Penalty",
+            "description": "Number between -2.0 and 2.0. Positive values penalize new tokens based on whether they appear in the text so far, increasing the model's likelihood to talk about new topics."
+          },
+          "response_format": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ResponseFormat"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "An object specifying the format that the model must output."
+          },
+          "seed": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Seed",
+            "description": "This feature is in Beta. If specified, our system will make a best effort to sample deterministically, such that repeated requests with the same `seed` and parameters should return the same result. Determinism is not guaranteed, and you should refer to the `system_fingerprint` response parameter to monitor changes in the backend."
+          },
+          "stop": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "items": {},
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Stop",
+            "description": "Up to 4 sequences where the API will stop generating further tokens."
+          },
+          "stream": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Stream",
+            "description": "If set, partial message deltas will be sent, like in ChatGPT."
+          },
+          "stream_options": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/StreamOptions"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Options for streaming response. Only set this when you set `stream: true`."
+          },
+          "temperature": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Temperature",
+            "description": "What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic."
+          },
+          "top_p": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Top P",
+            "description": "An alternative to sampling with temperature, called nucleus sampling, where the model considers the results of the tokens with top_p probability mass. So 0.1 means only the tokens comprising the top 10% probability mass are considered."
+          },
+          "tools": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/distributedinference__service__verified_completions__entities__Tool"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Tools",
+            "description": "**Currently the 8b model does not support tools.** A list of tools the model may call. Currently, only functions are supported as a tool. Use this to provide a list of functions the model may generate JSON inputs for."
+          },
+          "tool_choice": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "$ref": "#/components/schemas/ToolChoice"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Tool Choice",
+            "description": "Controls which (if any) tool is called by the model. none means the model will not call any tool and instead generates a message. auto means the model can pick between generating a message or calling one or more tools. required means the model must call one or more tools. Specifying a particular tool via `{\"type\": \"function\", \"function\": {\"name\": \"my_function\"}}` forces the model to call that tool."
+          },
+          "user": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "User",
+            "description": "A unique identifier representing your end-user, which can help OpenAI to monitor and detect abuse."
           }
         },
         "type": "object",
         "required": [
-          "model_name",
-          "prompt_tokens",
-          "completion_tokens",
-          "total_tokens",
-          "created_at"
+          "messages",
+          "model"
         ],
-        "title": "InferenceStats"
+        "title": "ChatCompletionRequest",
+        "example": {
+          "messages": [
+            {
+              "content": "You are a helpful assistant.",
+              "role": "system"
+            },
+            {
+              "content": "Hello!",
+              "role": "user"
+            }
+          ],
+          "model": "gpt-4o"
+        }
       },
-      "JsonSchema": {
+      "distributedinference__service__verified_completions__entities__Function": {
         "properties": {
           "description": {
             "anyOf": [
@@ -2076,26 +3717,17 @@
               }
             ],
             "title": "Description",
-            "description": "A description of what the response format is for, used by the model to determine how to respond in the format.",
-            "default": true
+            "description": "A description of what the function does, used by the model to choose when and how to call the function."
           },
           "name": {
             "type": "string",
             "title": "Name",
-            "description": "The name of the response format. Must be a-z, A-Z, 0-9, or contain underscores and dashes, with a maximum length of 64.",
-            "default": true
+            "description": "The name of the function to be called. Must be a-z, A-Z, 0-9, or contain underscores and dashes, with a maximum length of 64."
           },
-          "schema": {
-            "anyOf": [
-              {
-                "type": "object"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Schema",
-            "description": "The schema for the response format, described as a JSON Schema object."
+          "parameters": {
+            "type": "object",
+            "title": "Parameters",
+            "description": "The parameters the functions accepts, described as a JSON Schema object. See the guide for examples, and the JSON Schema reference for documentation about the format. To describe a function that accepts no parameters, provide the value {\"type\": \"object\", \"properties\": {}}."
           },
           "strict": {
             "anyOf": [
@@ -2107,806 +3739,22 @@
               }
             ],
             "title": "Strict",
-            "description": "Whether to enable strict schema adherence when generating the output. If set to true, the model will always follow the exact schema defined in the schema field. Only a subset of JSON Schema is supported when `strict` is `true`."
-          }
-        },
-        "type": "object",
-        "title": "JsonSchema"
-      },
-      "ListNodeRequestNode": {
-        "properties": {
-          "node_id": {
-            "type": "string",
-            "title": "Node Id",
-            "description": "Unique ID of the Node"
-          },
-          "gpu_model": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Gpu Model",
-            "description": "GPU model"
-          },
-          "vram": {
-            "anyOf": [
-              {
-                "type": "integer"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Vram",
-            "description": "VRAM in MB"
-          },
-          "gpu_count": {
-            "anyOf": [
-              {
-                "type": "integer"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Gpu Count",
-            "description": "GPU count"
-          },
-          "cpu_model": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Cpu Model",
-            "description": "CPU model"
-          },
-          "cpu_count": {
-            "anyOf": [
-              {
-                "type": "integer"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Cpu Count",
-            "description": "CPU cores count"
-          },
-          "ram": {
-            "anyOf": [
-              {
-                "type": "integer"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Ram",
-            "description": "RAM in MB"
-          },
-          "network_download_speed": {
-            "anyOf": [
-              {
-                "type": "number"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Network Download Speed",
-            "description": "Network download speed in Mbps"
-          },
-          "network_upload_speed": {
-            "anyOf": [
-              {
-                "type": "number"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Network Upload Speed",
-            "description": "Network upload speed in Mbps"
-          },
-          "operating_system": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Operating System",
-            "description": "Operating system"
-          },
-          "version": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Version",
-            "description": "Node version"
-          },
-          "name_alias": {
-            "type": "string",
-            "title": "Name Alias",
-            "description": "User defined name for the Node"
-          },
-          "status": {
-            "type": "string",
-            "enum": [
-              "online",
-              "offline"
-            ],
-            "title": "Status",
-            "description": "Node status"
-          },
-          "run_duration_seconds": {
-            "type": "integer",
-            "title": "Run Duration Seconds",
-            "description": "Run duration in seconds since connecting",
-            "default": 0
-          },
-          "total_uptime_seconds": {
-            "anyOf": [
-              {
-                "type": "integer"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Total Uptime Seconds",
-            "description": "Node total uptime in seconds"
-          },
-          "requests_served": {
-            "type": "integer",
-            "title": "Requests Served",
-            "description": "Total inference requests served by the node",
-            "default": 0
-          },
-          "requests_served_day": {
-            "type": "integer",
-            "title": "Requests Served Day",
-            "description": "Total inference requests served by the node past 24 hours",
-            "default": 0
-          },
-          "benchmark_tokens_per_second": {
-            "anyOf": [
-              {
-                "type": "number"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Benchmark Tokens Per Second",
-            "description": "Theoretical max tokens per second for the node"
-          },
-          "is_archived": {
-            "type": "boolean",
-            "title": "Is Archived",
-            "description": "true if a node is archived"
-          },
-          "node_created_at": {
-            "type": "integer",
-            "title": "Node Created At",
-            "description": "UNIX timestamp of node first registration"
+            "description": "Whether to enable strict schema adherence when generating the function call. If set to true, the model will follow the exact schema defined in the parameters field. Only a subset of JSON Schema is supported when `strict` is `true`."
           }
         },
         "type": "object",
         "required": [
-          "node_id",
-          "operating_system",
-          "name_alias",
-          "status",
-          "benchmark_tokens_per_second",
-          "is_archived",
-          "node_created_at"
+          "name",
+          "parameters"
         ],
-        "title": "ListNodeRequestNode"
+        "title": "Function"
       },
-      "ListNodeResponse": {
-        "properties": {
-          "response": {
-            "type": "string",
-            "enum": [
-              "OK"
-            ],
-            "const": "OK",
-            "title": "Response",
-            "description": "Success response",
-            "default": "OK"
-          },
-          "nodes": {
-            "items": {
-              "$ref": "#/components/schemas/ListNodeRequestNode"
-            },
-            "type": "array",
-            "title": "Nodes",
-            "description": "User nodes"
-          }
-        },
-        "type": "object",
-        "required": [
-          "nodes"
-        ],
-        "title": "ListNodeResponse"
-      },
-      "Message": {
-        "properties": {
-          "content": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Content",
-            "description": "The contents of the message. `content` is required for all messages, and may be null for assistant messages with function calls."
-          },
-          "function_call": {
-            "anyOf": [
-              {
-                "$ref": "#/components/schemas/FunctionCall-Input"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "description": "The name and arguments of a function that should be called, as generated by the model."
-          },
-          "role": {
-            "type": "string",
-            "title": "Role",
-            "description": "One of: `system`, `assistant`, `user` or `tool`"
-          },
-          "name": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Name",
-            "description": "The name of the author of this message. `name` is required if `role` is `function`, and it should be the name of the function whose response is in the content. May contain a-z, A-Z, 0-9, and underscores, with a maximum length of 64 characters."
-          }
-        },
-        "type": "object",
-        "required": [
-          "content",
-          "role"
-        ],
-        "title": "Message"
-      },
-      "ModelUsage": {
-        "properties": {
-          "model": {
-            "type": "string",
-            "title": "Model",
-            "default": "Model name"
-          },
-          "full_model": {
-            "type": "string",
-            "title": "Full Model",
-            "default": "Full model name"
-          },
-          "price_per_million_tokens": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Price Per Million Tokens",
-            "default": "Price per one million tokens"
-          },
-          "max_requests_per_day": {
-            "anyOf": [
-              {
-                "type": "integer"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Max Requests Per Day",
-            "default": "Max requests allowed per day"
-          },
-          "max_requests_per_minute": {
-            "anyOf": [
-              {
-                "type": "integer"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Max Requests Per Minute",
-            "default": "Max requests allowed per minute"
-          },
-          "max_tokens_per_day": {
-            "anyOf": [
-              {
-                "type": "integer"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Max Tokens Per Day",
-            "default": "Max tokens allowed per day"
-          },
-          "max_tokens_per_minute": {
-            "anyOf": [
-              {
-                "type": "integer"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Max Tokens Per Minute",
-            "default": "Max tokens allowed per minute"
-          },
-          "requests_left_day": {
-            "anyOf": [
-              {
-                "type": "integer"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Requests Left Day",
-            "default": "Requests left for the day"
-          },
-          "requests_used_day": {
-            "anyOf": [
-              {
-                "type": "integer"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Requests Used Day",
-            "default": "Requests used for the day"
-          },
-          "tokens_left_day": {
-            "anyOf": [
-              {
-                "type": "integer"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Tokens Left Day",
-            "default": "Tokens left for the day"
-          },
-          "tokens_used_day": {
-            "anyOf": [
-              {
-                "type": "integer"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Tokens Used Day",
-            "default": "Tokens used for the day"
-          }
-        },
-        "type": "object",
-        "title": "ModelUsage"
-      },
-      "NetworkModelStats": {
-        "properties": {
-          "model_name": {
-            "type": "string",
-            "title": "Model Name",
-            "description": "Model name"
-          },
-          "throughput": {
-            "type": "string",
-            "title": "Throughput",
-            "description": "Throughput in tokens/second"
-          }
-        },
-        "type": "object",
-        "required": [
-          "model_name",
-          "throughput"
-        ],
-        "title": "NetworkModelStats"
-      },
-      "NetworkStatsResponse": {
-        "properties": {
-          "nodes_count": {
-            "type": "integer",
-            "title": "Nodes Count",
-            "description": "Total registered nodes count"
-          },
-          "connected_nodes_count": {
-            "type": "integer",
-            "title": "Connected Nodes Count",
-            "description": "Currently connected nodes count"
-          },
-          "network_throughput": {
-            "type": "string",
-            "title": "Network Throughput",
-            "description": "Current network throughput in tokens/second"
-          },
-          "inference_count_day": {
-            "type": "integer",
-            "title": "Inference Count Day",
-            "description": "Inferences count in the past 24 hours"
-          },
-          "network_models_stats": {
-            "items": {
-              "$ref": "#/components/schemas/NetworkModelStats"
-            },
-            "type": "array",
-            "title": "Network Models Stats",
-            "description": "Current network throughput per model in tokens/second"
-          }
-        },
-        "type": "object",
-        "required": [
-          "nodes_count",
-          "connected_nodes_count",
-          "network_throughput",
-          "inference_count_day",
-          "network_models_stats"
-        ],
-        "title": "NetworkStatsResponse"
-      },
-      "PostNodeBenchmarkRequest": {
-        "properties": {
-          "node_id": {
-            "type": "string",
-            "title": "Node Id",
-            "description": "Unique ID of the Node"
-          },
-          "model_name": {
-            "type": "string",
-            "title": "Model Name",
-            "description": "Model name"
-          },
-          "tokens_per_second": {
-            "type": "number",
-            "title": "Tokens Per Second",
-            "description": "Tokens per second"
-          }
-        },
-        "type": "object",
-        "required": [
-          "node_id",
-          "model_name",
-          "tokens_per_second"
-        ],
-        "title": "PostNodeBenchmarkRequest"
-      },
-      "PostNodeBenchmarkResponse": {
-        "properties": {
-          "response": {
-            "type": "string",
-            "enum": [
-              "OK"
-            ],
-            "const": "OK",
-            "title": "Response",
-            "description": "Success response",
-            "default": "OK"
-          }
-        },
-        "type": "object",
-        "title": "PostNodeBenchmarkResponse"
-      },
-      "PostNodeInfoRequest": {
-        "properties": {
-          "node_id": {
-            "type": "string",
-            "title": "Node Id",
-            "description": "Unique ID of the Node"
-          },
-          "gpu_model": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Gpu Model",
-            "description": "GPU model"
-          },
-          "vram": {
-            "anyOf": [
-              {
-                "type": "integer"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Vram",
-            "description": "VRAM in MB"
-          },
-          "gpu_count": {
-            "anyOf": [
-              {
-                "type": "integer"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Gpu Count",
-            "description": "GPU count"
-          },
-          "cpu_model": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Cpu Model",
-            "description": "CPU model"
-          },
-          "cpu_count": {
-            "anyOf": [
-              {
-                "type": "integer"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Cpu Count",
-            "description": "CPU cores count"
-          },
-          "ram": {
-            "anyOf": [
-              {
-                "type": "integer"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Ram",
-            "description": "RAM in MB"
-          },
-          "network_download_speed": {
-            "anyOf": [
-              {
-                "type": "number"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Network Download Speed",
-            "description": "Network download speed in Mbps"
-          },
-          "network_upload_speed": {
-            "anyOf": [
-              {
-                "type": "number"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Network Upload Speed",
-            "description": "Network upload speed in Mbps"
-          },
-          "operating_system": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Operating System",
-            "description": "Operating system"
-          },
-          "version": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Version",
-            "description": "Node version"
-          }
-        },
-        "type": "object",
-        "required": [
-          "node_id",
-          "operating_system"
-        ],
-        "title": "PostNodeInfoRequest"
-      },
-      "PostNodeInfoResponse": {
-        "properties": {
-          "response": {
-            "type": "string",
-            "enum": [
-              "OK"
-            ],
-            "const": "OK",
-            "title": "Response",
-            "description": "Success response",
-            "default": "OK"
-          }
-        },
-        "type": "object",
-        "title": "PostNodeInfoResponse"
-      },
-      "RateLimitResponse": {
-        "properties": {
-          "usage_tier_name": {
-            "type": "string",
-            "title": "Usage Tier Name",
-            "description": "Current API usage tier name"
-          },
-          "usage_tier_description": {
-            "type": "string",
-            "title": "Usage Tier Description",
-            "description": "Current API usage tier description"
-          },
-          "credits_balance": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Credits Balance",
-            "description": "User credits balance if user has or ever had a balance"
-          },
-          "usages": {
-            "items": {
-              "$ref": "#/components/schemas/ModelUsage"
-            },
-            "type": "array",
-            "title": "Usages",
-            "description": "Model max usage and usage stats"
-          }
-        },
-        "type": "object",
-        "required": [
-          "usage_tier_name",
-          "usage_tier_description",
-          "credits_balance",
-          "usages"
-        ],
-        "title": "RateLimitResponse"
-      },
-      "ResponseFormat": {
-        "properties": {
-          "type": {
-            "type": "string",
-            "enum": [
-              "text",
-              "json_object",
-              "json_schema"
-            ],
-            "title": "Type",
-            "description": "The type of response format being defined: `text`"
-          },
-          "json_schema": {
-            "anyOf": [
-              {
-                "$ref": "#/components/schemas/JsonSchema"
-              },
-              {
-                "type": "null"
-              }
-            ]
-          }
-        },
-        "type": "object",
-        "required": [
-          "type"
-        ],
-        "title": "ResponseFormat"
-      },
-      "SearchRequest": {
-        "properties": {
-          "query": {
-            "type": "string",
-            "title": "Query",
-            "description": "Search query"
-          },
-          "max_results": {
-            "type": "integer",
-            "title": "Max Results",
-            "description": "Search query",
-            "default": 5,
-            "max": 10,
-            "min": 1
-          }
-        },
-        "type": "object",
-        "required": [
-          "query"
-        ],
-        "title": "SearchRequest"
-      },
-      "SearchResponse": {
-        "properties": {
-          "results": {
-            "items": {
-              "type": "object"
-            },
-            "type": "array",
-            "title": "Results",
-            "description": "Search results"
-          }
-        },
-        "type": "object",
-        "required": [
-          "results"
-        ],
-        "title": "SearchResponse"
-      },
-      "StreamOptions": {
-        "properties": {
-          "include_usage": {
-            "type": "boolean",
-            "title": "Include Usage",
-            "description": "If set, an additional chunk will be streamed before the `data: [DONE]` message. The usage field on this chunk shows the token usage statistics for the entire request, and the choices field will always be an empty array. All other chunks will also include a usage field, but with a null value."
-          }
-        },
-        "type": "object",
-        "required": [
-          "include_usage"
-        ],
-        "title": "StreamOptions"
-      },
-      "Tool": {
+      "distributedinference__service__verified_completions__entities__Tool": {
         "properties": {
           "type": {
             "anyOf": [
               {
                 "type": "string",
-                "enum": [
-                  "function"
-                ],
                 "const": "function"
               },
               {
@@ -2917,7 +3765,7 @@
             "description": "The type of the tool. Currently, only `function` is supported."
           },
           "function": {
-            "$ref": "#/components/schemas/Function-Input"
+            "$ref": "#/components/schemas/distributedinference__service__verified_completions__entities__Function"
           }
         },
         "type": "object",
@@ -2926,194 +3774,6 @@
           "function"
         ],
         "title": "Tool"
-      },
-      "ToolChoice": {
-        "properties": {
-          "type": {
-            "anyOf": [
-              {
-                "type": "string",
-                "enum": [
-                  "function"
-                ],
-                "const": "function"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Type",
-            "description": "The type of the tool. Currently, only `function` is supported."
-          },
-          "function": {
-            "$ref": "#/components/schemas/ToolChoiceFunction"
-          }
-        },
-        "type": "object",
-        "required": [
-          "type",
-          "function"
-        ],
-        "title": "ToolChoice"
-      },
-      "ToolChoiceFunction": {
-        "properties": {
-          "name": {
-            "type": "string",
-            "title": "Name",
-            "description": "The name of the function to call."
-          }
-        },
-        "type": "object",
-        "required": [
-          "name"
-        ],
-        "title": "ToolChoiceFunction"
-      },
-      "TopLogprob": {
-        "properties": {
-          "token": {
-            "type": "string",
-            "title": "Token"
-          },
-          "bytes": {
-            "anyOf": [
-              {
-                "items": {
-                  "type": "integer"
-                },
-                "type": "array"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Bytes"
-          },
-          "logprob": {
-            "type": "number",
-            "title": "Logprob"
-          }
-        },
-        "additionalProperties": true,
-        "type": "object",
-        "required": [
-          "token",
-          "logprob"
-        ],
-        "title": "TopLogprob"
-      },
-      "UpdateNodeRequest": {
-        "properties": {
-          "node_id": {
-            "type": "string",
-            "title": "Node Id",
-            "description": "Unique ID of the Node"
-          },
-          "node_name": {
-            "anyOf": [
-              {
-                "type": "string",
-                "maxLength": 40,
-                "minLength": 3
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Node Name",
-            "description": "User defined node name to use as the new value"
-          },
-          "is_archived": {
-            "anyOf": [
-              {
-                "type": "boolean"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Is Archived",
-            "description": "New node archival status"
-          }
-        },
-        "type": "object",
-        "required": [
-          "node_id"
-        ],
-        "title": "UpdateNodeRequest"
-      },
-      "UpdateNodeResponse": {
-        "properties": {
-          "is_name_updated": {
-            "type": "boolean",
-            "title": "Is Name Updated",
-            "description": "Shows if the name was updated"
-          },
-          "is_archival_status_updated": {
-            "type": "boolean",
-            "title": "Is Archival Status Updated",
-            "description": "Shows if the archival status was updated"
-          }
-        },
-        "type": "object",
-        "required": [
-          "is_name_updated",
-          "is_archival_status_updated"
-        ],
-        "title": "UpdateNodeResponse"
-      },
-      "Usage": {
-        "properties": {
-          "prompt_tokens": {
-            "type": "integer",
-            "title": "Prompt Tokens"
-          },
-          "total_tokens": {
-            "type": "integer",
-            "title": "Total Tokens"
-          }
-        },
-        "additionalProperties": true,
-        "type": "object",
-        "required": [
-          "prompt_tokens",
-          "total_tokens"
-        ],
-        "title": "Usage"
-      },
-      "ValidationError": {
-        "properties": {
-          "loc": {
-            "items": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "integer"
-                }
-              ]
-            },
-            "type": "array",
-            "title": "Location"
-          },
-          "msg": {
-            "type": "string",
-            "title": "Message"
-          },
-          "type": {
-            "type": "string",
-            "title": "Error Type"
-          }
-        },
-        "type": "object",
-        "required": [
-          "loc",
-          "msg",
-          "type"
-        ],
-        "title": "ValidationError"
       }
     },
     "securitySchemes": {
