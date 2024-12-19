@@ -1,6 +1,6 @@
 ---
 title: Verify Attestation
-description: Galadriel Verified Inference API provides LLM inferences results that are signed by the TEE private key. This page goes over the details on how to validate if the signatures are correct.
+description: Galadriel Verified Inference API provides LLM inferences results that are signed by the TEE private key add attested by AWS enclave. This page gives overview on how to verify the attestation.
 ---
 
 <Info>
@@ -61,4 +61,6 @@ description: Galadriel Verified Inference API provides LLM inferences results th
         python verify.py --pcr0_hash a3575880471781514c83935ee77dd8fc710512daf5d306ccee2c2abb0985e35fea0843f0e950a74f8d17541fc66dd0e4 --attestation insert-your-attestation
         ```
     </Step>
+
+    See more information in the [TEE repo](https://github.com/galadriel-ai/better-tee/tree/main/verify)
 </Steps>
