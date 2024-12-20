@@ -30,9 +30,9 @@ description: Galadriel Verified Inference API provides LLM inferences results th
     }
   ],
     ...redacted...
-  "hash": "fa1eb8b9c330cf13f3643d46bc7e10510fa207a4e80645c795f82c3ddf9806ad",
-  "public_key": "Dp2k554Ebsij5RjuhjsZujVW2bJnQzfb43VYZSQ4NZo1",
-  "signature": "2386393752ede1ade2a2ef8f46847ffbb11ab3f03ce5773d68391906b5c03ca7346bda7458df1c3f4fbe6df8a6774e2af791a3ede203cacd852ec819c818dc05"
+  "hash": "c847e98b1abf528f988c0253840616405a014ef2494e7a1b6c8d35e90413dd0a",
+  "public_key": "835cc0e84c2a5190561d7c2eaf10eb2597cbe7a71541084c5edea32b60bc5e68",
+  "signature": "68603b802f1e293dbf21bb1004bd08bca272fc70b6d00556f2a06b35949319533ad527c614c063836601aa00c8ca960dc600cad990df1ff8ff18079a09561d07"
 }
 ```
 
@@ -42,25 +42,24 @@ description: Galadriel Verified Inference API provides LLM inferences results th
       <CodeGroup>
 
 ```python Python
-# pip install base58 pynacl
+# pip install pynacl
 # python verify.py
 import binascii
-import base58
 import nacl.signing
 import nacl.exceptions
 
 # Given values
 # TODO: change to your values
-hash_hex = "fa1eb8b9c330cf13f3643d46bc7e10510fa207a4e80645c795f82c3ddf9806ad"
-signature_hex = "2386393752ede1ade2a2ef8f46847ffbb11ab3f03ce5773d68391906b5c03ca7346bda7458df1c3f4fbe6df8a6774e2af791a3ede203cacd852ec819c818dc05"
-public_key_b58 = "Dp2k554Ebsij5RjuhjsZujVW2bJnQzfb43VYZSQ4NZo1"
+hash = "c847e98b1abf528f988c0253840616405a014ef2494e7a1b6c8d35e90413dd0a"
+signature = "68603b802f1e293dbf21bb1004bd08bca272fc70b6d00556f2a06b35949319533ad527c614c063836601aa00c8ca960dc600cad990df1ff8ff18079a09561d07"
+public_key = "835cc0e84c2a5190561d7c2eaf10eb2597cbe7a71541084c5edea32b60bc5e68"
 
+public_key_bytes = binascii.unhexlify(public_key)
 # Decode the public key from base58 into raw bytes
-public_key_bytes = base58.b58decode(public_key_b58)
 
 # Decode the hash (message) and signature from hex
-message_bytes = binascii.unhexlify(hash_hex)
-signature_bytes = binascii.unhexlify(signature_hex)
+message_bytes = binascii.unhexlify(hash)
+signature_bytes = binascii.unhexlify(signature)
 
 # Create a VerifyKey object from the public key bytes
 verify_key = nacl.signing.VerifyKey(public_key_bytes)
@@ -74,23 +73,20 @@ except nacl.exceptions.BadSignatureError:
 ```
 
 ```javascript Javascript
-// npm install tweetnacl bs58
-// node verify.js
 import nacl from 'tweetnacl';
-import bs58 from 'bs58';
 
 // Given values
 // TODO: change to your values
-const hashHex = "fa1eb8b9c330cf13f3643d46bc7e10510fa207a4e80645c795f82c3ddf9806ad";
-const signatureHex = "2386393752ede1ade2a2ef8f46847ffbb11ab3f03ce5773d68391906b5c03ca7346bda7458df1c3f4fbe6df8a6774e2af791a3ede203cacd852ec819c818dc05";
-const publicKeyBase58 = "Dp2k554Ebsij5RjuhjsZujVW2bJnQzfb43VYZSQ4NZo1";
+const hash = "c847e98b1abf528f988c0253840616405a014ef2494e7a1b6c8d35e90413dd0a";
+const signature = "68603b802f1e293dbf21bb1004bd08bca272fc70b6d00556f2a06b35949319533ad527c614c063836601aa00c8ca960dc600cad990df1ff8ff18079a09561d07";
+const publicKey = "835cc0e84c2a5190561d7c2eaf10eb2597cbe7a71541084c5edea32b60bc5e68";
 
-// Decode the public key from Base58
-const publicKeyBytes = bs58.decode(publicKeyBase58);
+// Decode the public key from hex
+const publicKeyBytes = Buffer.from(publicKey, 'hex');
 
 // Decode the message (hash) and signature from hex
-const messageBytes = Buffer.from(hashHex, 'hex');
-const signatureBytes = Buffer.from(signatureHex, 'hex');
+const messageBytes = Buffer.from(hash, 'hex');
+const signatureBytes = Buffer.from(signature, 'hex');
 
 // Verify the signature
 const isValid = nacl.sign.detached.verify(messageBytes, signatureBytes, publicKeyBytes);
