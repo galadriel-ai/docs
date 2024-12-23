@@ -1,14 +1,10 @@
 ---
 title: Quickstart
-description: Galadriel API is designed to be compatible with OpenAI's client libraries, making it easy to use your existing workflows
+description: Galadriel API is designed to be compatible with OpenAI's client libraries, making it easy to use your existing workflows but with an added benefit of prooving that the inference was made as is.
 ---
 
 <Info>
-  This API does not support streaming.
-</Info>
-
-<Info>
-  Make sure each agent uses a separate API key.
+  This API does not support streaming yet.
 </Info>
 
 <Steps>
@@ -95,5 +91,7 @@ curl -X 'POST' \
 </Steps>
 
 ### What's next?
-* Check out the currently supported [models](/api-reference/models)
-* To see more details about the API check out the full [API docs](/api-reference/chat-completion-API)
+* To see more details about the API check out the full [API docs](/api-reference/verified-chat-completion-API)
+* To see how it all works [How TEE Works](/for-agents-developers/how-tee-works)
+* To see how to verify the signatures [Verify Signatures](/for-agents-developers/verify-signatures)
+* To see how to verify the attestation [Verify Attestation](/for-agents-developers/verify-attestation)

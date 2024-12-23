@@ -1,0 +1,60 @@
+---
+title: How TEE works
+description: TEE (Trusted Execution Enclave) proves that a given code is running as expected
+---
+
+<Info>
+    The whole source code is available
+    [here](https://github.com/galadriel-ai/sentience)
+</Info>
+
+![title](/images/tee.png)
+
+<Steps>
+    <Step title="Code gets packed into TEE">
+        The Sentience enclave
+        [code](https://github.com/galadriel-ai/sentience/tree/main/enclave) is
+        first packaged into a Docker image, which
+        is then packaged into an enclave image. This is a deterministic process:
+        the resulting `enclave image hash` verifies that the code running inside
+        the TEE (Trusted Execution Environment) is indeed the original code.
+
+        To confirm which code is running in the TEE, take the source code and
+        generate a new enclave image. If you end up with the same `enclave image
+        hash`, you have verified that it matches the code currently running
+        inside the TEE.
+    </Step>
+    <Step title="TEE starts">
+        Upon TEE startup, a private key is generated. Since no one can access
+        the internal components of the TEE, any data signed with this key can be
+        trusted as authentic.
+    </Step>
+    <Step title="AWS signs the attestation">
+        AWS signs the resulting enclave image hash alongside the generated
+        public key inside the TEE. This signature provides a final guarantee
+        that the code is running exactly as intended, without any
+        intermediaries.
+
+        You can read more about Nitro Enclaves
+        [here](https://docs.aws.amazon.com/enclaves/latest/user/nitro-enclave.html)
+    </Step>
+    <Step title="LLM Proofs">
+        Each LLM inference request to the Galadriel Verified API is processed in
+        the enclave. After the LLM generates a response, both the request and
+        the response are hashed using SHA256. This hash is provided in the LLM
+        response under the `hash` field.
+
+        The hash is then signed with the TEE’s private key, producing the
+        `signature` field.
+
+        Finally, the Galadriel API includes the full `attestation` and `public_key`
+        in the LLM response. With these four pieces of information: `hash`,
+        `signature`, `attestation`, and `public_key` you can verify that an LLM
+        inference genuinely took place inside the enclave.
+    </Step>
+</Steps>
+
+### What's next?
+* To see more details about the API check out the full [API docs](/api-reference/verified-chat-completion-API)
+* To see how to verify the signatures [Verify Signatures](/for-agents-developers/verify-signatures)
+* To see how to verify the attestation [Verify Attestation](/for-agents-developers/verify-attestation)
