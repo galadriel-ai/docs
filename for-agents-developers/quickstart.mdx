@@ -11,8 +11,14 @@ description: Galadriel API is designed to be compatible with OpenAI's client lib
     <Step title="Sign up to get an API key">
     1. Create an account [here](https://dashboard.galadriel.com)
     2. Create an API key on the dashboard
-  </Step>
-    <Step title="Call the API">
+    </Step>
+    <Step title="Sign up to get an API key">
+        Install the SDK:
+```sh
+pip install sentience
+```
+    </Step>
+    <Step title="Call the verified inference API">
     Run the following code
       <CodeGroup>
 
@@ -86,12 +92,46 @@ curl -X 'POST' \
 }'
 ```
 
-</CodeGroup>
-  </Step>
+        </CodeGroup>
+    </Step>
+    <Step title="Get history of all your verified inference calls">
+```python
+from typing import List
+import sentience
+from sentience.history import GaladrielChatHistory
+
+history: List[GaladrielChatHistory] = sentience.get_history(
+    galadriel_api_key="Bearer GALADRIEL_API_KEY", filter="mine"
+)
+        ```
+    </Step>
+    <Step title="Get history of all verified inference calls">
+```python
+from typing import List
+import sentience
+from sentience.history import GaladrielChatHistory
+
+history: List[GaladrielChatHistory] = sentience.get_history(
+    galadriel_api_key="Bearer GALADRIEL_API_KEY"
+)
+```
+    </Step>
+    <Step title="Get history for one verified inference call">
+```python
+import sentience
+from sentience.history import GaladrielChatHistory
+
+item: GaladrielChatHistory = sentience.get_by_hash(
+    galadriel_api_key="Bearer GALADRIEL_API_KEY",
+    # example hash, replace with your own:
+    hash="922e575ef7f07449977001c1caaf78fb6ad8b731cd625434f9215087a6c2b39f"
+)
+```
+    </Step>
 </Steps>
 
 ### What's next?
 * To see more details about the API check out the full [API docs](/api-reference/verified-chat-completion-API)
 * To see how it all works [How TEE Works](/for-agents-developers/how-tee-works)
 * To see how to verify the signatures [Verify Signatures](/for-agents-developers/verify-signatures)
-* To see how to verify the attestation [Verify Attestation](/for-agents-developers/verify-attestation)
+* To see how to verify the attestation [Verify Attestation](/for-agent-developers/verify-attestation)
