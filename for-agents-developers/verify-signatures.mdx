@@ -8,36 +8,11 @@ description: Galadriel Verified Inference API provides LLM inferences results th
 </Info>
 
 <Steps>
-    <Step title="Get the LLM inference response as in quickstart">
-        From the previous step the LLM inference result is returned with `hash`, `public_key` and `signature` that will be used to verify that the result came from the TEE.
-        This is the example response with some information redacted:
-
-```json
-{
-  "id": "chatcmpl-AgAQhAGTZKog9p0wPC7aVOXT44046",
-  "choices": [
-    {
-      "finish_reason": "stop",
-      "index": 0,
-      "logprobs": null,
-      "message": {
-        "content": "Hello! How can I assist you today?",
-        "refusal": null,
-        "role": "assistant",
-        "function_call": null,
-        "tool_calls": null,
-        "audio": null
-      }
-    }
-  ],
-    ...redacted...
-  "hash": "c847e98b1abf528f988c0253840616405a014ef2494e7a1b6c8d35e90413dd0a",
-  "public_key": "835cc0e84c2a5190561d7c2eaf10eb2597cbe7a71541084c5edea32b60bc5e68",
-  "signature": "68603b802f1e293dbf21bb1004bd08bca272fc70b6d00556f2a06b35949319533ad527c614c063836601aa00c8ca960dc600cad990df1ff8ff18079a09561d07"
-}
+    <Step title="Install Sentience SDK">
 ```
-
-  </Step>
+pip install sentience
+```
+    </Step>
     <Step title="Call the verification code">
     Run the following code
       <CodeGroup>
@@ -65,6 +40,9 @@ print("is_valid:", is_valid)
 ```
 
 ```python Python
+# See quick start on how to get the `hash`, `signature` and
+# `public_key` fields from LLM inference
+
 # pip install pynacl
 # python verify.py
 import binascii
@@ -96,6 +74,9 @@ except nacl.exceptions.BadSignatureError:
 ```
 
 ```javascript Javascript
+// See quick start on how to get the `hash`, `signature` and
+// `public_key` fields from LLM inference
+
 import nacl from 'tweetnacl';
 
 // Given values
