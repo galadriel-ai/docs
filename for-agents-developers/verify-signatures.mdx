@@ -9,6 +9,7 @@ description: Galadriel Verified Inference API provides LLM inferences results th
 
 <Steps>
     <Step title="Get the LLM inference response as in quickstart">
+        From the previous step the LLM inference result is returned with `hash`, `public_key` and `signature` that will be used to verify that the result came from the TEE.
         This is the example response with some information redacted:
 
 ```json
@@ -40,6 +41,28 @@ description: Galadriel Verified Inference API provides LLM inferences results th
     <Step title="Call the verification code">
     Run the following code
       <CodeGroup>
+
+```python PythonSDK
+import sentience
+from openai import OpenAI
+
+client = OpenAI(
+    base_url="https://api.galadriel.com/v1/verified",
+    api_key="Bearer GALADRIEL_API_KEY",
+)
+
+completion = client.chat.completions.create(
+    model="gpt-4o",
+    messages=[
+        {"role": "system", "content": "You are a helpful assistant."},
+        {"role": "user", "content": "Hello!"},
+    ],
+)
+
+# Verifying proof is just oneliner after making the request:
+is_valid = sentience.verify_signature(completion)
+print("is_valid:", is_valid)
+```
 
 ```python Python
 # pip install pynacl
@@ -103,6 +126,5 @@ if (isValid) {
 </Steps>
 
 ### What's next?
-TODO
-* Check out the currently supported [models](/api-reference/models)
-* To see more details about the API check out the full [API docs](/api-reference/chat-completion-API)
+* To see more details about the API check out the full [API docs](/api-reference/verified-chat-completion-API)
+* To see how to verify the attestation [Verify Attestation](/for-agents-developers/verify-attestation)
