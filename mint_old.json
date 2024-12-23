@@ -58,9 +58,27 @@
       ]
     },
     {
+      "group": "For LLM apps developers",
+      "pages": [
+        "for-developers/quickstart",
+        "for-developers/models",
+        "for-developers/rate-limits"
+      ]
+    },
+    {
       "group": "API docs",
       "pages": [
-        "api-reference/proof-of-sentience-API"
+        "api-reference/chat-completion-API",
+        "api-reference/proof-of-sentience-API",
+        "api-reference/embedding-API",
+        "api-reference/image-generation-API",
+        "api-reference/image-editing-API"
+      ]
+    },
+    {
+      "group": "Examples",
+      "pages": [
+        "examples/retrieval-augmented-generation"
       ]
     },
     {
