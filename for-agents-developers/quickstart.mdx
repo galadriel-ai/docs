@@ -95,9 +95,9 @@ curl -X 'POST' \
 ```
 
         </CodeGroup>
-      If you want to use your fine-tuned model, you have to provide the OpenAI API key with the correct access to the fine-tuned model due to OpenAI restrictions.
+      If you want to use your own fine-tuned model, you have to provide an OpenAI API key with access to the fine-tuned model due to OpenAI restrictions.
       1. Specify your fine-tuned model name in the model field. For example: `ft:gpt-4o-2024-08-06:personal::abcdefg`
-      2. Add an extra header `Fine-Tune-Authentication` with your OpenAI API key that has the correct access to your model.
+      2. Add an extra header `Fine-Tune-Authentication` with your OpenAI API key that has the correct access to your model in Bearer format(see code examples below).
       <CodeGroup>
 
 ```python Python
