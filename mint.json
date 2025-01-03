@@ -65,15 +65,6 @@
       ]
     },
     {
-      "group": "For nodes",
-      "pages": [
-        "nodes/requirements",
-        "nodes/quickstart",
-        "nodes/incentives",
-        "nodes/update-node"
-      ]
-    },
-    {
       "group": "Other",
       "pages": [
         "changelog",
