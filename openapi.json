@@ -761,7 +761,7 @@
         },
         "parameters": [
           {
-            "name": "Fine-Tune-Authentication",
+            "name": "Fine-Tune-Authorization",
             "in": "header",
             "required": false,
             "schema": {
