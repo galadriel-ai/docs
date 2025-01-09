@@ -59,6 +59,12 @@
       ]
     },
     {
+      "group": "Examples",
+      "pages": [
+        "examples/eliza"
+      ]
+    },
+    {
       "group": "API docs",
       "pages": [
         "api-reference/proof-of-sentience-API"

@@ -1,0 +1,44 @@
+Eliza enables developers to build autonomous AI agents. To make them on-chain verifiable we have integrated Galadriel's [Proof of Sentience API](https://docs.galadriel.com/api-reference/proof-of-sentience-API) into Eliza framework.
+
+## Prerequisite
+- Go through the [Eliza quickstart](https://elizaos.github.io/eliza/docs/quickstart/)
+
+## Use Eliza with Proof of Sentience API
+
+1. **Configure the environment variables**
+
+    ```env
+    GALADRIEL_API_KEY=gal-*         # Get from https://dashboard.galadriel.com/
+    # Use any model supported by OpenAI
+    SMALL_GALADRIEL_MODEL=          # Default: gpt-4o-mini
+    MEDIUM_GALADRIEL_MODEL=         # Default: gpt-4o
+    LARGE_GALADRIEL_MODEL=          # Default: gpt-4o
+    # If you wish to use a fine-tuned model you will need to provide your own OpenAI API key
+    GALADRIEL_FINE_TUNE_API_KEY=    # starting with sk-
+    ```
+
+2. **Configure your character to use galadriel**
+
+    In your character file set the `modelProvider` as `galadriel`
+    ```json
+    "modelProvider": "galadriel"
+    ```
+
+3. **Run your agent**
+4. **Get the history of all of your verified inference calls**
+    ```javascript
+    const url = 'https://api.galadriel.com/v1/verified/chat/completions?limit=100&filter=mine';
+    const headers = {
+    'accept': 'application/json',
+    'Authorization': 'Bearer <GALADRIEL_API_KEY>' // Replace with your Galadriel API key
+    };
+
+    const response = await fetch(url, { method: 'GET', headers });
+    const data = await response.json();
+    console.log(data);
+    ```
+5. **Check your inferences in the explorer**
+
+    You can also see your inferences with proofs in the [Galadriel explorer](https://explorer.galadriel.com/)
+
+    And for specific responses: `https://explorer.galadriel.com/details/<hash>`
