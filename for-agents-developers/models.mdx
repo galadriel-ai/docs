@@ -1,0 +1,88 @@
+## Large language models
+
+The Proof of Sentience API chat API currently supports all OpenAI models.
+
+### Fine-tuned models
+The API supports using fine-tuned models hosted by OpenAI. To use your fine-tuned model, you need to:
+1. Specify your fine-tuned model name in the model field. For example: `ft:gpt-4o-2024-08-06:personal::abcdefg`
+2. Add an extra header `Fine-Tune-Authorization` with your OpenAI API key that has the correct access to your model in Bearer format(see code examples below).
+<CodeGroup>
+
+```python Python
+from openai import OpenAI
+
+client = OpenAI(
+    base_url="https://api.galadriel.com/v1/verified",
+    api_key=GALADRIEL_API_KEY
+)
+
+completion = client.chat.completions.create(
+    model="ft:gpt-4o-2024-08-06:personal::abcdefg",
+    messages=[
+        {"role": "system", "content": "You are a helpful assistant."},
+        {"role": "user", "content": "Hello!"}
+    ],
+    extra_headers={
+        "Fine-Tune-Authorization": "Bearer your-openai-fine-tune-api-key"
+    }
+)
+
+print(f"Message: {completion.choices[0].message}")
+print(f"Hash: {completion.hash}")
+print(f"Signed public key: {completion.public_key}")
+print(f"Signature: {completion.signature}")
+print(f"Tx hash: {completion.tx_hash}")
+print(f"Attestation: {completion.attestation}")
+
+```
+
+```javascript Javascript
+import OpenAI from "openai";
+
+const openai = new OpenAI({
+  apiKey: process.env.GALADRIEL_API_KEY,
+  baseURL: "https://api.galadriel.com/v1/verified",
+});
+
+const completion = await openai.chat.completions.create({
+  model: "ft:gpt-4o-2024-08-06:personal::abcdefg",
+  messages: [
+    { role: "system", content: "You are a helpful assistant." },
+    { role: "user", content: "Hello!" },
+  ],
+  headers: {
+    "Fine-Tune-Authorization": "Bearer your-openai-fine-tune-api-key"
+  }
+});
+
+console.log(`Message: ${completion.choices[0].message}`);
+console.log(`Hash: ${completion.hash}`);
+console.log(`Signed public key: ${completion.public_key}`);
+console.log(`Signature: ${completion.signature}`);
+console.log(`Tx hash: ${completion.tx_hash}`);
+console.log(`Attestation: ${completion.attestation}`);
+```
+
+```bash cURL
+curl -X 'POST' \
+  'https://api.galadriel.com/v1/verified/chat/completions' \
+  -H 'accept: application/json' \
+  -H 'Authorization: Bearer $GALADRIEL_API_KEY' \
+  -H 'Fine-Tune-Authorization: Bearer your-openai-fine-tune-api-key' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "model": "ft:gpt-4o-2024-08-06:personal::abcdefg",
+  "messages": [
+    {
+      "content": "You are a helpful assistant.",
+      "role": "system"
+    },
+    {
+      "content": "Hello!",
+      "role": "user"
+    }
+  ]
+}'
+```
+
+        </CodeGroup>

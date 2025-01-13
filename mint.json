@@ -55,6 +55,7 @@
         "for-agents-developers/how-tee-works",
         "for-agents-developers/verify-signatures",
         "for-agents-developers/verify-attestation",
+        "for-agents-developers/models",
         "for-agents-developers/rate-limits"
       ]
     },
