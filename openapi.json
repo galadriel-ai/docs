@@ -764,6 +764,17 @@
             }
           }
         },
+        "parameters": [
+          {
+            "name": "Fine-Tune-Authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Optional bearer authentication header for calling a fine-tuned model hosted on external service like OpenAI or Anthropic.\n\nWhen a fine-tuned model is provided in the `model` field in body, you must pass the authentication key which has the access to that model.\n\nThe header should be in the format eg. `Bearer OpenAI-API-Key`."
+          }
+        ],
         "responses": {
           "200": {
             "description": "Returns a chat completion object, or a streamed sequence of chat completion chunk objects if the request is streamed.",
