@@ -749,27 +749,21 @@
         "summary": "Creates a model response for the given chat conversation.",
         "description": "Given a list of messages comprising a conversation, the model will return a response.",
         "operationId": "completions_v1_verified_chat_completions_post",
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ],
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/distributedinference__service__verified_completions__entities__ChatCompletionRequest"
               }
             }
-          },
-          "required": true
-        },
-        "parameters": [
-          {
-            "name": "Fine-Tune-Authorization",
-            "in": "header",
-            "required": false,
-            "schema": {
-              "type": "string"
-            },
-            "description": "Optional bearer authentication header for calling a fine-tuned model hosted on external service like OpenAI or Anthropic.\n\nWhen a fine-tuned model is provided in the `model` field in body, you must pass the authentication key which has the access to that model.\n\nThe header should be in the format eg. `Bearer OpenAI-API-Key`."
           }
-        ],
+        },
         "responses": {
           "200": {
             "description": "Returns a chat completion object, or a streamed sequence of chat completion chunk objects if the request is streamed.",
@@ -777,6 +771,99 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/distributedinference__service__verified_completions__entities__ChatCompletion"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Verified Chat"
+        ],
+        "summary": "Retrieves all agent verified chat completions.",
+        "description": "Retrieves all agent verified chat completions.",
+        "operationId": "get_completions_v1_verified_chat_completions_get",
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "The maximum number of completions to retrieve.",
+              "default": 100,
+              "title": "Limit"
+            },
+            "description": "The maximum number of completions to retrieve."
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "The cursor for pagination.",
+              "title": "Cursor"
+            },
+            "description": "The cursor for pagination."
+          },
+          {
+            "name": "filter",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/VerifiedChatCompletionFilter"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Filter completions. Use `mine` to retrieve your own completions.",
+              "title": "Filter"
+            },
+            "description": "Filter completions. Use `mine` to retrieve your own completions."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns a list of chat completion objects.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VerifiedChatCompletionsResponse"
                 }
               }
             }
