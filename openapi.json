@@ -749,15 +749,20 @@
         "summary": "Creates a model response for the given chat conversation.",
         "description": "Given a list of messages comprising a conversation, the model will return a response.",
         "operationId": "completions_v1_verified_chat_completions_post",
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ],
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/distributedinference__service__verified_completions__entities__ChatCompletionRequest"
               }
             }
-          },
-          "required": true
+          }
         },
         "parameters": [
           {
@@ -791,12 +796,150 @@
               }
             }
           }
-        },
+        }
+      },
+      "get": {
+        "tags": [
+          "Verified Chat"
+        ],
+        "summary": "Retrieves all agent verified chat completions.",
+        "description": "Retrieves all agent verified chat completions.",
+        "operationId": "get_completions_v1_verified_chat_completions_get",
         "security": [
           {
             "APIKeyHeader": []
           }
-        ]
+        ],
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "The maximum number of completions to retrieve.",
+              "default": 100,
+              "title": "Limit"
+            },
+            "description": "The maximum number of completions to retrieve."
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "The cursor for pagination.",
+              "title": "Cursor"
+            },
+            "description": "The cursor for pagination."
+          },
+          {
+            "name": "filter",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/VerifiedChatCompletionFilter"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Filter completions. Use `mine` to retrieve your own completions.",
+              "title": "Filter"
+            },
+            "description": "Filter completions. Use `mine` to retrieve your own completions."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns a list of chat completion objects.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VerifiedChatCompletionsResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/verified/chat/completions/{hash}": {
+      "get": {
+        "tags": [
+          "Verified Chat"
+        ],
+        "summary": "Retrieves a verified chat completion by hash.",
+        "description": "Retrieve a verified chat completion by hash.",
+        "operationId": "get_completion_by_hash_v1_verified_chat_completions__hash__get",
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "hash",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "The hash of the verified completion.",
+              "title": "Hash"
+            },
+            "description": "The hash of the verified completion."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns a verified chat completion object.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VerifiedChatCompletion"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/": {
@@ -2964,6 +3107,105 @@
         ],
         "title": "ValidationError"
       },
+      "VerifiedChatCompletion": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id",
+            "description": "Unique ID of the verified completion."
+          },
+          "request": {
+            "type": "object",
+            "title": "Request"
+          },
+          "response": {
+            "type": "object",
+            "title": "Response"
+          },
+          "hash": {
+            "type": "string",
+            "title": "Hash",
+            "description": "The SHA-256 hash of the request and response"
+          },
+          "public_key": {
+            "type": "string",
+            "title": "Public Key",
+            "description": "Signer public key"
+          },
+          "signature": {
+            "type": "string",
+            "title": "Signature",
+            "description": "The signature of the hash, signed by the Solana account in hex format."
+          },
+          "attestation": {
+            "type": "string",
+            "title": "Attestation",
+            "description": "The attestation document."
+          },
+          "tx_hash": {
+            "type": "string",
+            "title": "Tx Hash",
+            "description": "The transaction hash."
+          },
+          "created_at": {
+            "type": "integer",
+            "title": "Created At",
+            "description": "The timestamp of when the verified completion was created."
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "request",
+          "response",
+          "hash",
+          "public_key",
+          "signature",
+          "attestation",
+          "tx_hash",
+          "created_at"
+        ],
+        "title": "VerifiedChatCompletion"
+      },
+      "VerifiedChatCompletionFilter": {
+        "type": "string",
+        "enum": [
+          "all",
+          "mine"
+        ],
+        "title": "VerifiedChatCompletionFilter"
+      },
+      "VerifiedChatCompletionsResponse": {
+        "properties": {
+          "completions": {
+            "items": {
+              "$ref": "#/components/schemas/VerifiedChatCompletion"
+            },
+            "type": "array",
+            "title": "Completions",
+            "description": "List of verified chat completions."
+          },
+          "cursor": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Cursor",
+            "description": "Cursor for pagination."
+          }
+        },
+        "type": "object",
+        "required": [
+          "completions",
+          "cursor"
+        ],
+        "title": "VerifiedChatCompletionsResponse"
+      },
       "distributedinference__service__completions__entities__ChatCompletion": {
         "properties": {
           "id": {
@@ -3477,7 +3719,7 @@
           "model": {
             "type": "string",
             "title": "Model",
-            "description": "ID of the model to use. Get ID for available [models](/for-developers/models)."
+            "description": "ID of the model to use. The requested model is forwarded to OpenAI without modifications."
           },
           "frequency_penalty": {
             "anyOf": [
@@ -3537,7 +3779,7 @@
               }
             ],
             "title": "Max Tokens",
-            "description": "The maximum number of tokens to generate in the chat completion. [Models](/for-developers/models) specific."
+            "description": "The maximum number of tokens to generate in the chat completion."
           },
           "n": {
             "anyOf": [

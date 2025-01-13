@@ -68,7 +68,9 @@
     {
       "group": "API docs",
       "pages": [
-        "api-reference/proof-of-sentience-API"
+        "api-reference/proof-of-sentience-API",
+        "api-reference/get-history-API",
+        "api-reference/get-history-by-hash-API"
       ]
     },
     {
