@@ -1,0 +1,235 @@
+This guide will walk you through the process of adding payment verification to your autonomous agent. The approach is blockchain-agnostic, meaning you can use Ethereum, Solana, or any other blockchain that supports transaction verification. We'll use Solana as an example, but the same principles apply to other chains.
+
+## Understand the Core Components
+To add payment verification, your agent needs to handle the following:
+
+- **Transaction Data**: Information required to verify the payment, such as the transaction signature and the recipient's wallet address.
+- **Payment Verification**: A function that checks if a payment has been made to a specific address. In our example, this is handled by `solana_payment_check.py`.
+- **Agent Logic**: The core logic of the agent, which should only execute once the payment is verified.
+
+## Step-by-Step Guide to Adding Payment Verification to Your Agent
+
+### Step 1: Start with a Basic Agent
+Initially, create a simple agent that can process tasks without payment verification.
+
+```python
+import os
+from smolagents import CodeAgent
+from smolagents import LiteLLMModel
+from galadriel_agent.agent import Agent
+from galadriel_agent.entities import Message
+
+class MyAgent(Agent):
+    def __init__(self):
+        model = LiteLLMModel(
+            model_id="openai/gpt-4o",
+            api_key=os.getenv("OPENAI_API_KEY"),
+        )
+        self.agent = CodeAgent(
+            tools=[],
+            model=model,
+            add_base_tools=True,
+        )
+    
+    async def run(self, request: Message) -> Message:
+        task = request.content
+        answer = self.agent.run(task)
+        return Message(content=answer)
+```
+
+### Step 2: Define the Expected Task Format
+To integrate payments, agent needs to be able to verify the payment before proceeding with the task. Since agent receives a string, one approach is for agent to expect messages  follow a specific format. For example:
+
+```
+<Task Description> <Payment Signature>
+How long should I hold my ETH portfolio before selling? 5aqB4BGz...
+```
+
+The agent must extract the task and payment signature before proceeding.
+
+### Step 3: Install Dependencies for Blockchain Verification
+For Solana, install the necessary libraries:
+
+```sh
+pip install solana solders
+```
+
+For any other blockchain, install the necessary libraries.
+
+### Step 4: Implement the Payment Verification Function
+
+In Solana's case, the function is implemented as follows:
+
+```python
+from solana.rpc.api import Client
+from solders.signature import Signature
+from solders.pubkey import Pubkey
+
+def check_solana_payment(signature: str, wallet_address: str, price_lamport: int) -> bool:
+    # Initialize the Solana client with the mainnet endpoint
+    http_client = Client("https://api.mainnet-beta.solana.com")
+    tx_sig = Signature.from_string(signature)
+    # retrieve the transaction information
+    tx_info = http_client.get_transaction(tx_sig, max_supported_transaction_version=10)
+
+    # check if the transaction is valid
+    if not tx_info.value:
+        return False
+    
+    # retrieve the transaction information
+    transaction = tx_info.value.transaction.transaction
+    account_keys = transaction.message.account_keys
+    wallet_key = Pubkey.from_string(wallet_address)
+
+    try:
+        # check if the wallet address is in the transaction
+        index = account_keys.index(wallet_key)
+    except ValueError:
+        return False
+    
+    # retrieve the transaction metadata and check if there was an error
+    meta = tx_info.value.transaction.meta
+    if meta.err is not None:
+        return False
+    
+    # retrieve the pre and post balances of the wallet
+    pre_balance = meta.pre_balances[index]
+    post_balance = meta.post_balances[index]
+
+    # calculate the amount sent
+    amount_sent = post_balance - pre_balance
+    
+    # check if the amount sent is greater than or equal to the price
+    return amount_sent >= price_lamport
+```
+
+For other blockchains, similar logic can be used.
+
+### Step 5: Extract Payment Signature from the Request
+Extend the agent with a function to parse tasks and extract payment signatures.
+Since we're using Solana, we expect the message to contain a solscan.io transaction URL at the end.
+
+```python
+def extract_task_and_payment_signature(self, message: str) -> Tuple[str, str]:
+    if "https://solscan.io/tx/" in message:
+        task, payment = message.split("https://solscan.io/tx/")
+        return task.strip(), payment.strip()
+
+    signature = self._find_signature(message)
+    if signature:
+        return message.replace(signature, "").strip(), signature
+```
+
+### Step 6: Validate Payment Against the Agent's Wallet
+Once extracted, check if the payment has been made to the agent's wallet.
+
+```python
+is_payment_valid = check_solana_payment(
+    signature=payment_signature,
+    wallet_address=self.agent_wallet_address,
+    price_lamport=self.task_per_price_lamport,
+)
+if not is_payment_valid:
+    return Message(content="Invalid payment")
+```
+
+### Step 7: Prevent Double Spending
+Ensure that a transaction signature is used only once by keeping track of spent payments.
+
+```python
+if payment_signature in self.spent_payments:
+    return Message(content="Funds already spent")
+self.spent_payments.add(payment_signature)
+```
+
+### Step 8: Execute the Agent’s Task
+Once the payment is verified, the agent can proceed with executing the task.
+
+```python
+answer = self.agent.run(task)
+return Message(content=answer)
+```
+
+## Full Example of a Payment-Verified Agent
+
+```python
+import os
+from typing import Optional, Set, Tuple
+from smolagents import CodeAgent
+from smolagents import LiteLLMModel
+from solders.signature import Signature
+from galadriel_agent.agent import Agent
+from galadriel_agent.entities import Message
+from solana_payment_check import check_solana_payment
+
+class MyAgent(Agent):
+    # agent's wallet address
+    agent_wallet_address: str = "5RYHzQuknP2viQjYzP27wXVWKeaxonZgMBPQA8wGV92t"
+    # price per task in lamports
+    task_per_price_lamport: int = 1000000000
+
+    # keeps track of the spent payments
+    spent_payments: Set[str] = set()
+
+    def __init__(self):
+        model = LiteLLMModel(
+            model_id="openai/gpt-4o",
+            api_key=os.getenv("OPENAI_API_KEY"),
+        )
+        self.agent = CodeAgent(
+            tools=[],
+            model=model,
+            add_base_tools=True,
+        )
+
+    async def run(self, request: Message) -> Message:
+        # extract the task and payment signature from the request
+        task, payment_signature = self.extract_task_and_payment_signature(request.content)
+        if not payment_signature:
+            return Message(content="Missing payment signature")
+        
+        # check if the payment is valid
+        is_payment_valid = check_solana_payment(
+            signature=payment_signature,
+            wallet_address=self.agent_wallet_address,
+            price_lamport=self.task_per_price_lamport,
+        )
+        if not is_payment_valid:
+            return Message(content="Invalid payment")
+        
+        # check if the payment has already been spent
+        if payment_signature in self.spent_payments:
+            return Message(content="Funds already spent")
+        
+        # add the payment to the spent payments
+        self.spent_payments.add(payment_signature)
+
+        # execute the agent's task
+        answer = self.agent.run(task)
+        return Message(content=answer)
+
+    def extract_task_and_payment_signature(self, message: str) -> Tuple[Optional[str], Optional[str]]:
+        if "https://solscan.io/tx/" in message:
+            task, payment = message.split("https://solscan.io/tx/")
+            return task.strip(), payment.strip()
+
+        signature = self._find_signature(message)
+        if signature:
+            task = message.replace(signature, "").strip()
+            return task, signature
+        
+        return None, None
+
+    def _find_signature(self, message: str) -> Optional[str]:
+        for word in message.split():
+            try:
+                signature = Signature.from_string(word.strip())
+                return str(signature)
+            except:
+                pass
+        return None
+```
+
+## Conclusion
+By following these steps, your autonomous agent can enforce payment verification before executing tasks. This ensures users compensate your agent for its services while preventing double spending. The same principles apply whether you're using Solana, Ethereum, or any other blockchain.
+
