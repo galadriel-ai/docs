@@ -1,0 +1,108 @@
+{
+  "$schema": "https://mintlify.com/docs.json",
+  "theme": "mint",
+  "name": "Galadriel Docs",
+  "colors": {
+    "primary": "#0657E0",
+    "light": "#0657E0",
+    "dark": "#0657E0"
+  },
+  "favicon": "/favicon.png",
+  "navigation": {
+    "anchors": [
+      {
+        "anchor": "Documentation",
+        "icon": "book-open",
+        "groups": [
+          {
+            "group": "About",
+            "pages": [
+              "overview"
+            ]
+          },
+          {
+            "group": "For agents developers",
+            "pages": [
+              "for-agents-developers/quickstart",
+              "for-agents-developers/how-tee-works",
+              "for-agents-developers/verify-signatures",
+              "for-agents-developers/verify-attestation",
+              "for-agents-developers/models",
+              "for-agents-developers/rate-limits"
+            ]
+          },
+          {
+            "group": "Examples",
+            "pages": [
+              "examples/eliza"
+            ]
+          },
+          {
+            "group": "API docs",
+            "pages": [
+              "api-reference/proof-of-sentience-API",
+              "api-reference/get-history-API",
+              "api-reference/get-history-by-hash-API"
+            ]
+          },
+          {
+            "group": "Other",
+            "pages": [
+              "changelog",
+              "FAQ"
+            ]
+          }
+        ]
+      }
+    ],
+    "global": {
+      "anchors": [
+        {
+          "anchor": "Github",
+          "href": "https://github.com/galadriel-ai",
+          "icon": "github"
+        },
+        {
+          "anchor": "Twitter",
+          "href": "https://twitter.com/Galadriel_AI",
+          "icon": "twitter"
+        },
+        {
+          "anchor": "Discord",
+          "href": "https://discord.com/invite/bHnFgSTKrP",
+          "icon": "discord"
+        }
+      ]
+    }
+  },
+  "logo": {
+    "light": "/logo/light.png",
+    "dark": "/logo/dark.png"
+  },
+  "navbar": {
+    "links": [],
+    "primary": {
+      "type": "button",
+      "label": "Get support",
+      "href": "https://discord.com/invite/bHnFgSTKrP"
+    }
+  },
+  "seo": {
+    "metatags": {
+      "og:image": "/images/og_image.png"
+    },
+    "indexing": "navigable"
+  },
+  "footer": {
+    "socials": {
+      "twitter": "https://twitter.com/Galadriel_AI",
+      "github": "https://github.com/galadriel-ai",
+      "discord": "https://discord.gg/galadriel"
+    }
+  },
+  "integrations": {
+    "ga4": {
+      "measurementId": "G-93RM06N82K"
+    }
+  }
+}
