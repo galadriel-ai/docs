@@ -38,11 +38,11 @@ This client listens to messages in a Discord server and replies with agent-gener
 ```python
 agent = # Create your agent here
 DISCORD_GUILD_ID = "<DISCORD_GUILD_ID>" # Add your Discord guild ID
-**discord_client = DiscordClient(guild_id=DISCORD_GUILD_ID))** # Create Discord client
+discord_client = DiscordClient(guild_id=DISCORD_GUILD_ID)) # Create Discord client
 knowledge_base_output_client = # Create client eg based on [SimpleMessageClient](https://github.com/galadriel-ai/galadriel/blob/main/galadriel/clients/simple_message_client.py) which updates company's knowledge base based on new facts from Discord channels
 
 agent = AgentRuntime(
-    inputs=[**discord_client**], # Pass the Discord client to listen to Discord inputs
+    inputs=[discord_client], # Pass the Discord client to listen to Discord inputs
     outputs=[knowledge_base_output_client],
     agent=agent,
 )
@@ -61,11 +61,11 @@ The Telegram client listens to messages in a Telegram server and replies with ag
 ```python
 agent = # Create your agent here
 TELEGRAM_TOKEN = "<TELEGRAM_TOKEN>" # Add your Telegram bot token ID
-**telegram_client = TelegramClient(token=TELEGRAM_TOKEN))**
+telegram_client = TelegramClient(token=TELEGRAM_TOKEN))
 
 agent = AgentRuntime(
-    inputs=[**telegram_client**],
-    outputs=[**telegram_client**],
+    inputs=[telegram_client],
+    outputs=[telegram_client],
     agent=agent,
 )
 ```
@@ -80,11 +80,11 @@ The Gradio client listens to messages from a local Gradio server and replies wit
 
 ```python
 agent = # Create your agent here
-**gradio_client = GradioClient()**
+gradio_client = GradioClient()
 
 agent = AgentRuntime(
-    inputs=[**gradio_client**],
-    outputs=[**gradio_client**],
+    inputs=[gradio_client],
+    outputs=[gradio_client],
     agent=agent,
 )
 ```
@@ -99,11 +99,11 @@ The Terminal client listens to messages from the terminal and replies with agent
 
 ```python
 agent = # Create your agent here
-**terminal_client = TerminalClient()**
+terminal_client = TerminalClient()
 
 agent = AgentRuntime(
-    inputs=[**terminal_client**],
-    outputs=[**terminal_client**],
+    inputs=[terminal_client],
+    outputs=[terminal_client],
     agent=agent,
 )
 ```
@@ -118,11 +118,11 @@ A simple client that receives messages when instantiated and pushes them to the 
 
 ```python
 agent = # Create your agent here
-**client = SimpleMessageClient**("What is the capital of Estonia?")
+client = SimpleMessageClient("What is the capital of Estonia?")
 
 agent = AgentRuntime(
-    inputs=[**client**],
-    outputs=[**client**],
+    inputs=[client],
+    outputs=[client],
     agent=agent,
 )
 ```
@@ -137,7 +137,7 @@ The TwitterMention client listens to mentions on Twitter and replies accordingly
 
 ```python
 agent = # Create your agent here
-**twitter_client = TwitterMentionClient**(
+twitter_client = TwitterMentionClient(
     TwitterCredentials(
         consumer_api_key="<TWITTER_CONSUMER_API_KEY>",
         consumer_api_secret="<TWITTER_CONSUMER_API_SECRET>",
@@ -148,8 +148,8 @@ agent = # Create your agent here
 )
 
 agent = AgentRuntime(
-    inputs=[**twitter_client**],
-    outputs=[**twitter_client**],
+    inputs=[twitter_client],
+    outputs=[twitter_client],
     agent=agent,
 )
 ```
@@ -167,7 +167,7 @@ agent = # Create your agent here
 
 agent = AgentRuntime(
     inputs=[Cron(POST_INTERVAL_SECONDS)],
-    outputs=[**TwitterPostClient()**],
+    outputs=[TwitterPostClient()],
     agent=agent,
 )
 ```

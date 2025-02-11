@@ -32,13 +32,13 @@ The private key is stored in JSON format as a standard Solana Ed25519 keypair.
 
 To import an existing wallet, use one of the following methods:
 
-1. **Import from a file**
+**Import from a file**
 
     ```bash
     galadriel wallet import --path /Users/galadriel/my_solana_key.json
     ```
 
-2. **Import using a private key string**
+**Import using a private key string**
 
     ```bash
     galadriel wallet import --private-key "[236,183,172,159,151,136,98,48,88,225,87,94,91,65,98,19,19,145,171,156,142,193,63,132,224,192,216,112,222,61,41,9,226,41,148,80,123,104,2,9,100,141,69,233,137,201,64,43,166,147,184,64,70,212,61,187,36,92,170,120,136,163,236,231]"
@@ -49,11 +49,11 @@ After importing or creating a wallet, it will be ready for use. The private key'
 
 ## Using a Wallet in an Agent
 
-### 1. Prerequisites
+### Prerequisites
 
 **Important:** Ensure your wallet is funded before use. Without sufficient SOL, Web3 tools may fail due to a lack of gas fees or available funds.
 
-### 2. Agent Code Example
+### Agent Code Example
 
 Once the wallet is set up, it is automatically accessible by Web3 tools. To use it, simply include Web3 tools in your agent’s toolset.
 
