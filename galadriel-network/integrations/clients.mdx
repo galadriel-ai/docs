@@ -38,7 +38,7 @@ This client listens to messages in a Discord server and replies with agent-gener
 ```python
 agent = # Create your agent here
 DISCORD_GUILD_ID = "<DISCORD_GUILD_ID>" # Add your Discord guild ID
-discord_client = DiscordClient(guild_id=DISCORD_GUILD_ID))** # Create Discord client
+discord_client = DiscordClient(guild_id=DISCORD_GUILD_ID)) # Create Discord client
 knowledge_base_output_client = # Create client eg based on [SimpleMessageClient](https://github.com/galadriel-ai/galadriel/blob/main/galadriel/clients/simple_message_client.py) which updates company's knowledge base based on new facts from Discord channels
 
 agent = AgentRuntime(
@@ -61,11 +61,11 @@ The Telegram client listens to messages in a Telegram server and replies with ag
 ```python
 agent = # Create your agent here
 TELEGRAM_TOKEN = "<TELEGRAM_TOKEN>" # Add your Telegram bot token ID
-**telegram_client = TelegramClient(token=TELEGRAM_TOKEN))**
+telegram_client = TelegramClient(token=TELEGRAM_TOKEN))
 
 agent = AgentRuntime(
-    inputs=[**telegram_client**],
-    outputs=[**telegram_client**],
+    inputs=[telegram_client],
+    outputs=[telegram_client],
     agent=agent,
 )
 ```
