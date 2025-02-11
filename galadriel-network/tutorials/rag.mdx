@@ -58,7 +58,7 @@ At this point, `docs_processed` is a structured collection of document chunks, r
 
 ### **Retriever Tool**
 
-Galadriel framework provides a [RetrieverTool](https://github.com/galadriel-ai/galadriel/blob/main/galadriel/tools/retriever.py) (visit [Tools](https://www.notion.so/Tools-In-Review-18f52f74d7f680c48c2ef61ab4afff12?pvs=21) for more details) that uses semantic search (BM25 for simplicity) to fetch relevant passages. This tool will be called by the agent whenever it needs more information.
+Galadriel framework provides a [RetrieverTool](https://github.com/galadriel-ai/galadriel/blob/main/galadriel/tools/retriever.py) (visit [Tools](/galadriel-network/integrations/tools) for more details) that uses semantic search (BM25 for simplicity) to fetch relevant passages. This tool will be called by the agent whenever it needs more information.
 
 > Note: You can replace BM25 with a vector-based retriever for better semantic matching.
 >
@@ -104,7 +104,7 @@ The agent will attempt to solve the user’s query by:
 
 Bellow is a screenshot with a snippet of the logs from the execution:
 
-![image.png](attachment:d6e9bf4a-b84a-4df9-b28f-71ed39d00711:image.png)
+<img src="/images/agentic_rag.png" alt="RAG Agent" />
 
 As you can see, the agent was successful in selecting semantic relevant chunks of text and produced the final answer: *The backward pass is typically slower than the forward pass during transformers model training.*
 
