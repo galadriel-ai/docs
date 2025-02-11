@@ -57,17 +57,43 @@
         "tab": "Galadriel L1 (Alpha)",
         "groups": [
           {
-            "group": "API Documentation",
+            "group": "Get Started",
             "pages": [
-              "api-reference/introduction"
+              "galadriel-network/get-started/overview",
+              "galadriel-network/get-started/quickstart"
             ]
           },
           {
-            "group": "Endpoint Examples",
+            "group": "Tutorials",
             "pages": [
-              "api-reference/endpoint/get",
-              "api-reference/endpoint/create",
-              "api-reference/endpoint/delete"
+              "galadriel-network/tutorials/agents",
+              "galadriel-network/tutorials/clients",
+              "galadriel-network/tutorials/tools",
+              "galadriel-network/tutorials/wallet",
+              "galadriel-network/tutorials/payments",
+              "galadriel-network/tutorials/memory",
+              "galadriel-network/tutorials/chat-to-agents",
+              "galadriel-network/tutorials/rag"
+            ]
+          },
+          {
+            "group": "Concepts",
+            "pages": [
+              "galadriel-network/concepts/runtime"
+            ]
+          },
+          {
+            "group": "Integrations",
+            "pages": [
+              "galadriel-network/integrations/models",
+              "galadriel-network/integrations/tools",
+              "galadriel-network/integrations/clients"
+            ]
+          },
+          {
+            "group": "Examples",
+            "pages": [
+              "galadriel-network/examples/examples"
             ]
           }
         ]
