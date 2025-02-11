@@ -1,4 +1,80 @@
 ---
 title: Models
-description: TODO
 ---
+Models serve as the core engine of Agents, and the Galadriel framework supports multiple LLM providers to offer flexibility and scalability. The following LLM providers are currently supported:
+
+- **LiteLLMModel**
+- **HfApiModel**
+- **TransformersModel**
+- **AzureOpenAIServerModel**
+
+In the sections below, we provide details on each supported provider and, more importantly, how to use them.
+
+## LiteLLMModel
+
+The `LiteLLMModel` leverages [**LiteLLM**](https://www.litellm.ai/) to support over 100 LLMs from various providers. Here’s how to use it:
+
+```python
+from galadriel.core_agent import LiteLLMModel
+
+messages = [
+  {"role": "user", "content": [{"type": "text", "text": "Hello, how are you?"}]}
+]
+
+model = LiteLLMModel("anthropic/claude-3-5-sonnet-latest", temperature=0.2, max_tokens=10)
+print(model(messages))
+```
+
+## **HfApiModel**
+
+This model interact with Hugging Face's Inference API. Here’s how to use it:
+
+```python
+from galadriel.core_agent import HfApiModel
+
+messages = [{"role": "user", "content": "Explain quantum mechanics in simple terms."}]
+
+model = HfApiModel(
+    model_id="Qwen/Qwen2.5-Coder-32B-Instruct",
+    token=os.getenv("HF_TOKEN"),
+    max_tokens=5000,
+)
+print(model(messages, stop_sequences=["END"]))
+```
+
+## **TransformersModel**
+
+The `TransformersModel` allows you to load and run Hugging Face models locally using the `transformers` library. Ensure that both `transformers` and `torch` are installed before use.
+
+```python
+from galadriel.core_agent import TransformersModel
+
+model = TransformersModel(
+    model_id="Qwen/Qwen2.5-Coder-32B-Instruct",
+    device="cuda",
+    max_new_tokens=5000,
+)
+messages = [{"role": "user", "content": "Explain quantum mechanics in simple terms."}]
+response = model(messages, stop_sequences=["END"])
+print(response)
+```
+
+## **AzureOpenAIServerModel**
+
+The `AzureOpenAIServerModel` enables integration with any Azure OpenAI deployment. Below is an example of how to configure and use it:
+
+```python
+import os
+from galadriel.core_agent import AzureOpenAIServerModel
+
+model = AzureOpenAIServerModel(
+    model_id = os.environ.get("AZURE_OPENAI_MODEL"),
+    azure_endpoint=os.environ.get("AZURE_OPENAI_ENDPOINT"),
+    api_key=os.environ.get("AZURE_OPENAI_API_KEY"),
+    api_version=os.environ.get("OPENAI_API_VERSION")
+)
+```
+
+## Conclusion
+
+Galadriel provides seamless integration with multiple LLM providers, allowing you to choose the best model for your needs—whether it's via LiteLLM for broad model access, Hugging Face’s API for hosted inference, local execution with Transformers, or Azure OpenAI for enterprise deployments. By leveraging these options, you can build powerful, flexible AI agents tailored to your specific requirements.

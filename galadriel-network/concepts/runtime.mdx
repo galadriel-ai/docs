@@ -1,4 +1,67 @@
 ---
 title: Agent Runtime
-description: TODO
 ---
+## What is an Agent Runtime?
+
+For an agent to be truly autonomous, it must operate continuously, ready to process new requests at any moment. This is precisely what the `AgentRuntime` enables. It is the core orchestration layer that manages agent execution, ensuring that messages are processed efficiently while maintaining the agent’s state.
+
+![agent (1).jpg](attachment:be72d90c-d3f7-4896-a9f1-2e38e339b7a3:agent_(1).jpg)
+
+## How It Works
+
+At a high level, the `Agent Runtime` follows this execution loop:
+
+1. **Receive a [Message](https://github.com/galadriel-ai/galadriel/blob/main/galadriel/entities.py#L11)** – An input client sends a message to the runtime.
+2. **Process the [Message](https://github.com/galadriel-ai/galadriel/blob/main/galadriel/entities.py#L11)** – The agent receives and handles the request.
+3. **Send the Response** – The agent's output is forwarded to the appropriate client.
+4. **Repeat** – The runtime continuously handles incoming messages in a loop.
+
+`AgentRuntime` interface is defined as follows
+
+```python
+class AgentRuntime:
+    def __init__(
+            self,
+            # Any number of input Clients
+            inputs: List[AgentInput],
+            # Any number of output Clients
+            outputs: List[AgentOutput],
+            # The agent to run
+            agent: Agent,
+            # optional short term memory - more on that later
+            short_term_memory: Optional[ShortTermMemory] = None,
+            # optional pricing - more on that later
+            pricing: Optional[Pricing] = None,
+    ):
+        ...
+```
+
+The `Agent Runtime` **can handle any number of input/output clients concurrently, making it easy to implement all kinds of agents that can handle all kinds of workflows.
+
+## Using `AgentRuntime`
+
+Based on the interface above, here’s the example of how the runtime is created.
+
+```python
+runtime = AgentRunTime(
+	inputs=[cron, discord], # Specify which input clients should trigger agent execution
+	outputs=[twitter], # Specify which output clients should publish agent's results
+	agent=agent, # Specify which agent should be executed
+)
+```
+
+Creating of the runtime is lightweight i.e it doesn’t start listening to inputs nor trigger the agent execution. In order to actually start the runtime process, its `AgentRuntime#run` must be called.
+
+```python
+asyncio.run(runtime.run())
+```
+
+Note, that in order to run infinitely and asynchronously respond to inputs, `AgentRuntime#run` is `async` function. Therefore, it has to be passed to `asyncio.run`.
+
+## Conclusion
+
+The `Agent Runtime` is the backbone of autonomous agent execution, enabling seamless integration and scalability. It’s main responsibilities are:
+
+- **Orchestration** – the runtime ties the agent execution flow together. It enables Agents to run indefinitely and autonomously. Handles multiple concurrent clients
+- **Validation -** manages the types of messages coming in and making sure they are valid
+- **Integration** – Supports multiple input/output sources, enabling build complex agents. It can be extended with additional components like memory and pricing

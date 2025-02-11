@@ -1,4 +1,119 @@
 ---
 title: Agentic RAG
-description: TODO
 ---
+## What is Agentic RAG?
+
+While RAG helps ground language models in factual, domain-specific data, basic implementations have limitations:
+
+### Common pitfalls of simple RAG:
+
+1. **Single-step retrieval** – If the initial retrieval is inaccurate, the model’s response suffers, with no way to refine the search.
+2. **Query mismatch** – Directly matching the user’s query can miss relevant results if phrasing differs (e.g., question vs. statement).
+
+### How Agentic RAG improves RAG
+
+An **agentic RAG** overcomes these issues by:
+
+- **Iterating retrieval** – Refining queries when initial results are off-target.
+- **Rewriting queries** – Adjusting phrasing to better match stored documents.
+
+By actively optimizing search strategies, an agentic RAG surfaces more relevant content than a single-step approach.
+
+## How to build a RAG Agent
+
+By **turning RAG into an agent-based approach**, we can address these limitations more effectively.
+
+### Preparing the knowledge base
+
+In this example, we load a dataset of documentation pages for various Hugging Face libraries, keeping only those related to the `transformers` library. We then split this data into smaller chunks, which will form our searchable knowledge base.
+
+```python
+
+import datasets
+from langchain.docstore.document import Document
+from langchain.text_splitter import RecursiveCharacterTextSplitter
+
+knowledge_base = datasets.load_dataset("m-ric/huggingface_doc", split="train")
+knowledge_base = knowledge_base.filter(lambda row: row["source"].startswith("huggingface/transformers"))
+
+source_docs = [
+    Document(page_content=doc["text"], metadata={"source": doc["source"].split("/")[1]})
+    for doc in knowledge_base
+]
+
+text_splitter = RecursiveCharacterTextSplitter(
+    chunk_size=500,
+    chunk_overlap=50,
+    add_start_index=True,
+    strip_whitespace=True,
+    separators=["\n\n", "\n", ".", " ", ""],
+)
+docs_processed = text_splitter.split_documents(source_docs)
+
+```
+
+At this point, `docs_processed` is a structured collection of document chunks, ready to be used by a retriever tool.
+
+---
+
+### **Retriever Tool**
+
+Galadriel framework provides a [RetrieverTool](https://github.com/galadriel-ai/galadriel/blob/main/galadriel/tools/retriever.py) (visit [Tools](https://www.notion.so/Tools-In-Review-18f52f74d7f680c48c2ef61ab4afff12?pvs=21) for more details) that uses semantic search (BM25 for simplicity) to fetch relevant passages. This tool will be called by the agent whenever it needs more information.
+
+> Note: You can replace BM25 with a vector-based retriever for better semantic matching.
+>
+
+### **Initializing the Agent**
+
+Check the code
+
+```python
+import asyncio
+from galadriel import AgentRuntime, CodeAgent
+from galadriel.clients import SimpleMessageClient
+from galadriel.core_agent import LiteLLMModel
+**from galadriel.tools.retriever import RetrieverTool**
+
+model = LiteLLMModel(model_id="gpt-4o", api_key="<YOUR_OPENAI_API_KEY>")
+
+**retriever_tool = RetrieverTool(docs_processed)**
+
+agent = CodeAgent(
+    model=model,
+    tools=[**retriever_tool**],
+)
+
+client = SimpleMessageClient("For a transformers model training, which is slower, the forward or the backward pass?")
+
+runtime = AgentRuntime(
+    agent=agent,
+    inputs=[client],
+    outputs=[client],
+)
+
+asyncio.run(runtime.run())
+
+```
+
+The agent will attempt to solve the user’s query by:
+
+1. Reasoning through the user’s prompt step by step.
+2. Calling `retriever_tool` to gather relevant context from the knowledge base.
+3. Potentially adjusting or refining the query if needed.
+4. Providing a final answer once enough context is gathered.
+
+Bellow is a screenshot with a snippet of the logs from the execution:
+
+![image.png](attachment:d6e9bf4a-b84a-4df9-b28f-71ed39d00711:image.png)
+
+As you can see, the agent was successful in selecting semantic relevant chunks of text and produced the final answer: *The backward pass is typically slower than the forward pass during transformers model training.*
+
+## Conclusion
+
+**RAG Agents** provide a powerful way to **ground** your language model’s outputs on **factual, domain-specific data**. By:
+
+- **Rewriting queries** – Agents can better match the style or content of the relevant documents.
+- **Iterating retrieval** – Agents critique and refine their searches when initial results are insufficient.
+- **Controlling knowledge access** – You decide what information the agent can retrieve, ensuring compliance and data security.
+
+With this approach, you can address the pitfalls of single-step or query-mismatch retrieval and tap into more **flexible, accurate, and controllable** LLM interactions.
