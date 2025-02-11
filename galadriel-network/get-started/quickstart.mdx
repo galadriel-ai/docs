@@ -26,7 +26,7 @@ pip install galadriel
 
 ## Create a Simple Web Search Agent
 
-### 1. Agent Code
+### Agent Code
 
 Create a file named `agent.py` with the following Python code.
 
@@ -61,7 +61,7 @@ runtime = AgentRuntime(
 asyncio.run(runtime.run())
 ```
 
-### 2. Running the Agent
+### Running the Agent
 Execute the script:
 ```bash
 python agent.py
@@ -86,7 +86,7 @@ request: content='What is the capital of Estonia?'
 response: content='Tallinn'
 ```
 
-### 3. How it Works
+###  How it Works
 
 This simple agent receives a question from the client and executes a series of reasoning steps to provide an answer. It figures out by itself when to search the web.
 
@@ -99,7 +99,7 @@ It leverages:
 
 ## Create a Web3 Agent
 
-### 1. Agent Code
+### Agent Code
 
 Let’s extend the web search agent with Web3 capabilities to fetch real-time market data.
 
@@ -122,7 +122,7 @@ agent = CodeAgent(
 )
 ```
 
-💡 **Dexscreener** is a widely used Web3 tool to monitor crypto market data like prices, new tokens, etc. Galadriel offers it out of the box as a tool to enable an agent to fetch market data across multiple chains.
+💡 [Dexscreener](https://dexscreener.com/) is a widely used Web3 tool to monitor crypto market data like prices, new tokens, etc. Galadriel offers it out of the box as a tool to enable an agent to fetch market data across multiple chains.
 
 Update the client’s input by asking a Web3-specific question:
 
@@ -130,7 +130,7 @@ Update the client’s input by asking a Web3-specific question:
 client = SimpleMessageClient("What are the top tokens on the market today?")
 ```
 
-### 2. Running the Agent
+### Running the Agent
 
 Execute the script:
 
@@ -150,7 +150,7 @@ You’ve successfully built both a generic web search agent and a Web3-focused a
 
 But this is just scratching the surface - **what’s next?** To unlock more capabilities for your agent, check out these resources:
 
-- [Agent tutorial](/galadriel-network/tutorials/agents)
+- Tutorials section with [Agents](/galadriel-network/tutorials/agents), [Client](galadriel-network/tutorials/clients), [Wallet](/galadriel-network/tutorials/wallet)
 - [Deep dive into fundamental concepts like AgentRuntime](/galadriel-network/concepts/runtime)
 - [Real-world examples of building more complex agents](/galadriel-network/examples/examples)
 
