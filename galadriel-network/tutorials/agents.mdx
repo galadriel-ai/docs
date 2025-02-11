@@ -1,4 +1,134 @@
 ---
 title: Agents
-description: TODO
 ---
+## What Is a Galadriel Agent?
+
+When we say “Galadriel Agent,” we mean the **entire AI system** that includes:
+
+1. **An Agent Interface** (e.g., `ToolCallingAgent`, `CodeAgent`, or a custom interface you build),
+2. [**Tools**](https://www.notion.so/Tools-In-Review-18f52f74d7f680c48c2ef61ab4afff12?pvs=21) it can call (e.g., a web search tool, a database query tool),
+3. [**Memory**](https://www.notion.so/Memory-In-review-18c52f74d7f68070b0cad5ccb7e5b515?pvs=21) for context,
+4. [**Input/Output Clients**](https://www.notion.so/Clients-in-review-19652f74d7f68041be7ec44585963dd9?pvs=21) that send user queries and receive responses,
+5. **A [Runtime](https://www.notion.so/Agent-Runtime-In-Review-18c52f74d7f680439bcac34e51a0e811?pvs=21)** that orchestrates continuous execution, communication and state persistence.
+
+You can picture an Agent as follows:
+
+![agent3.jpg](attachment:406c6f2b-7530-444e-b9aa-4d4a42b7e7a7:agent3.jpg)
+
+---
+
+## What is autonomy?
+
+**Autonomy** refers to how many decisions the Agent makes on its own to complete a task. This can range from simply choosing one of two routes (low autonomy) to a full multi-step, looped approach (high autonomy):
+
+| Agency Level | Description | Example Pattern |
+| --- | --- | --- |
+| ★☆☆ (Low) | LLM output is used for simple decisions (like routing). | `if llm_decision(): path_a() else: path_b()` |
+| ★★☆ (Medium) | LLM decides which tool/function to call and its arguments. | `tool_name, args = llm_parse_output(); tool_name(args)` |
+| ★★★ (High) | LLM controls the entire multi-step loop and orchestrates calls. | `while llm_should_continue(): execute_next_step()` |
+
+Galadriel empowers highly autonomous agents.  Its Runtime ensures agents can operate continuously, while the Agent Interface acts as the agent's "brain," reasoning through a multi-step loop driven by LLM output and strategically using available tools.  This design enables Galadriel agents to be fully autonomous, capable of running and performing tasks independently, without direct human intervention.
+
+### Tools, Loops, and Runtime
+
+- **Tools** provide *real-world capabilities* (e.g., searching the web, querying databases, etc.).
+- **Loops** enable iterative reasoning, via a [ReAct-style approach](https://huggingface.co/papers/2210.03629):
+    1. Observe the current situation,
+    2. Think (“Thought”),
+    3. Call a tool if needed (“Action”),
+    4. Observe the result (“Observation”),
+    5. Decide if another step is needed.
+- **The Runtime** connects all the dots by continuously feeding user requests to the Agent, capturing outputs, and optionally handling concurrency, logging, or multi-agent orchestration.
+
+---
+
+## The Agent Interface
+
+The Agent Interface is composed of the following interface: a class with an `execute` method that takes in a `Message` and returns a `Message`:
+
+```python
+from abc import ABC, abstractmethod
+
+class Agent(ABC):
+    @abstractmethod
+    async def execute(self, request: Message) -> Message:
+        raise RuntimeError("Function not implemented")
+```
+
+Where `Message` is defined as:
+
+```python
+class Message(BaseModel):
+    content: str
+    conversation_id: Optional[str] = None
+    type: Optional[str] = None
+    additional_kwargs: Optional[Dict] = None
+```
+
+> Note: This is the bare-bones of an **Agent Interface**. However, when we refer to **Agents**, we mean the entire system which also includes tools, memory, runtime and clients.
+>
+
+---
+
+## Built-In Agent Interfaces
+
+Galadriel provides two main interfaces you can use out of the box:
+
+1. **`ToolCallingAgent`** – Focuses on calling external functions (tools) to solve tasks.
+2. **`CodeAgent`** – Lets the LLM “write” Python code that is then executed, offering a powerful and flexible approach for certain use-cases.
+
+You can also create *custom agents* for specific personalities or domain knowledge. For example, [**`CharacterAgent`**](https://github.com/galadriel-ai/galadriel/tree/main/examples/discord) shows how to craft an agent with a distinct persona (like a Discord bot with a particular style).
+
+---
+
+## Sample Usage
+
+Below is a quick demonstration of how to set up a `CodeAgent` with a web search tool, run it via the runtime, and communicate with a simple input/output client.
+
+```python
+import asyncio
+from galadriel import AgentRuntime, CodeAgent
+from galadriel.clients import SimpleMessageClient
+from galadriel.core_agent import LiteLLMModel, DuckDuckGoSearchTool
+
+model = LiteLLMModel(model_id="gpt-4o", api_key="<ADD YOUR OPENAI KEY HERE>")
+
+agent = CodeAgent(
+    model=model,
+    tools=[DuckDuckGoSearchTool()]
+)
+
+# Simple input/output client:
+client = SimpleMessageClient("Explain the concept of blockchain")
+
+# The runtime orchestrates continuous execution of the agent.
+runtime = AgentRuntime(
+    agent=agent,
+    inputs=[client],
+    outputs=[client],
+)
+asyncio.run(runtime.run())
+```
+
+1. **`CodeAgent`** can “write” code to perform tasks.
+2. **`DuckDuckGoSearchTool`** provides a web search capability.
+3. **`SimpleMessageClient`** supplies the user’s query and will receive the final answer.
+4. **`AgentRuntime`** ties it all together, feeding data between the user, agent, and output.
+
+---
+
+## Conclusion
+
+Agents in Galadriel empower you to build **autonomous AI systems** that:
+
+- Utilize state-of-the-art LLM [Models](https://www.notion.so/Models-In-progress-18f52f74d7f6805b8ce0cb6b09beea77?pvs=21).
+- Integrate seamlessly with [Tools](https://www.notion.so/Tools-In-Review-18f52f74d7f680c48c2ef61ab4afff12?pvs=21).
+- Maintain meaningful [Memory](https://www.notion.so/Memory-In-review-18c52f74d7f68070b0cad5ccb7e5b515?pvs=21).
+- Run continuously, responding to user requests in real time when combined with an [AgentRuntime](https://www.notion.so/Agent-Runtime-In-Review-18c52f74d7f680439bcac34e51a0e811?pvs=21).
+
+---
+
+## Next Steps
+
+- Learn how to integrate your agent into the [AgentRuntime](https://www.notion.so/Agent-Runtime-In-Review-18c52f74d7f680439bcac34e51a0e811?pvs=21).
+- [**Examples](https://github.com/galadriel-ai/galadriel/tree/main/examples) -** Check out our repository for real-world sample projects.

@@ -1,4 +1,232 @@
 ---
 title: Clients
-description: TODO
 ---
+Galadriel framework comes with a set of clients out of the box. New core clients are regularly added to the framework. Below is a list of currently supported clients and how to use them.
+
+### [Cron Client](https://github.com/galadriel-ai/galadriel/blob/main/galadriel/clients/cron.py)
+
+Cron client sends empty message to the agent in order to trigger the agent execution at regular intervals.
+
+**Use Cases**
+
+- a trading agent which regularly executes its own trading strategy based on market data and updates users’ portfolios
+- a twitter agent which distills world news’ every 1 hour and prepares a comprehensive report
+
+**Example:**
+
+```python
+trading_agent = # Create your agent here
+cron = Cron(60) # Configure Cron client
+
+agent = AgentRuntime(
+    inputs=[cron],  # Pass the Cron client to trigger agent execution regularly
+    outputs=[],
+    agent=trading_agent,
+)
+```
+
+### [Discord Client](https://github.com/galadriel-ai/galadriel/blob/main/galadriel/clients/discord_client.py)
+
+This client listens to messages in a Discord server and replies with agent-generated responses.
+
+**Use Cases**
+
+- an assistant agent which answers questions, moderates conversations, or assists in a Discord community.
+
+**Example:**
+
+```python
+agent = # Create your agent here
+DISCORD_GUILD_ID = "<DISCORD_GUILD_ID>" # Add your Discord guild ID
+**discord_client = DiscordClient(guild_id=DISCORD_GUILD_ID))** # Create Discord client
+knowledge_base_output_client = # Create client eg based on [SimpleMessageClient](https://github.com/galadriel-ai/galadriel/blob/main/galadriel/clients/simple_message_client.py) which updates company's knowledge base based on new facts from Discord channels
+
+agent = AgentRuntime(
+    inputs=[**discord_client**], # Pass the Discord client to listen to Discord inputs
+    outputs=[knowledge_base_output_client],
+    agent=agent,
+)
+```
+
+### [Telegram Client](https://github.com/galadriel-ai/galadriel/blob/main/galadriel/clients/telegram_client.py)
+
+The Telegram client listens to messages in a Telegram server and replies with agent-generated responses.
+
+**Use Cases**
+
+- An assistant agent that answers questions, moderates conversations, or assists in a Telegram community.
+
+**Example:**
+
+```python
+agent = # Create your agent here
+TELEGRAM_TOKEN = "<TELEGRAM_TOKEN>" # Add your Telegram bot token ID
+**telegram_client = TelegramClient(token=TELEGRAM_TOKEN))**
+
+agent = AgentRuntime(
+    inputs=[**telegram_client**],
+    outputs=[**telegram_client**],
+    agent=agent,
+)
+```
+
+### [Gradio Client](https://github.com/galadriel-ai/galadriel/blob/main/galadriel/clients/gradio_client.py)
+
+The Gradio client listens to messages from a local Gradio server and replies with agent-generated responses.
+
+**Use Cases**
+
+- Test and debug your agent without requiring extra tokens or configuration.
+
+```python
+agent = # Create your agent here
+**gradio_client = GradioClient()**
+
+agent = AgentRuntime(
+    inputs=[**gradio_client**],
+    outputs=[**gradio_client**],
+    agent=agent,
+)
+```
+
+### [Terminal Client](https://github.com/galadriel-ai/galadriel/blob/main/galadriel/clients/terminal_client.py)
+
+The Terminal client listens to messages from the terminal and replies with agent-generated responses.
+
+**Use Cases**
+
+- Test and debug your agent without requiring extra tokens or configuration.
+
+```python
+agent = # Create your agent here
+**terminal_client = TerminalClient()**
+
+agent = AgentRuntime(
+    inputs=[**terminal_client**],
+    outputs=[**terminal_client**],
+    agent=agent,
+)
+```
+
+### [SimpleMessageClient](https://github.com/galadriel-ai/galadriel/blob/main/galadriel/clients/simple_message_client.py)
+
+A simple client that receives messages when instantiated and pushes them to the agent at a specified interval. The agent's responses are then printed to the console.
+
+**Use Cases**
+
+- Test and debug your agent without requiring extra tokens or configuration.
+
+```python
+agent = # Create your agent here
+**client = SimpleMessageClient**("What is the capital of Estonia?")
+
+agent = AgentRuntime(
+    inputs=[**client**],
+    outputs=[**client**],
+    agent=agent,
+)
+```
+
+### [TwitterMentionClient](https://github.com/galadriel-ai/galadriel/blob/main/galadriel/clients/twitter_mention_client.py)
+
+The TwitterMention client listens to mentions on Twitter and replies accordingly.
+
+**Use Cases**
+
+- An assistant agent that answers questions, moderates conversations, or assists in a Twitter community.
+
+```python
+agent = # Create your agent here
+**twitter_client = TwitterMentionClient**(
+    TwitterCredentials(
+        consumer_api_key="<TWITTER_CONSUMER_API_KEY>",
+        consumer_api_secret="<TWITTER_CONSUMER_API_SECRET>",
+        access_token="<TWITTER_ACCESS_TOKEN>",
+        access_token_secret="<TWITTER_ACCESS_TOKEN_SECRET>",
+    ),
+    user_id="<TWITTER_USER_ID>",
+)
+
+agent = AgentRuntime(
+    inputs=[**twitter_client**],
+    outputs=[**twitter_client**],
+    agent=agent,
+)
+```
+
+### [TwitterPostClient](https://github.com/galadriel-ai/galadriel/blob/main/galadriel/clients/twitter_post_client.py)
+
+The TwitterPost client is an `AgentOutput` type that posts new messages on a Twitter account.
+
+**Use Cases**
+
+- An assistant that posts curated and personalized content on Twitter.
+
+```python
+agent = # Create your agent here
+
+agent = AgentRuntime(
+    inputs=[Cron(POST_INTERVAL_SECONDS)],
+    outputs=[**TwitterPostClient()**],
+    agent=agent,
+)
+```
+
+## Build your own Client
+
+In order to build the client, implement one or both of these interfaces:
+
+### AgentInput
+
+```python
+class AgentInput:
+    async def start(self, queue: PushOnlyQueue) -> None:
+        pass
+```
+
+`start` function contains a queue to which the agent should push a `Message` object.
+
+```python
+class Message(BaseModel):
+    content: str
+    conversation_id: Optional[str] = None
+    type: Optional[str] = None
+    additional_kwargs: Optional[Dict] = None
+
+```
+
+In the simplest case, `Message` has just`content` .
+
+Let’s implement the simplest `AgentInput`
+
+```python
+class SimpleInput(AgentInput):
+    async def start(self, queue: PushOnlyQueue):
+        await queue.put(Message(content="Hello, Agent!"))
+```
+
+This client, when passed to the runtime will pass a single `Hello, Agent!` message to the agent.
+
+### AgentOutput
+
+```python
+class AgentOutput:
+    async def send(self, request: Message, response: Message) -> None:
+        pass
+```
+
+`send` function receives the response from the client, together with the request which trigger the agent flow.
+
+Here is the simplest implementation of
+
+```python
+class SimpleOutput(AgentOutput):
+    async def send(self, request: Message, response: Message):
+        print(f"Agent Response: {response.content}")
+```
+
+As explained above, the input and output need to be passed to AgentRuntime to start operating.
+
+## Conclusion
+
+Galadriel provides a diverse set of built-in clients to seamlessly integrate agents with various platforms, including messaging services, social media, and local development environments. Whether you need to trigger agents at regular intervals, process real-time user interactions, or debug locally, these clients offer flexible solutions. Additionally, developers can extend Galadriel’s capabilities by implementing custom clients using the `AgentInput` and `AgentOutput` interfaces. This modular approach ensures adaptability to a wide range of use cases, enabling efficient and intelligent agent interactions across different ecosystems.

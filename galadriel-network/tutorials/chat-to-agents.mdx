@@ -1,4 +1,100 @@
 ---
 title: Chat to Agents via UI
-description: TODO
 ---
+The Galadriel framework includes a built-in Gradio UI Client and a Terminal Client, enabling seamless local experimentation right out of the box. Unlike third-party clients such as Discord or Telegram, these clients require no additional configuration or authentication tokens. This makes them ideal for testing and debugging your agent before transitioning to a more advanced setup.
+
+## Gradio Client
+
+### Using Gradio with `AgentRuntime`
+
+Gradio can be easily imported and used as a client right out of the box. For example, let's take the [Discord agent setup](https://github.com/galadriel-ai/galadriel/tree/main/examples/discord) and swap out the client for Gradio, as demonstrated in the code snippet below:
+
+```python
+from galadriel.core_agent import LiteLLMModel
+from dotenv import load_dotenv
+from pathlib import Path
+from character_agent import CharacterAgent
+from galadriel.tools.composio_converter import convert_action
+from tools import get_time
+from galadriel import AgentRuntime
+import os
+import asyncio
+from galadriel.clients import GradioClient
+
+load_dotenv(dotenv_path=Path(".") / ".env", override=True)
+model = LiteLLMModel(model_id="gpt-4o", api_key=os.getenv("OPENAI_API_KEY"))
+
+composio_weather_tool = convert_action(
+    os.getenv("COMPOSIO_API_KEY"), "WEATHERMAP_WEATHER"
+)
+
+elon_musk_agent = CharacterAgent(
+    character_json_path="agent.json",
+    tools=[composio_weather_tool, get_time],
+    model=model,
+    max_steps=6,
+)
+
+**gradio_client = GradioClient()**
+
+runtime = AgentRuntime(
+    inputs=[**gradio_client**],
+    outputs=[**gradio_client**],
+    agent=elon_musk_agent,
+)
+
+asyncio.run(runtime.run())
+
+```
+
+Notice how simple it is, no extra configuration or token is required.
+
+### Interacting with Gradio UI
+
+Once the Agent is running, you can open Gradio UI locally in [http://0.0.0.0:7860](http://0.0.0.0:7860/).
+
+Here’s a screenshot showcasing an couple message interaction with Gradio:
+
+![image (4).png](attachment:0973e7eb-2a23-46bb-a68f-677def6481aa:image_(4).png)
+
+## Terminal client
+
+The **Terminal Client** provides an all-in-one debugging and testing environment. It is particularly useful as a minimal solution for agents that require ongoing conversations, as it keeps both the interaction and logs in the same terminal session.
+
+### Using Terminal client with `AgentRuntime`
+
+Similar to the Gradio client, the Terminal Client can be imported and used directly without extra configuration:
+
+```python
+from galadriel.clients import TerminalClient
+
+terminal_client = TerminalClient()
+
+runtime = AgentRuntime(
+    inputs=[terminal_client],
+    outputs=[terminal_client],
+    agent=<your-agent>,
+)
+```
+
+### Interacting with Terminal Client
+
+Once the agent is running, you can interact with it directly in the terminal. Your input will appear after the `you:` prompt, and the agent's response will follow the `Agent:` log.
+
+Bellow is a screenshot showcasing a simple interaction:
+
+![image (5).png](attachment:d7af73eb-a08c-49f5-9f4e-953fad8ca7d5:image_(5).png)
+
+## Conclusion
+
+The **Gradio UI Client** offers an intuitive and seamless way to test and debug your agent locally, requiring no extra configuration or authentication tokens. This makes it ideal for rapid experimentation before integrating with more complex clients like Discord or Telegram.
+
+For a lightweight alternative, the [**Terminal Client**](https://github.com/galadriel-ai/galadriel/blob/main/galadriel/clients/terminal_client.py) allows direct command-line interaction, making it useful for quick tests in non-graphical environments or when running agents on remote servers.
+
+By leveraging both **Gradio** and the **Terminal Client**, you can efficiently prototype, debug, and refine your agent before deploying it in a production setting.
+
+## What next?
+
+To unlock more capabilities to your agent, check out how to use more complex clients:
+
+- [Clients [In Review 👀]](https://www.notion.so/Clients-In-Review-18c52f74d7f680fb9340dc40e321a747?pvs=21)

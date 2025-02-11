@@ -1,4 +1,28 @@
 ---
 title: Payments
-description: TODO
 ---
+Agents can optionally be monetized using a pricing model. If a pricing object is provided, the runtime ensures that the client submitting a request has transferred the required funds on the Solana blockchain before processing the request.
+
+The `Runtime` also enables configuring payments to the Agent, to get paid for the tasks performed, by checking if the message from the client includes a transaction signature on the Solana blockchain, transferring enough funds to the Agent.
+
+To enable pricing, all that is needed is giving the Runtime a `Pricing` object that contains the payment size needed in SOL, and the Agent wallet address:
+
+```python
+pricing = Pricing(
+    wallet_address=agent_wallet_address,
+    cost=0.1, # 0.1 SOL
+)
+
+runtime = AgentRunTime(
+	inputs=[my_client],
+	outputs=[my_client],
+	agent=agent,
+	pricing=pricing,
+)
+```
+
+When pricing is forwarded, the runtime
+
+- checks if the incoming messages from the `inputs` contain a Solana transaction signature. The signatures can be either just a signature string or a link to Solscan.
+- Verifies that the transaction transferred the required amount of SOL.
+- Only forwards the `Message` to the agent if the payment is valid.

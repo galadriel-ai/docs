@@ -1,4 +1,157 @@
 ---
-title: Quickstart
-description: TODO
+title: "Quickstart"
 ---
+
+This quick start covers:
+
+1. Setting up the dev environment
+2. Creating and running a simple agent that uses the web search tool
+3. Creating and running a Web3 agent that uses the Dexscreener tool
+
+## Setup
+
+### Requirements
+
+Python >=3.10
+
+### Dev Environment
+
+First, set up your local environment and then install the `galadriel` Python package.
+
+```bash
+python -m venv venv
+source venv/bin/activate
+pip install galadriel
+```
+
+## Create a Simple Web Search Agent
+
+### 1. Agent Code
+
+Create a file named `agent.py` with the following Python code.
+
+Add your OpenAI API Key.
+
+```python
+import asyncio
+from galadriel import AgentRuntime, CodeAgent
+from galadriel.clients import SimpleMessageClient
+from galadriel.core_agent import LiteLLMModel, DuckDuckGoSearchTool
+
+# Set up the model (replace with your API key)
+OPENAI_API_KEY = "<YOUR_OPENAI_API_KEY>"
+model = LiteLLMModel(model_id="gpt-4o", api_key=OPENAI_API_KEY)
+
+# Create the AI agent with web search capabilities
+agent = CodeAgent(
+    model=model,
+    tools=[DuckDuckGoSearchTool()],
+)
+
+# Define a simple terminal client so you can chat with the agent
+client = SimpleMessageClient("What is the capital of Estonia?")
+
+# Set up and run the agent runtime
+runtime = AgentRuntime(
+    agent=agent,
+    inputs=[client],
+    outputs=[client],
+)
+
+asyncio.run(runtime.run())
+```
+
+### 2. Running the Agent
+Execute the script:
+```bash
+python agent.py
+```
+When the agents starts to execute the task, it prints the output similar to this one:
+```
+╭────────────────────────────────── New run ───────────────────────────────────╮
+│                                                                              │
+│ What is the capital of Estonia?                                              │
+│                                                                              │
+╰─ LiteLLMModel - gpt-4o ──────────────────────────────────────────────────────╯
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ Step 1 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ ─ Executing parsed code: ─────────────────────────────────────────────────────
+  capital_estonia = web_search(query="capital of Estonia")
+  print(capital_estonia)
+ ──────────────────────────────────────────────────────────────────────────────
+```
+Which will be followed by more steps until the results reaches the output
+```bash
+======== simple_message_client.post_output ========
+request: content='What is the capital of Estonia?'
+response: content='Tallinn'
+```
+
+### 3. How it Works
+
+This simple agent receives a question from the client and executes a series of reasoning steps to provide an answer. It figures out by itself when to search the web.
+
+It leverages:
+
+- `gpt-4o` model from OpenAI for agent reasoning.
+- `SimpleMessageClient` to send and receive messages.
+- `AgentRuntime` to connect the agent to the client and execute tasks.
+- `DuckDuckGoSearchTool` for web-based information retrieval.
+
+## Create a Web3 Agent
+
+### 1. Agent Code
+
+Let’s extend the web search agent with Web3 capabilities to fetch real-time market data.
+
+Modify your script to include:
+
+```python
+from galadriel.tools.web3 import dexscreener
+```
+
+Modify the `CodeAgent` to use the Web3 tool and add `additional_authorized_imports`:
+
+```python
+agent = CodeAgent(
+    model=model,
+    tools=[
+        DuckDuckGoSearchTool(),
+        dexscreener.fetch_market_data
+    ],
+    additional_authorized_imports=["json"]
+)
+```
+
+💡 **Dexscreener** is a widely used Web3 tool to monitor crypto market data like prices, new tokens, etc. Galadriel offers it out of the box as a tool to enable an agent to fetch market data across multiple chains.
+
+Update the client’s input by asking a Web3-specific question:
+
+```python
+client = SimpleMessageClient("What are the top tokens on the market today?")
+```
+
+### 2. Running the Agent
+
+Execute the script:
+
+```bash
+python agent.py
+```
+
+You should receive an output similar to:
+
+```bash
+Answer: The top tokens by 24-hour volume are: 'Trump's Tax Company', 'dogwifouthat', 'THE DARK KNIGHT', and 'BRITISH DOG'
+```
+
+## 🎉 Gratz on Building Your First Agent!
+
+You’ve successfully built both a generic web search agent and a Web3-focused agent using Galadriel.
+
+But this is just scratching the surface - **what’s next?** To unlock more capabilities for your agent, check out these resources:
+
+- [Tutorials on adding clients, tools, wallets, and more](https://www.notion.so/Docs-structure-for-Agent-Framework-18b52f74d7f6800daafaf472960d3cf6?pvs=21)
+- [Deep dive into fundamental concepts like AgentRuntime](https://www.notion.so/Agent-Runtime-In-Review-18c52f74d7f680439bcac34e51a0e811?pvs=21)
+- [Real-world examples of building more complex agents](https://www.notion.so/Docs-structure-for-Agent-Framework-18b52f74d7f6800daafaf472960d3cf6?pvs=21)
+
+Happy coding! 🚀

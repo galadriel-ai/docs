@@ -1,4 +1,107 @@
 ---
 title: Tools
-description: TODO
 ---
+Galadriel framework comes with a set of tools out of the box. New tools are regularly added to the framework.
+
+## Web3 Tools
+
+Here is the list of market data API available as tools in the framework:
+
+### [Coingecko](https://github.com/galadriel-ai/galadriel/blob/main/galadriel/tools/web3/coingecko.py)
+
+Current provided set of tools related with Coingecko:
+
+- `get_coin_price`: Retrieves the current price, market cap, 24hr volume, and 24hr change for a given cryptocurrency.
+- `get_coin_historical_data`: Retrieves historical market data for a given cryptocurrency.
+- `fetch_trending_coins`: Retrieves the current trending coins on CoinGecko.
+
+### [Dexscreener](https://github.com/galadriel-ai/galadriel/blob/main/galadriel/tools/web3/dexscreener.py)
+
+ Tools for interacting with the Dexscreener API to retrieve token information and market data.
+
+- `fetch_market_data`: Fetches market data for a list of tokens.
+- `get_token_profile`: Retrieves the latest token profiles from Dexscreener. It returns a formatted string containing the chain ID, token address, description, and links for each token.
+
+### [Jupiter](https://github.com/galadriel-ai/galadriel/blob/main/galadriel/tools/web3/jupiter.py)
+
+Tool for swapping tokens on the Solana blockchain using the Jupiter Aggregator:
+
+- `swap_token`: This tool allows a user to swap one token for another.
+
+### [Solana](https://github.com/galadriel-ai/galadriel/blob/main/galadriel/tools/web3/solana.py)
+
+Set of tools for managing user token balances on the Solana blockchain
+
+- `update_user_balance`: Updates the balance of a specific token for a given user.
+- `get_all_users`: Returns a JSON string containing a list of all user addresses that have balances stored.
+- `get_all_portfolios`: Returns a JSON string representing the portfolios of all users.
+- `get_user_balance`: Retrieves a user's balance for a specific token.
+
+## Composio Tools
+
+[Composio](https://github.com/ComposioHQ/composio) is a service for connecting AI Agents to hundreds external tools like  Gmail, GitHub, Salesforce, etc. Each of these tools can be added by it’s name by using `convert_action` helper.
+
+Galadriel framework empowers you to use any tool from Composio, here’s how to do it:
+
+### How to use
+
+```python
+from galadriel.tools.composio_converter import convert_action
+composio_weather_tool = convert_action(
+    os.getenv("COMPOSIO_API_KEY"), "WEATHERMAP_WEATHER"
+)
+
+agent = CodeAgent(
+    model=model,
+    tools=[composio_weather_tool],
+)
+```
+
+## Langchain Tools
+
+Galadriel framework allows you to use any tool from Langchain.
+
+### How to use
+
+Take the following example where we convert the [langchain’s wikipedia](https://python.langchain.com/v0.1/docs/modules/tools/) tool:
+
+```python
+from galadriel.core_agent import Tool
+from langchain_community.tools import WikipediaQueryRun
+from langchain_community.utilities import WikipediaAPIWrapper
+
+api_wrapper = WikipediaAPIWrapper(top_k_results=1, doc_content_chars_max=100)
+tool = WikipediaQueryRun(api_wrapper=api_wrapper)
+wikipedia_tool = Tool.from_langchain(langchain_tool=tool)
+```
+
+## [Retriever](https://github.com/galadriel-ai/galadriel/blob/main/galadriel/tools/retriever.py) tool
+
+Retriever provides access to loaded documents, which can be queried to retrieve knowledge.
+
+### How to use
+
+```python
+# Load documents: https://python.langchain.com/docs/tutorials/rag/#loading-documents
+# Split documents: https://python.langchain.com/docs/tutorials/rag/#splitting-documents
+
+retriever_tool = RetrieverTool(docs)
+agent = CodeAgent(
+    tools=[retriever_tool], model=model, max_steps=4, verbosity_level=2
+)
+```
+
+Check out [Agentic RAG [in review 👀]](https://www.notion.so/Agentic-RAG-in-review-19652f74d7f68012bfebd70158c6315e?pvs=21) where `RetrieverTool` is used to build an agent that leverages a knowledge base.
+
+## Twitter/X Tools
+
+Galadriel provided multiple tools to build Twitter/X agents:
+
+- `TwitterPostTool` for posting a new tweet
+- `TwitterRepliesTool` for replying to existing tweet
+- `TwitterGetPostTool` for fetching a specific tweet by its ID
+- `TwitterSearchTool` which searches tweets based on a provided query
+
+## Conclusion
+
+Galadriel provides a robust set of built-in tools, covering Web3, AI-powered integrations, retrieval-augmented generation, and social media automation. With support for external platforms like Composio and Langchain, the framework enables seamless interaction with a wide range of services. As new tools continue to be added, Galadriel remains a powerful and evolving solution for building AI-driven applications. Stay updated with the latest additions and enhancements by following the official repository.

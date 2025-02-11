@@ -1,4 +1,77 @@
 ---
 title: Tools
-description: TODO
 ---
+## What is a Tool?
+
+A tool is a predefined function available for an agent to use when it decides to. It augments the LLM model used by the agent to interact with external data sources, APIs, or programs. For example, a tool can fetch the weather in London or sign and submit a transaction to Ethereum to update a portfolio.
+
+Every tool extends the [Tool](https://github.com/huggingface/smolagents/blob/main/src/smolagents/tools.py#L83) class and specifies:
+
+- A `name` used in the prompt for an agent.
+- A `description` of what the tool does, the inputs it expects, and the output(s) it will return.
+- A type of tool `output`.
+- `Inputs` it expects.
+
+## Adding Tool-Use to Your Agent
+
+Tools are passed to the `agent` object. The agent can run with any number of tools, including no tools at all.
+
+### 1. Prerequisites
+
+Make sure you’ve gone through the quick start guide and have the development environment set up.
+
+### 2. Example Usage
+
+```python
+from galadriel.tools.web3 import dexscreener
+
+agent = CodeAgent(
+    model=model,
+    tools=[dexscreener.fetch_market_data],
+)
+```
+
+In this example, `dexscreener.fetch_market_data` is a tool available in `galadriel.tools.web3`.
+
+Complete example code is [here](https://github.com/galadriel-ai/galadriel/tree/main/examples/basic-web3).
+
+### 3. Out-of-the-Box Tools by Galadriel
+
+Visit the [Tools Integration](https://www.notion.so/Tools-In-Review-18f52f74d7f680c48c2ef61ab4afff12?pvs=21) page to explore our growing list of supported tools and learn how to integrate them. You can also leverage tools from [Composio](https://composio.dev/) and [Langchain](https://python.langchain.com/v0.1/docs/modules/tools/).
+
+### 4. Build Your Own Tools
+
+You can also build your own tools. There are two ways to do it.
+
+#### 1. For Simpler Tools, Use the `@tool` Annotation
+
+```python
+from galadriel.core_agent import tool
+
+@tool
+def get_time(location: str) -> str:
+    """
+    Get the current time in the given location.
+    Args:
+        location: the location
+    """
+    return f"The time in {location} is {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
+```
+
+#### 2. For More Complex Tools, Extend the `Tool` Class
+
+Extend the `Tool` class similarly to [RetrieverTool](https://github.com/galadriel-ai/galadriel/blob/main/galadriel/tools/retriever.py).
+
+#### 3. Want Your Tool in the Galadriel Framework?
+
+Contact our developers on Discord to integrate your tool into the Galadriel framework out of the box.
+
+## Conclusion
+
+Tools significantly expand an agent’s capabilities, enabling interaction with external systems and data sources. Whether using built-in tools, third-party integrations, or custom implementations, tools make AI agents more powerful and versatile.
+
+## See Next
+
+- [Tools [In Review 👀]](https://www.notion.so/Tools-In-Review-18f52f74d7f680c48c2ef61ab4afff12?pvs=21)
+- [Wallet [In Review 👀]](https://www.notion.so/Wallet-In-Review-18c52f74d7f680c58ba5ed10d14a454f?pvs=21)
+- [Memory [In Review 👀]](https://www.notion.so/Memory-In-review-18c52f74d7f68070b0cad5ccb7e5b515?pvs=21)

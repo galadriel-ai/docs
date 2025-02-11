@@ -1,4 +1,69 @@
 ---
 title: Clients
-description: TODO
 ---
+## What is a Client?
+
+A Client connects your agent to real-world input and output sources. It delivers [Messages](https://github.com/galadriel-ai/galadriel/blob/main/galadriel/entities.py#L11) to your agent and routes responses to their destination.
+
+A Client can be one (or both) of:
+
+- **Input (AgentInput)**: Provides messages to the agent.
+- **Output (AgentOutput)**: Sends the agent's responses to their destination.
+
+This design allows your agent to integrate seamlessly with a wide range of sources, from scheduled tasks (like cron jobs) to interactive platforms (like Discord bots).
+
+## Adding Clients to Your Agent
+
+### 1. Prerequisites
+
+If you don’t have an already working agent built with Galadriel, please go through the [quick start](https://www.notion.so/Quick-Start-Reviewed-18c52f74d7f6801296a8d2c098d3913f?pvs=21).
+
+### 2. Gradio Client Example
+
+Clients connect to [AgentRuntime](https://www.notion.so/Agent-Runtime-In-Review-18c52f74d7f680439bcac34e51a0e811?pvs=21), which manages how the agent processes inputs and returns results.
+
+```python
+import asyncio
+from galadriel import AgentRuntime, CodeAgent
+from galadriel.clients import GradioClient
+from galadriel.core_agent import LiteLLMModel, DuckDuckGoSearchTool
+
+model = LiteLLMModel(model_id="gpt-4o", api_key="<YOUR_OPENAI_API_KEY>")
+
+agent = CodeAgent(model=model, tools=[DuckDuckGoSearchTool()])
+
+gradio_client = GradioClient()
+
+runtime = AgentRuntime(
+    agent=agent,
+    inputs=[gradio_client],
+    outputs=[gradio_client],
+)
+
+asyncio.run(runtime.run())
+```
+
+### 3. Supported Clients (or Build Your Own)
+
+We currently provide built-in support for:
+
+- Discord
+- Telegram
+- Gradio
+- Terminal
+- Cron
+- SimpleMessageClient
+- Twitter
+
+Visit our [Clients](https://www.notion.so/Clients-in-review-19652f74d7f68041be7ec44585963dd9?pvs=21) to learn more about using these clients or creating your own.
+
+## Conclusion
+
+Clients allow you to plug your agent into the real world with minimal effort. Need an AI that interacts via Discord, Slack, email, or webhooks? Just write a Client that conforms to `AgentInput` and `AgentOutput`, and you're good to go.
+
+## See Next
+
+- [Clients](https://www.notion.so/Clients-in-review-19652f74d7f68041be7ec44585963dd9?pvs=21)
+- [Tools](https://www.notion.so/Tools-In-Review-18c52f74d7f68015a43ee86205dfd146?pvs=21)
+
+Happy coding! 🚀

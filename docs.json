@@ -93,9 +93,13 @@
           {
             "group": "Examples",
             "pages": [
-              "galadriel-network/examples/examples"
+              "galadriel-network/examples/defai",
+              "galadriel-network/examples/task-agent",
+              "galadriel-network/examples/discord-agent",
+              "galadriel-network/examples/telegram-agent",
+              "galadriel-network/examples/twitter-agent"
             ]
-          }
+          },
         ]
       }
     ],
