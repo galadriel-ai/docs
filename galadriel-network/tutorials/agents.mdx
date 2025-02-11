@@ -1,19 +1,22 @@
 ---
 title: Agents
 ---
+
+Agents are the **thinking** component of an AI application: they parse user input, reason about it, potentially call external tools, and generate intelligent responses. In Galadriel, an Agent does all of that and more—it can be customized with different personalities, tools, and memory capabilities, and orchestrated via a runtime so it can operate continuously.
+
 ## What Is a Galadriel Agent?
 
 When we say “Galadriel Agent,” we mean the **entire AI system** that includes:
 
 1. **An Agent Interface** (e.g., `ToolCallingAgent`, `CodeAgent`, or a custom interface you build),
-2. [**Tools**](https://www.notion.so/Tools-In-Review-18f52f74d7f680c48c2ef61ab4afff12?pvs=21) it can call (e.g., a web search tool, a database query tool),
-3. [**Memory**](https://www.notion.so/Memory-In-review-18c52f74d7f68070b0cad5ccb7e5b515?pvs=21) for context,
-4. [**Input/Output Clients**](https://www.notion.so/Clients-in-review-19652f74d7f68041be7ec44585963dd9?pvs=21) that send user queries and receive responses,
-5. **A [Runtime](https://www.notion.so/Agent-Runtime-In-Review-18c52f74d7f680439bcac34e51a0e811?pvs=21)** that orchestrates continuous execution, communication and state persistence.
+2. [**Tools**](https://docs.galadriel.com/galadriel-network/tutorials/tools) it can call (e.g., a web search tool, a database query tool),
+3. [**Memory**](https://docs.galadriel.com/galadriel-network/tutorials/memory) for context,
+4. [**Input/Output Clients**](https://docs.galadriel.com/galadriel-network/tutorials/clients) that send user queries and receive responses,
+5. **A [Runtime](https://docs.galadriel.com/galadriel-network/concepts/runtime)** that orchestrates continuous execution, communication and state persistence.
 
 You can picture an Agent as follows:
 
-![agent3.jpg](attachment:406c6f2b-7530-444e-b9aa-4d4a42b7e7a7:agent3.jpg)
+<img src="/images/agent_2.jpg" alt="Agent Diagram" />
 
 ---
 
@@ -121,14 +124,14 @@ asyncio.run(runtime.run())
 
 Agents in Galadriel empower you to build **autonomous AI systems** that:
 
-- Utilize state-of-the-art LLM [Models](https://www.notion.so/Models-In-progress-18f52f74d7f6805b8ce0cb6b09beea77?pvs=21).
-- Integrate seamlessly with [Tools](https://www.notion.so/Tools-In-Review-18f52f74d7f680c48c2ef61ab4afff12?pvs=21).
-- Maintain meaningful [Memory](https://www.notion.so/Memory-In-review-18c52f74d7f68070b0cad5ccb7e5b515?pvs=21).
-- Run continuously, responding to user requests in real time when combined with an [AgentRuntime](https://www.notion.so/Agent-Runtime-In-Review-18c52f74d7f680439bcac34e51a0e811?pvs=21).
+- Utilize state-of-the-art LLM [Models](https://docs.galadriel.com/galadriel-network/integrations/models).
+- Integrate seamlessly with [Tools](https://docs.galadriel.com/galadriel-network/tutorials/tools).
+- Maintain meaningful [Memory](https://docs.galadriel.com/galadriel-network/tutorials/memory).
+- Run continuously, responding to user requests in real time when combined with an [AgentRuntime](https://docs.galadriel.com/galadriel-network/concepts/runtime).
 
 ---
 
 ## Next Steps
 
-- Learn how to integrate your agent into the [AgentRuntime](https://www.notion.so/Agent-Runtime-In-Review-18c52f74d7f680439bcac34e51a0e811?pvs=21).
-- [**Examples](https://github.com/galadriel-ai/galadriel/tree/main/examples) -** Check out our repository for real-world sample projects.
+- Learn how to integrate your agent into the [AgentRuntime](https://docs.galadriel.com/galadriel-network/concepts/runtime).
+- [Examples](https://docs.galadriel.com/galadriel-network/examples/examples) - Check out our repository for real-world sample projects.
