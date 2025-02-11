@@ -9,10 +9,9 @@
   },
   "favicon": "/favicon.png",
   "navigation": {
-    "anchors": [
+    "tabs": [
       {
-        "anchor": "Documentation",
-        "icon": "book-open",
+        "tab": "Verified Inference",
         "groups": [
           {
             "group": "About",
@@ -50,6 +49,25 @@
             "pages": [
               "changelog",
               "FAQ"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Galadriel L1 (Alpha)",
+        "groups": [
+          {
+            "group": "API Documentation",
+            "pages": [
+              "api-reference/introduction"
+            ]
+          },
+          {
+            "group": "Endpoint Examples",
+            "pages": [
+              "api-reference/endpoint/get",
+              "api-reference/endpoint/create",
+              "api-reference/endpoint/delete"
             ]
           }
         ]
