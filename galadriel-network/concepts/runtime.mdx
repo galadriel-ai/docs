@@ -3,7 +3,7 @@ title: Agent Runtime
 ---
 ## What is an Agent Runtime?
 
-For an agent to be truly autonomous, it must operate continuously, ready to process new requests at any moment. This is precisely what the `AgentRuntime` enables. It is the core orchestration layer that manages agent execution, ensuring that messages are processed efficiently while maintaining the agent’s state.
+For an agent to be truly autonomous, it must operate continuously, ready to process new requests in real time. This is precisely  the role of `AgentRuntime`. It is the core orchestration layer that manages agent execution, ensuring that messages are processed efficiently while maintaining the agent’s state.
 
 <img src="/images/agent_1.jpg" alt="Agent Runtime Diagram" />
 
@@ -36,11 +36,11 @@ class AgentRuntime:
         ...
 ```
 
-The `Agent Runtime` **can handle any number of input/output clients concurrently, making it easy to implement all kinds of agents that can handle all kinds of workflows.
+The `Agent Runtime` **can handle any number of input/output clients concurrently, making it easy to implement all kinds of agents that can handle various workflows.
 
 ## Using `AgentRuntime`
 
-Based on the interface above, here’s the example of how the runtime is created.
+Based on the interface above, here’s an example of how the runtime is created.
 
 ```python
 runtime = AgentRunTime(
@@ -50,13 +50,13 @@ runtime = AgentRunTime(
 )
 ```
 
-Creating of the runtime is lightweight i.e it doesn’t start listening to inputs nor trigger the agent execution. In order to actually start the runtime process, its `AgentRuntime#run` must be called.
+The creation of the runtime is lightweight as it doesn’t start listening to inputs nor trigger the agent execution. In order to start the runtime process, its `AgentRuntime#run` must be called.
 
 ```python
 asyncio.run(runtime.run())
 ```
 
-Note, that in order to run infinitely and asynchronously respond to inputs, `AgentRuntime#run` is `async` function. Therefore, it has to be passed to `asyncio.run`.
+Note that in order to run infinitely and asynchronously respond to inputs, `AgentRuntime#run` is `async` function. Therefore, it has to be passed to `asyncio.run`.
 
 ## Conclusion
 
