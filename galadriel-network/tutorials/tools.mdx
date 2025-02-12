@@ -12,15 +12,15 @@ Every tool extends the [Tool](https://github.com/huggingface/smolagents/blob/mai
 - A type of tool `output`.
 - `Inputs` it expects.
 
-## Adding Tool-Use to Your Agent
+## Adding tool-use to your agent
 
 Tools are passed to the `agent` object. The agent can run with any number of tools, including no tools at all.
 
-### 1. Prerequisites
+### Prerequisites
 
 Make sure you’ve gone through the quick start guide and have the development environment set up.
 
-### 2. Example Usage
+### Example usage
 
 ```python
 from galadriel.tools.web3 import dexscreener
@@ -35,15 +35,18 @@ In this example, `dexscreener.fetch_market_data` is a tool available in `galadri
 
 Complete example code is [here](https://github.com/galadriel-ai/galadriel/tree/main/examples/basic-web3).
 
-### 3. Out-of-the-Box Tools by Galadriel
+### List of tools provided by Galadriel
 
 Visit the [Tools Integration](/galadriel-network/integrations/tools) page to explore our growing list of supported tools and learn how to integrate them. You can also leverage tools from [Composio](https://composio.dev/) and [Langchain](https://python.langchain.com/v0.1/docs/modules/tools/).
 
-### 4. Build Your Own Tools
+### Build your own tools
 
 You can also build your own tools. There are two ways to do it.
 
-#### 1. For Simpler Tools, Use the `@tool` Annotation
+#### Building simple tools
+To build simple tools, annotate the function with `@tool`.
+Then, right under the function signature, provide the description explaining what the tool does, arguments it expects, and the return format. These values will be used by LLM to evaluate when and how to use the tool.
+
 
 ```python
 from galadriel.core_agent import tool
@@ -58,11 +61,11 @@ def get_time(location: str) -> str:
     return f"The time in {location} is {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
 ```
 
-#### 2. For More Complex Tools, Extend the `Tool` Class
+#### Building more complex tools
 
-Extend the `Tool` class similarly to [RetrieverTool](https://github.com/galadriel-ai/galadriel/blob/main/galadriel/tools/retriever.py).
+To build complex tools, Extend the `Tool` class similarly to [RetrieverTool](https://github.com/galadriel-ai/galadriel/blob/main/galadriel/tools/retriever.py).
 
-#### 3. Want to Integrate Your Tool into the Galadriel Framework?
+#### Want to integrate your tool into Galardiel?
 
 Contact our developers on Discord to integrate your tool into the Galadriel framework out of the box.
 
@@ -70,7 +73,7 @@ Contact our developers on Discord to integrate your tool into the Galadriel fram
 
 Tools significantly expand an agent’s capabilities, enabling interaction with external systems and data sources. Whether using built-in tools, third-party integrations, or custom implementations, tools make AI agents more powerful and versatile.
 
-## See Next
+## See next
 
 - [Tools](/galadriel-network/integrations/tools)
 - [Wallet](/galadriel-network/concepts/wallet)
