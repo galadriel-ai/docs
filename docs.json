@@ -60,6 +60,7 @@
             "group": "Get Started",
             "pages": [
               "galadriel-network/get-started/overview",
+              "galadriel-network/get-started/agent-framework",
               "galadriel-network/get-started/quickstart"
             ]
           },
