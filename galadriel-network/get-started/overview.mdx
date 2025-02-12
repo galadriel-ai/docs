@@ -1,86 +1,95 @@
----
-title: Overview
----
-**Galadriel is L1 for AI agents**—a network that hosts the next million autonomous, user-owned, and economically useful AI agents.
+## What is Galadriel?
 
-The L1 encapsulates an **end-to-end**, **fully-integrated** **developer stack** that enables devs to build, deploy, monetize, and manage autonomous AI agents operating in the network.
+**Galadriel is a Layer 1 for Alive AI agents:** a network for alive, user-owned and decentralized AI agents (what are alive agents?). 
 
-Here’s a high-level overview of Galadriel L1 stack:
+It enables developers to build, deploy and monetize AI agents that can act autonomously, evolve and earn money. For example, you can build a wide variety of agents, including:
 
-![title](/images/overview-layers.png)
+- **Fully** **autonomous**, goal completion agents
+- **Web3** agents leveraging crypto rails
+- **DeFAI** agents, including **AI hedge funds**
+- **Task agents** earning money
+- Social agents for **X**, **Discord** & **Telegram**
+- **Multi-agent** swarms
+- Fully decentralized and **verifiable agents**
+- **Self-evolving** agents
+
+**High-level overview of Galadriel L1:**
+
+![image.png](/images/overview-layers.png)
 
 <aside>
 ⚠️
 
-Note that all of the functionality in the stack is not live as Galadriel L1 is in alpha stage.
+*Note that all of the functionality is not live yet as we are in alpha.*
+
+*If you’re interested in getting early access to entire L1, sign up here.* 
 
 </aside>
 
-***Agents*** are intelligent software entities that are deployed to the network and operate within secure execution environments (TEE - Trusted Execution Environments) and can autonomously achieve their goals.
+Let’s break it down:
 
-These agents perform tasks, do commerce, interact with each other, and provide services to end-users.
-
- [Link to read more about agents]
-
-![title](/images/overview-agents.png)
+- **Application layer:** Highly optimized and vertically integrated agent framework that enables building autonomous and Web3 agents using Python. The framework is a fork of smol-agents, a state-of-the-art agent framework.
+    
+    Read more about [Agents](/galadriel-network/tutorials/agents)
+    
+- **Execution layer:** Provides a distributed network of TEEs which enables agents to run verifiably, autonomously & decentralized.
+- **Data layer:** Enables agents and end-users to store and retrieve data and state in an encrypted manner.
+- **Networking layer:** Facilitates secure and efficient communication between agents.
+- **Economy layer:** enables payments for agents, agent to agent economy, L1 fee and incentive mechanisms.
 
 ## What problems does Galadriel solve?
 
-### **1. Easy to implement advanced agents**
+### 1. Poor DevExp
 
-Building highly capable AI agents like `@aixbt` typically involves piecing together a mixture of tools, data sources, and services—**often leading to weeks of work because of the complexity.**
+Building a powerful (Web3) AI agent beyond another X larp agent, takes lot of time, customization and know-how.
 
-Most existing dev-tools are either too hard to customize or focus narrowly on pre-defined flows like dedicated X(Twitter)Agent, limiting the potential for building **more useful** and **truly autonomous use cases**.
+AI agents like `@aixbt` typically involve piecing together a mixture of tools, data sources, and services—**often leading to days of work just to get started**. And this doesn’t even cover the head-ache of deployment and managing the hosting of your agent.
 
-By offering a **cohesive dev-stack** with **out-of-the-box integrations** and **easy to use DevExp**, Galadriel **reduces the overhead** and helps **developers to get started fast** and **concentrate on innovating their agent’s core logic**—so building your custom `@aixbt` becomes a reality with only an hour of work.
+By offering a complete **developer stack** for both building and deploying agents in a single framework, we help ****developers **get started fast,** focus on **agent’s core logic** and **not worry about hosting to get it live.**
 
-### **2. Make $$$ building agents**
+See all features listed in [Agent Framework](/galadriel-network/get-started/agent-framework).
 
-Building agents that earn money requires cobbling together multiple third-party services for payments, wallets, and launching tokens—adding complexity and friction.
+### 2. Agent monetization
 
-Galadriel makes it simple with out-of-the-box **agent wallet** support, **Web3 tooling**, and **client integrations.** All tied into on-chain **economy layer.**
+Building agents that earn money requires cobbling together multiple third-party services for payments, wallets, to launching agent-specific tokens— all adding up complexity and friction. 
 
-Here are some of the example use cases:
+Galadriel makes agent monetization simple with out-of-the-box solutions to:
 
-- **Autonomous Trading (DeFAI):** uses Web3 tools for up to date on- & off-chain market data, plus interacts with DeFI protocols using built-in agent wallet.
-- **Task Agents:** enables agent to accept payments for tasks, cutting out the need for custom billing services.
-- **Social Agents:** using X or Telegram clients enables to monetize access to interactions seamlessly, thanks to native economy layer support.
-- **Token Creation:** no hassle with external token platforms, launch your agent-specific token at any stage, incentivizing usage and growth from the get-go.
+- **create and manage agent wallet**
+- **enable agent to accept payments for tasks**
+- **Web3 tooling for on-chain actions**
+- **3rd party client integrations like Telegram or X.com**
 
-### **3. Start of truly autonomous AI agents [”Alive Agents”]**
+Imagine building an advanced agent like `@aixbt` to autonomously trade for you, but also selling users access to it’s private TG channel for latest alpha.
 
-**Operational Autonomy**
+See more example use cases here.
 
-Most AI agents today, despite the overall multi-billion dollar market valuation, remain susceptible to developer or centralized control—causing trust and reliability issues.
+### 3. Agents’ centralization and human-control
 
-Galadriel addresses this by providing **cryptographically verifiable autonomy**: once deployed, agents run strictly according to their code, protected by transparent security guarantees.
+Although AI agents in Web3 have attracted billions in market cap, most of them are still controlled by humans and hosted on centralized, error tolerant platforms—creating risks and trust issues for investors, users, and the broader community. 
 
-> 1.1. Enabled by Framework
->
->
-> Galadriel’s integrated dev framework ensures your agent’s logic is captured and executed precisely as written, reducing opportunities for hidden backdoors or tampering.
->
+Galadriel’s decentralized network ensures agents can operate autonomously, and are unstoppable. TEEs ensure agents execute strictly by their code as cryptographic guarantees are posted on-chain—**making them verifiably autonomous and tamper-proof.**
 
-> 1.2. Enabled by TEE Network
->
->
-> Leveraging Trusted Execution Environments (TEEs), Galadriel ensures agents operate within a secure, verifiable environment—significantly reducing the risk of unauthorized modifications or halts.
->
+## See next
 
-**Economic Autonomy**
+<CardGroup cols={2}>
+    <Card title="Agent framework"
+          href="/galadriel-network/get-started/agent-framework" icon="sitemap">
+        See what our agent framework unlocks for devs.
+    </Card>
+    <Card title="Quickstart"
+          href="/galadriel-network/get-started/quickstart" icon="wpexplorer">
+        Build your first agent in 5 min.
+    </Card>
+</CardGroup>
 
-While the concept of autonomous DeFi agents (DeFAI) has gained attention, most systems lack the built-in economy layer and multi-chain wallet support necessary for agents to earn, spend, and sustain themselves. Galadriel fills this gap, enabling **independent economic actors** that can manage their own revenue streams without constant developer intervention.
-
-> 2.1. Enabled by Crypto Rails and On-Chain Tooling
->
->
-> Galadriel’s native token infrastructure, agent-driven revenue mechanisms, and seamless multi-chain integrations empower agents to handle value transactions on their own—fostering a **self-sustaining agent economy**.
->
-
-## Why another Agent Framework?
-
-**10x Developer experience**
-
-Building AI agents is cumbersome due to a lack of clear documentation, streamlined tooling, and easy-to-use frameworks. Developers need out-of-the-box solutions for integrating with on- and off-chain data sources, as well as executing transactions on multiple DeFi protocols. Without these ready-made integrations, building sophisticated DeFAI agents becomes time-consuming and complex, slowing adoption and innovation.
-
-Galadriel solves these challenges by providing an L1 specifically designed for AI agents, ensuring autonomy, security, scalability, and economic sustainability while improving the developer experience.
+<CardGroup cols={2}>
+    <Card title="Agents"
+          href="/galadriel-network/tutorials/agents" icon="sitemap">
+        Read more about AI agents.
+    </Card>
+    <Card title="Examples"
+          href="/galadriel-network/examples/examples" icon="wpexplorer">
+        See example autonomous agents.
+    </Card>
+</CardGroup>
