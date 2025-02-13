@@ -10,11 +10,11 @@ This quickstart covers:
 
 ## Setup
 
-### Requirements
+### 1. Requirements
 
 Python >=3.10
 
-### Dev Environment
+### 2. Dev Environment
 
 First, set up your local environment and then install the `galadriel` Python package.
 
@@ -26,7 +26,7 @@ pip install galadriel
 
 ## Create a Simple Web Search Agent
 
-### Agent Code
+### 1. Agent Code
 
 Create a file named `agent.py` with the following Python code.
 
@@ -39,8 +39,7 @@ from galadriel.clients import SimpleMessageClient
 from galadriel.core_agent import LiteLLMModel, DuckDuckGoSearchTool
 
 # Set up the model (replace with your API key)
-OPENAI_API_KEY = "<YOUR_OPENAI_API_KEY>"
-model = LiteLLMModel(model_id="gpt-4o", api_key=OPENAI_API_KEY)
+model = LiteLLMModel(model_id="gpt-4o", api_key="<YOUR_OPENAI_API_KEY>")
 
 # Create the AI agent with web search capabilities
 agent = CodeAgent(

@@ -1,24 +1,24 @@
 ## Problems with existing frameworks
 
-While our team built Daige, we tried every major Web3 agent framework and ran into well-known issues most of them have:
+While our team built [Daige](https://www.daige.ai/), we tried every major Web3 agent framework and ran into well-known issues most of them have:
 
 1. **Rigid & Complex**: Too many layers of abstraction, making them hard to debug and extend.
 2. **Workflow-Focused**: They emphasize workflows over autonomous, goal-solving agents.
 3. **Overgrown & Hard to Customize**: Production often requires rewriting the whole framework from scratch.
 4. **Weak MVP Focus**: They can spin up basic agents quickly but struggle with truly powerful ones.
 
-We knew creating a world-class agent framework from scratch would take serious effort and R&D. That’s why our solution is built on [**smol-agents**](https://github.com/huggingface/smolagents) from Hugging Face—a lightweight, powerful library that enables autonomous agentic capabilities for LLMs.
+We knew creating a world-class agent framework from scratch would take serious effort and R&D. That’s why our solution is built on [**smolagents**](https://github.com/huggingface/smolagents) from Hugging Face—a lightweight, powerful library that enables autonomous agents.
 
 ## Galadriel framework
 
 Just as Solana leans on Rust, our framework is like the “SVM of agent frameworks”—highly optimized and tightly integrated for our L1.
 
-Together with smol-agents as base, Galadriel’s framework unlocks the building of autonomous agents with benefits from:
+Together with smolagents as base, Galadriel’s framework unlocks the building of autonomous agents with benefits from:
 
 1. **Simplicity**: ~1,000 lines of agent logic, minimal abstractions.
 2. **Autonomous Agents**: Build agents that plan and control their own workflows.
 3. **Broad Tool Support**: Integrations with [LangChain](https://huggingface.co/docs/smolagents/reference/tools#smolagents.Tool.from_langchain), [Anthropic's MCP](https://huggingface.co/docs/smolagents/reference/tools#smolagents.ToolCollection.from_mcp), and more.
-4. **Web3 Functionalities**: ****Out-of-the-box on- and off-chain tools, wallet integration, and payments.
+4. **Web3 Functionalities**: Out-of-the-box on- and off-chain tools, wallet integration, and payments.
 5. **Most used Clients**: Integrate your agent on X, TG, Discord, and other main clients.
 6. **Model-Agnostic**: Works with any LLM, local or hosted.
 7. **Modality-Agnostic**: Supports text, vision, video, and audio inputs.
