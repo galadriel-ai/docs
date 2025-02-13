@@ -109,7 +109,8 @@ Modify your script to include:
 from galadriel.tools.web3 import dexscreener
 ```
 
-Modify the `CodeAgent` to use the Web3 tool and add `additional_authorized_imports`:
+We are going to use [Dexscreener](https://dexscreener.com/)  to fetch market data. Dexscrener is a widely used Web3 tool to monitor crypto market data like prices, new tokens, etc.
+Modify the `CodeAgent` initialization:
 
 ```python
 agent = CodeAgent(
@@ -122,7 +123,10 @@ agent = CodeAgent(
 )
 ```
 
-💡 [Dexscreener](https://dexscreener.com/) is a widely used Web3 tool to monitor crypto market data like prices, new tokens, etc. Galadriel offers it out of the box as a tool to enable an agent to fetch market data across multiple chains.
+<Info>
+    Note `additional_authorized_imports=["json"]` parameter in the `CodeAgent` initialization.
+    It is required because `dexscreener.fetch_market_data` imports `json` module and the Python interpreter doesn’t allow imports by default outside of a safe list.
+</Info>
 
 Update the client’s input by asking a Web3-specific question:
 
