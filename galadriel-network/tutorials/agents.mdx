@@ -120,6 +120,55 @@ asyncio.run(runtime.run())
 
 ---
 
+## Multi-Agents
+
+Multi-agent systems enable several agents to work together on a task, often yielding better performance than a single monolithic agent. By dividing responsibilities among agents, you can achieve efficient specialization. For example, rather than filling the memory of a code-generating agent with the details of every webpage visited by a web search agent, you can separate these concerns by delegating tasks to specialized agents.
+
+### Key Concepts
+
+- **Specialization**: Each agent focuses on a specific sub-task, leveraging unique tool sets and memory.
+- **Delegation**: A manager agent can direct tasks to worker agents optimized for those tasks.
+
+### Implementation Example
+
+```python
+import asyncio
+from galadriel import AgentRuntime, CodeAgent
+from galadriel.clients import SimpleMessageClient
+from galadriel.core_agent import LiteLLMModel, DuckDuckGoSearchTool
+
+model = LiteLLMModel(model_id="gpt-4o", api_key="<ADD YOUR OPENAI KEY HERE>")
+
+managed_web_agent = CodeAgent(
+    tools=[DuckDuckGoSearchTool()],
+    model=model,
+    name="web_search",
+    description="Runs web searches for you. Give it your query as an argument.",
+)
+
+manager_agent = CodeAgent(tools=[], model=model, managed_agents=[managed_web_agent])
+
+client = SimpleMessageClient("What's the most recent of Daige on X (twitter)?")
+
+# Set up the runtime
+runtime = AgentRuntime(
+    agent=manager_agent,
+    inputs=[client],
+    outputs=[client],
+)
+
+# Run the agent
+asyncio.run(runtime.run())
+```
+This example demonstrates a manager-worker pattern using multiple agents:
+
+- **Manager Agent**: A CodeAgent that receives user queries and coordinates with specialized worker agents.
+- **Web Search Agent**: A worker agent equipped with DuckDuckGoSearchTool to handle web search requests.
+- **SimpleMessageClient**: Implements input/output interfaces to send queries and display results.
+- **AgentRuntime**: Connects the manager and worker agents with the client, orchestrating continuous execution.
+
+---
+
 ## Conclusion
 
 Agents in Galadriel empower you to build **autonomous AI systems** that:
