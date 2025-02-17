@@ -1,0 +1,121 @@
+---
+title: Payments Agent Tutorial
+---
+
+## Payments Agent Tutorial
+
+This tutorial will guide you through the process of setting up a Payments Agent using the Galadriel framework. The Payments Agent requires users to make SOL payments before executing tasks, providing a mechanism for monetizing agent interactions.
+
+### Prerequisites
+
+- **Python 3.10 or higher**: Ensure you have an appropriate version of Python installed.
+- **Galadriel framework**: Make sure you have the Galadriel framework installed in your environment. Follow installation instructions if necessary.
+- **Access to the Solana blockchain**: You will need to set up a wallet and have access to the Solana blockchain for transactions.
+
+### Step-by-Step Guide
+
+#### Step 1: Environment Setup
+
+Create a virtual environment and activate it:
+
+```bash
+python3 -m venv venv
+source venv/bin/activate
+```
+
+Install the Galadriel package:
+
+```bash
+pip install galadriel
+```
+
+Create an Agent Wallet that will receive SOL payments:
+You can use the Galadriel CLI to create or import a wallet for the agent.
+
+```bash
+galadriel wallet create
+```
+
+Note: Make sure to secure the wallet's private key.
+
+#### Step 2: Configure Environment Variables
+
+Create a \`.env\` file in your project directory and add the necessary API keys and wallet information:
+
+```dotenv
+OPENAI_API_KEY=your_openai_api_key
+TWITTER_CONSUMER_API_KEY=your_twitter_consumer_key  # If using Twitter client
+TWITTER_CONSUMER_API_SECRET=your_twitter_consumer_secret
+TWITTER_ACCESS_TOKEN=your_twitter_access_token
+TWITTER_ACCESS_TOKEN_SECRET=your_twitter_access_secret
+```
+
+#### Step 3: Create the Payments Agent
+
+Initialize the agent with code that includes the following components:
+
+```python
+import asyncio
+import os
+from pathlib import Path
+
+from dotenv import load_dotenv
+
+from galadriel import AgentRuntime, CodeAgent
+from galadriel.clients import SimpleMessageClient, TwitterMentionClient
+from galadriel.core_agent import LiteLLMModel
+from galadriel.entities import Pricing
+from galadriel.tools.web3 import dexscreener, coingecko
+
+load_dotenv(dotenv_path=Path('.') / '.env', override=True)
+
+model = LiteLLMModel(
+    model_id="openai/gpt-4o",
+    api_key=os.getenv("OPENAI_API_KEY"),
+)
+
+researcher = CodeAgent(
+    tools=[
+        coingecko.get_coin_price,
+        dexscreener.get_token_profile,
+    ],
+    model=model,
+    add_base_tools=True,
+)
+
+agent_pricing = Pricing(
+    wallet_address="your_agent_wallet_address",
+    cost=0.001,  # Price per task in SOL
+)
+
+simple_client = SimpleMessageClient(
+    "Is Bitcoin good investment now with high prices? transaction_signature"
+)
+
+runtime = AgentRuntime(
+    inputs=[simple_client],
+    outputs=[simple_client],
+    agent=researcher,
+    pricing=agent_pricing,
+)
+
+asyncio.run(runtime.run())
+```
+
+Make sure to replace \`your_agent_wallet_address\` with the actual wallet address configured earlier.
+
+#### Step 4: Execute the Agent
+
+Run your Payments Agent:
+
+```bash
+python agent.py
+```
+
+### Testing
+
+Your agent is now set to receive SOL payments and process requests when payment conditions are met. You can test the setup using the \`SimpleMessageClient\`. For broader integrations, consider using the \`TwitterMentionClient\` as demonstrated in the code.
+
+### Conclusion
+
+You've successfully set up a Payments Agent using the Galadriel framework. This agent structure not only provides an interactive interface for users but also integrates a payment gateway via the Solana blockchain, allowing you to monetize interactions efficiently.

@@ -1,0 +1,147 @@
+## Step-by-Step Tutorial: Creating a DeFAI Trading Agent in Galadriel
+
+This tutorial will guide you through creating a trading agent using the Galadriel framework. The agent will fetch trending cryptocurrencies, analyze market data, and autonomously decide trading actions.
+
+### Prerequisites
+
+- Python >= 3.10
+- OpenAI API Key
+- Coingecko API Key
+
+### Clone the Galadriel Repository
+
+Make sure you have the galadriel repository cloned to access the examples.
+
+```bash
+# Clone the repository if you haven't already
+git clone https://github.com/galadriel-ai/galadriel.git
+cd galadriel/examples/trading
+```
+
+### Step 1: Set Up Your Environment
+
+#### Create and Activate a Virtual Environment
+
+```bash
+python3 -m venv venv
+source venv/bin/activate
+```
+
+#### Install Requirements
+
+```bash
+pip install -r requirements.txt
+```
+
+### Step 2: Configure Environment Variables
+
+- Rename `template.env` to `.env`
+- Edit `.env` to Add Your API Keys and Network
+
+```plaintext
+OPENAI_API_KEY=your_openai_api_key
+COINGECKO_API_KEY=your_coingecko_api_key
+SOLANA_NETWORK="devnet" # or "mainnet"
+```
+
+- Rename `template.agents.env` to `agents.env`
+- Edit `agents.env` to Add Wallet Path
+
+```plaintext
+AGENT_NAME="trading_agent"
+SOLANA_KEY_PATH=your_solana_key_path
+```
+
+### Step 3: Understand the Trading Agent Code
+
+Open the `agent.py` file to follow along.
+
+#### Imports and Configuration
+
+The code imports necessary modules and tools including market data fetchers and trading tools from Solana’s ecosystem.
+
+```python
+from galadriel import AgentRuntime
+from galadriel.agent import CodeAgent
+from galadriel.core_agent import LiteLLMModel
+from galadriel.clients import Cron
+from galadriel.tools.web3.market_data import market_data_devnet
+from galadriel.tools.web3.onchain.solana import raydium_cpmm
+from galadriel.tools.web3.onchain.solana import common as solana_common
+```
+
+#### Define Trading Intervals
+
+```python
+TRADING_INTERVAL_SECONDS = 300  # 5 minutes
+```
+
+#### Set Up the LLM Model
+
+The LLM (GPT-4o) is configured with your OpenAI API Key.
+
+```python
+load_dotenv(dotenv_path=Path(".") / ".env", override=True)
+model = LiteLLMModel(
+    model_id="openai/gpt-4o",
+    api_key=os.getenv("OPENAI_API_KEY"),
+)
+```
+
+#### Configure Web3 Tools
+
+Add tools like market data fetchers and Raydium's CPMM tool for on-chain trading.
+
+```python
+tools = [
+    market_data_devnet.fetch_mock_market_data,
+    raydium_cpmm.BuyTokenWithSolTool(),
+    solana_common.GetAdminWalletAddressTool(),
+    solana_common.GetUserBalanceTool(),
+]
+```
+
+#### Create the Trading Agent
+
+Set up a CodeAgent that uses the above tools and models to perform trading.
+
+```python
+trading_agent = CodeAgent(
+    prompt_template=TRADING_PROMPT,
+    model=model,
+    tools=tools,
+    add_base_tools=True,
+    additional_authorized_imports=["json"],
+    max_steps=8,  # Increase reliability by allowing more steps
+)
+```
+
+#### Define the Agent Runtime
+
+The runtime manages execution intervals using a Cron client.
+
+```python
+runtime = AgentRuntime(
+    inputs=[Cron(TRADING_INTERVAL_SECONDS)],
+    outputs=[],
+    agent=trading_agent,
+)
+```
+
+### Step 4: Run the Agent
+
+Execute the following command in your terminal:
+
+```bash
+python agent.py
+```
+
+Your trading agent is now up and running, fetching market data and autonomously participating in trading actions based on the strategies it formulates.
+
+### Troubleshooting
+
+Ensure all API keys and paths are set correctly in the `.env` and `agents.env` files. Check the console for any error messages, especially around API connectivity or tool access errors.
+
+### Conclusion
+
+This tutorial demonstrated setting up and running a fully autonomous trading agent in Galadriel. By leveraging the Galadriel framework and Web3 tools, developers can create sophisticated agents capable of interacting with crypto markets autonomously.

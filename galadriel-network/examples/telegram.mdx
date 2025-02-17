@@ -1,0 +1,132 @@
+---
+title: Telegram Elon Musk Agent Tutorial
+description: Step-by-step guide to building a Telegram agent that simulates Elon Musk's personality using the Galadriel framework
+---
+
+## Telegram Elon Musk Agent Tutorial
+
+In this tutorial, we'll walk through the process of building a Telegram bot that simulates Elon Musk's personality using the Galadriel framework. The bot is capable of interacting with users in a Telegram chat while providing weather information and telling the current time.
+
+## Prerequisites
+
+- Basic knowledge of Python programming.
+- Python environment set up with the `galadriel` package installed.
+- A Telegram account to create and manage bots.
+
+## Setup and Installation
+
+### 1. Create a new Telegram Bot
+
+- Open Telegram and search for **BotFather**.
+- Start a chat and use the command `/newbot` to create a new bot.
+- Follow the instructions to set a name and a username for your bot.
+- Once created, copy the API token provided by BotFather.
+
+### 2. Environment Setup
+
+Ensure Python >=3.10 is installed on your machine.
+
+Create a virtual environment and install dependencies:
+
+```bash
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt  # Ensure requirements.txt lists Galadriel and other necessary libraries
+```
+
+### 3. Configure environment variables
+
+Create a `.env` file in the project directory and add your tokens:
+
+```ini
+OPENAI_API_KEY=your_openai_api_key
+TELEGRAM_TOKEN=your_telegram_bot_token
+COMPOSIO_API_KEY=your_composio_api_key
+```
+
+## Building Your Agent
+
+### 1. Define the Agent Behavior
+
+Create a file named `character_agent.py` and define your agent with a personality:
+
+```python
+import json
+from pathlib import Path
+
+from galadriel import ToolCallingAgent
+from galadriel.domain.prompts.format_prompt import load_agent_template
+from galadriel.entities import AgentMessage, Message
+
+DISCORD_SYSTEM_PROMPT = '''
+{{system}}
+
+# Task: You received a new message on Telegram from {{user_name}}. You must reply in the voice and style of {{agent_name}},
+'''
+
+class CharacterAgent(ToolCallingAgent):
+    def __init__(self, character_json_path: str, **kwargs):
+        super().__init__(**kwargs)
+        self.character_json_path = character_json_path
+
+    async def execute(self, message: Message) -> Message:
+        character_prompt = load_agent_template(DISCORD_SYSTEM_PROMPT, Path(self.character_json_path))
+        task_message = character_prompt.replace("{{message}}", message.content)
+        response = super().run(task=task_message)
+        return AgentMessage(content=response)
+```
+
+### 2. Add Custom Tools
+
+Define your tools, like getting the current time:
+
+```python
+def get_time(location: str) -> str:
+    from datetime import datetime
+    return f"The time in {location} is {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
+```
+
+### 3. Build the Agent Script
+
+Create `agent.py` and wire up the components:
+
+```python
+import asyncio
+import os
+from galadriel import AgentRuntime
+from galadriel.clients import TelegramClient
+from character_agent import CharacterAgent
+from galadriel.tools.composio_converter import convert_action
+from tools import get_time
+
+async def main():
+    model = LiteLLMModel(model_id="gpt-4o", api_key=os.getenv("OPENAI_API_KEY"))
+    composio_weather_tool = convert_action(os.getenv("COMPOSIO_API_KEY"), "WEATHERMAP_WEATHER")
+    agent = CharacterAgent(character_json_path="agent.json", tools=[composio_weather_tool, get_time], model=model)
+    client = TelegramClient(token=os.getenv("TELEGRAM_TOKEN"), logger=None)
+    runtime = AgentRuntime(inputs=[client], outputs=[client], agent=agent)
+    await runtime.run()
+
+if __name__ == "__main__":
+    asyncio.run(main())
+```
+
+## Run the Agent
+
+With your environment set and agent code in place, execute:
+
+```bash
+python agent.py
+```
+
+The bot should now be running! Interact with it via Telegram to see responses styled like Elon Musk.
+
+## Conclusion
+
+Congratulations! You have successfully created a Telegram bot using the Galadriel framework. This setup can be expanded by adding more tools, changing the agent personality, or integrating additional external APIs.
+
+## Next Steps
+
+- Add more functionalities like handling text commands or integrating more APIs.
+- Deploy your bot on a cloud platform for continuous availability.
+- Explore more agents and examples in the documentation.

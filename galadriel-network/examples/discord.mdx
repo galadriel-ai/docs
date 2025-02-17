@@ -1,0 +1,127 @@
+---
+title: Discord Agent Example
+description: Step-by-step tutorial on setting up the Discord Agent using the Galadriel framework.
+---
+
+## Overview
+
+This tutorial provides a step-by-step guide to creating a Discord agent using the Galadriel framework. This agent will simulate a personality (like Elon Musk) and can interact with users in real-time on a Discord server. The agent will have the capability to provide weather information, tell the current time using custom tools, and maintain context over conversations.
+
+## Prerequisites
+
+- **Python:** Ensure you have Python >=3.10 installed.
+- **Discord Bot:** You need a Discord bot set up, with a bot token acquired from the Discord Developer Portal.
+- **API Keys:** You'll need an OpenAI API key for the language model, and optionally a Composio API key if using related tools.
+
+## Setup
+
+### 1. Clone the Repository
+
+Start by cloning the Galadriel GitHub repository:
+
+```bash
+git clone https://github.com/galadriel-ai/galadriel.git
+```
+
+### 2. Create a Virtual Environment
+
+Navigate to the project directory and set up a virtual environment:
+
+```bash
+cd galadriel/examples/discord
+python3 -m venv venv
+source venv/bin/activate
+```
+
+### 3. Install Dependencies
+
+Install the required dependencies:
+
+```bash
+pip install -r requirements.txt
+```
+
+### 4. Set Up Environment Variables
+
+Create a `.env` file in the discord directory with the following content:
+(note: composio api key is optional, you can use it to add more tools to the agent)
+
+```ini
+DISCORD_TOKEN=<your_discord_bot_token>
+DISCORD_GUILD_ID=<your_discord_guild_id>
+OPENAI_API_KEY=<your_openai_api_key>
+COMPOSIO_API_KEY=<your_composio_api_key>
+```
+
+### 5. Configure Agent Character Traits
+
+Ensure you have a file named `agent.json` in the same directory. This file defines the agent's personality traits:
+
+```json
+{
+  "name": "Elon Musk",
+  "system": "You are roleplaying as Elon Musk...",
+  "bio": ["Entrepreneur focused on..."],
+  "lore": ["Sold PayPal to focus on..."],
+  "knowledge": ["Rocket engineering..."],
+  "style": {"post": ["keep it short..."]}
+}
+```
+
+### 6. Implement the Agent Code
+
+In your `agent.py`, implement the agent's behavior:
+
+```python
+from galadriel.core_agent import LiteLLMModel
+from dotenv import load_dotenv
+from pathlib import Path
+
+from character_agent import CharacterAgent
+from galadriel.tools.composio_converter import convert_action
+from tools import get_time
+from galadriel import AgentRuntime
+from galadriel.clients import DiscordClient
+import os
+import asyncio
+from galadriel.logging_utils import get_agent_logger
+
+# Load environment variables
+load_dotenv(dotenv_path=Path(".") / ".env", override=True)
+model = LiteLLMModel(model_id="gpt-4o", api_key=os.getenv("OPENAI_API_KEY"))
+
+logger = get_agent_logger()
+
+# Setup Discord client which pushes and sends messages
+discord_client = DiscordClient(guild_id=os.getenv("DISCORD_GUILD_ID"))
+
+composio_weather_tool = convert_action(os.getenv("COMPOSIO_API_KEY"), "WEATHERMAP_WEATHER")
+
+elon_musk_agent = CharacterAgent(
+    character_json_path="agent.json",
+    tools=[get_time, composio_weather_tool],
+    model=model,
+)
+
+runtime = AgentRuntime(
+    inputs=[discord_client],
+    outputs=[discord_client],
+    agent=elon_musk_agent,
+)
+
+asyncio.run(runtime.run())
+```
+
+### 7. Run the Agent
+
+Execute the script to start the agent:
+
+```bash
+python agent.py
+```
+
+## Conclusion
+
+Congratulations! You now have a fully functional Discord agent capable of interacting with users in real-time and simulating a specific persona. Experiment with different personalities, expand the toolset, or enhance the logic to see what unique interactions you can create.
+
+For more information, check the Galadriel documentation or explore other examples in the repository.

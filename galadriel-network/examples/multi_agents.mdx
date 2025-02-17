@@ -1,0 +1,118 @@
+---
+title: Multi-Agents with Galadriel Framework
+---
+
+## Introduction
+
+In this tutorial, we'll walk through building a multi-agent system using the Galadriel framework. This system will demonstrate how agents can collaborate to solve complex tasks by delegating work among specialized agents. This is useful for scenarios where different tasks require different sets of capabilities or resources.
+
+## Prerequisites
+
+Before you begin, ensure you have the following:
+
+- Python 3.10 or later
+- An understanding of asynchronous programming in Python
+- Basic knowledge of Large Language Models (LLMs) and AI agents
+- Galadriel framework installed
+
+## Step 1: Setting Up the Environment
+
+### Installing Galadriel
+
+Firstly, you'll need to set up a virtual environment and install the Galadriel package:
+
+```bash
+python3 -m venv venv
+git clone <repository-url>
+source venv/bin/activate
+pip install ./galadriel-ai-galadriel
+```
+
+### Environment Configuration
+
+Ensure your environment is configured with the necessary API keys and dependencies. Create a `.env` file in your project directory with your API Key:
+
+```ini
+OPENAI_API_KEY=your-openai-api-key
+```
+
+## Step 2: Creating the Agents
+
+### Creating a Web Search Agent
+
+We will start by creating a worker agent specialized in performing web searches. This agent will use the `DuckDuckGoSearchTool` to fulfill search requests.
+
+#### Define the Web Search Agent:
+
+```python
+import os
+from galadriel.core_agent import LiteLLMModel, DuckDuckGoSearchTool
+from galadriel import CodeAgent
+
+model = LiteLLMModel(model_id="gpt-4o", api_key=os.getenv("OPENAI_API_KEY"))
+
+web_search_agent = CodeAgent(
+    tools=[DuckDuckGoSearchTool()],
+    model=model,
+    name="web_search",
+    description="This agent performs web searches."
+)
+```
+
+### Creating a Manager Agent
+
+Next, we will create a manager agent responsible for coordinating tasks and delegating them to the appropriate worker agents.
+
+#### Define the Manager Agent:
+
+```python
+from galadriel import CodeAgent
+
+manager_agent = CodeAgent(
+    tools=[],
+    model=model,
+    managed_agents=[web_search_agent],
+)
+```
+
+## Step 3: Setting Up the Runtime
+
+### Define Simple Client
+
+For testing, we'll use a `SimpleMessageClient` to send a query to the manager agent.
+
+```python
+from galadriel.clients import SimpleMessageClient
+
+client = SimpleMessageClient("What's the latest news on DeFi on X (Twitter)?")
+```
+
+### Configure the Runtime
+
+Bring all the components together in an `AgentRuntime`:
+
+```python
+from galadriel import AgentRuntime
+
+runtime = AgentRuntime(
+    agent=manager_agent,
+    inputs=[client],
+    outputs=[client],
+)
+```
+
+## Step 4: Running the System
+
+Finally, execute your multi-agent system:
+
+```python
+import asyncio
+
+asyncio.run(runtime.run())
+```
+
+Once executed, the manager agent will handle the client request and utilize the web search agent to fetch necessary information.
+
+## Conclusion
+
+In this tutorial, we demonstrated how to build a multi-agent system using the Galadriel framework. By dividing tasks among specialized agents, you can develop efficient, scalable AI systems capable of autonomously accomplishing complex objectives involving distinct workflows. This foundation can be expanded with additional agents and tools, tailored to your specific application needs.
