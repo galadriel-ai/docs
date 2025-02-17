@@ -1,0 +1,165 @@
+---                                                                                                                              
+title: Twitter Agent Tutorial                                                                                                                    
+---                                                                                                                                              
+                                                                                                                                                
+This tutorial guides you through creating a Twitter agent that automatically posts tweets at regular intervals using the Galadriel framework.    
+                                                                                                                                                
+## Prerequisites                                                                                                                                 
+                                                                                                                                                
+- Python 3.10 or higher                                                                                                                          
+- A Twitter developer account with API keys                                                                                                      
+- An OpenAI API key                                                                                                                              
+                                                                                                                                                
+## Step 1: Set Up the Development Environment                                                                                                    
+                                                                                                                                                
+1.  Create a virtual environment:                                                                                                                
+                                                                                                                                                
+    ```bash                                                                                                                                      
+    python3 -m venv venv                                                                                                                         
+    source venv/bin/activate                                                                                                                     
+    ```                                                                                                                                          
+                                                                                                                                                
+2.  Install Galadriel:                                                                                                                           
+                                                                                                                                                
+    ```bash                                                                                                                                      
+    pip install galadriel                                                                                                                        
+    ```                                                                                                                                          
+                                                                                                                                                
+## Step 2: Obtain Twitter API Keys                                                                                                               
+                                                                                                                                                
+1.  Create a Twitter developer account at [https://developer.x.com/](https://developer.x.com/).                                                  
+2.  Create a new app and obtain the following credentials:                                                                                       
+    -   Consumer API Key                                                                                                                         
+    -   Consumer API Secret                                                                                                                      
+    -   Access Token                                                                                                                             
+    -   Access Token Secret                                                                                                                      
+                                                                                                                                                
+    Ensure that the user authentication is set up with write access.                                                                             
+                                                                                                                                                
+## Step 3: Set Up Environment Variables                                                                                                          
+                                                                                                                                                
+1.  Create a file named `.env` in your project directory.                                                                                        
+2.  Add the following environment variables to the `.env` file:                                                                                  
+                                                                                                                                                
+    ```                                                                                                                                          
+    OPENAI_API_KEY=<YOUR_OPENAI_API_KEY>                                                                                                         
+    TWITTER_CONSUMER_API_KEY=<YOUR_TWITTER_CONSUMER_API_KEY>                                                                                     
+    TWITTER_CONSUMER_API_SECRET=<YOUR_TWITTER_CONSUMER_API_SECRET>                                                                               
+    TWITTER_ACCESS_TOKEN=<YOUR_TWITTER_ACCESS_TOKEN>                                                                                             
+    TWITTER_ACCESS_TOKEN_SECRET=<YOUR_TWITTER_ACCESS_TOKEN_SECRET>                                                                               
+    ```                                                                                                                                          
+                                                                                                                                                
+    Replace the placeholder values with your actual API keys and tokens.                                                                         
+                                                                                                                                                
+    Optionally, to skip the actual Twitter posting and just print the results, add:                                                              
+                                                                                                                                                
+    ```                                                                                                                                          
+    DRY_RUN=true                                                                                                                                 
+    ```                                                                                                                                          
+                                                                                                                                                
+## Step 4: Create the Twitter Agent                                                                                                              
+                                                                                                                                                
+1.  Create a file named `twitter_agent.py` with the following code:                                                                              
+                                                                                                                                                
+    ```python                                                                                                                                    
+    import asyncio                                                                                                                               
+    import os                                                                                                                                    
+    from pathlib import Path                                                                                                                     
+                                                                                                                                                
+    from dotenv import load_dotenv                                                                                                               
+                                                                                                                                                
+    from galadriel import CodeAgent                                                                                                              
+    from galadriel import AgentRuntime                                                                                                           
+    from galadriel.clients import Cron                                                                                                           
+    from galadriel.core_agent import LiteLLMModel                                                                                                
+    from galadriel.tools.twitter import TwitterPostTool                                                                                          
+                                                                                                                                                
+    load_dotenv(dotenv_path=Path(".") / ".env", override=True)                                                                                   
+    llm_model = LiteLLMModel(model_id="gpt-4o", api_key=os.getenv("OPENAI_API_KEY"))                                                             
+                                                                                                                                                
+    POST_INTERVAL_SECONDS = 3 * 60 * 60  # 3 hours                                                                                               
+                                                                                                                                                
+    AGENT_PROMPT = """                                                                                                                           
+    You are a humorous Twitter user.                                                                                                             
+    Every time you are called:                                                                                                                   
+    1. Generate a short tweet (1-2 sentences). About any topic.                                                                                  
+    2. Post the tweet.                                                                                                                           
+    """                                                                                                                                          
+                                                                                                                                                
+    agent = CodeAgent(                                                                                                                           
+        prompt_template=AGENT_PROMPT,                                                                                                            
+        model=llm_model,                                                                                                                         
+        tools=[TwitterPostTool()],                                                                                                               
+    )                                                                                                                                            
+                                                                                                                                                
+    runtime = AgentRuntime(                                                                                                                      
+        agent=agent,                                                                                                                             
+        inputs=[Cron(POST_INTERVAL_SECONDS)],                                                                                                    
+        outputs=[],  # No output, posting happens inside Agent                                                                                   
+    )                                                                                                                                            
+                                                                                                                                                
+    asyncio.run(runtime.run())                                                                                                                   
+    ```                                                                                                                                          
+                                                                                                                                                
+    Key components:                                                                                                                              
+                                                                                                                                                
+    -   `LiteLLMModel`: Loads the OpenAI GPT-4o model.                                                                                           
+    -   `TwitterPostTool`: Enables posting tweets to Twitter.                                                                                    
+    -   `CodeAgent`: Creates the agent with the specified prompt and tools.                                                                      
+    -   `Cron`: Triggers the agent to run every 3 hours.                                                                                         
+    -   `AgentRuntime`: Manages the execution of the agent.                                                                                      
+                                                                                                                                                
+## Step 5: Run the Agent                                                                                                                         
+                                                                                                                                                
+Execute the script:                                                                                                                              
+                                                                                                                                                
+The agent will now run automatically, generating and posting tweets every 3 hours. If `DRY_RUN=true` is set, it will print the generated tweets  
+to the console instead of posting them to Twitter.                                                                                               
+                                                                                                                                                
+## Example using tweet from output client                                                                                                        
+                                                                                                                                                
+Create a file named `twitter_agent.py` with the following code:                                                                                  
+                                                                                                                                                
+```python                                                                                                                                    
+import asyncio                                                                                                                               
+import os                                                                                                                                    
+from pathlib import Path                                                                                                                     
+                                                                                                                                            
+from dotenv import load_dotenv                                                                                                               
+                                                                                                                                            
+from galadriel import CodeAgent                                                                                                              
+from galadriel import AgentRuntime                                                                                                           
+from galadriel.clients import Cron                                                                                                           
+from galadriel.clients.twitter_post_client import TwitterPostClient                                                                          
+from galadriel.core_agent import LiteLLMModel                                                                                                
+                                                                                                                                            
+load_dotenv(dotenv_path=Path(".") / ".env", override=True)                                                                                   
+llm_model = LiteLLMModel(model_id="gpt-4o", api_key=os.getenv("OPENAI_API_KEY"))                                                             
+                                                                                                                                            
+POST_INTERVAL_SECONDS = 5                                                                                                                    
+                                                                                                                                            
+AGENT_PROMPT = """                                                                                                                           
+You are a humorous Twitter user.                                                                                                             
+Generate a short tweet (1-2 sentences). About any topic.                                                                                     
+"""                                                                                                                                          
+                                                                                                                                            
+agent = CodeAgent(                                                                                                                           
+    prompt_template=AGENT_PROMPT,                                                                                                            
+    model=llm_model,                                                                                                                         
+    tools=[],                                                                                                                                
+)                                                                                                                                            
+                                                                                                                                            
+runtime = AgentRuntime(                                                                                                                      
+    agent=agent,                                                                                                                             
+    inputs=[Cron(POST_INTERVAL_SECONDS)],                                                                                                    
+    outputs=[TwitterPostClient()],                                                                                                           
+)                                                                                                                                            
+                                                                                                                                            
+asyncio.run(runtime.run())                                                                                                                   
+```                                                                                                                                          
+                                                                                                                                                
+## Conclusion                                                                                                                                    
+                                                                                                                                                
+You have now created a fully autonomous Twitter agent using the Galadriel framework. This agent runs continuously, generating and posting        
+tweets without any manual intervention. You can further customize the agent by modifying the prompt, adding more tools, and adjusting the        
+posting interval. 

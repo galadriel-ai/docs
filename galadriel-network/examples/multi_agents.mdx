@@ -1,0 +1,73 @@
+title: Multi-Agent System Tutorial
+description: Learn how to build a multi-agent system using the Galadriel framework.
+---
+
+## Introduction
+
+This tutorial guides you through building a multi-agent system using the Galadriel framework. Multi-agent systems enable several agents to work 
+together on a task, often yielding better performance than a single monolithic agent. By dividing responsibilities among agents, you can achieve 
+efficient specialization.
+
+## Prerequisites
+
+- Python >=3.10
+- Galadriel installed (see [Quickstart](/galadriel-network/get-started/quickstart) for installation instructions)
+- OpenAI API key set in your environment
+
+## Step 1: Define the Agents
+
+In this example, we will create a manager-worker pattern with two agents:
+
+-   **Manager Agent**: This agent receives user queries and coordinates with the worker agent.
+-   **Web Search Agent**: This specialized worker agent uses the `DuckDuckGoSearchTool` to perform web searches.
+
+Create two CodeAgents:
+
+### Web Search Agent (Worker)
+
+This agent is responsible for performing web searches based on queries provided by the manager agent.
+
+### Manager Agent
+
+This agent receives the initial query and orchestrates the workflow, delegating web search tasks to the `managed_web_agent` when necessary.
+
+## Step 2: Set up the Client
+
+Create a `SimpleMessageClient` to provide input to the manager agent. This client will simulate user queries.
+
+## Step 3: Configure the Agent Runtime
+
+The `AgentRuntime` manages the execution of the agents, connecting the input client, manager agent, and output client.
+
+## Step 4: Run the Multi-Agent System
+
+Start the agent runtime using asyncio:
+
+## Complete Code
+
+Here's the complete code for the multi-agent system:
+
+## Step 5: Run the agent
+
+To execute the multi-agent system, save the code above in `agent.py` file.
+Make sure to create `template.env` file and set OPENAI_API_KEY environment variable inside it.
+Finally, run the script:
+
+## Architecture
+
+The example showcases a hierarchical agent system using the manager-worker pattern:
+
+-   The **Manager Agent** receives user queries and delegates tasks to the **Web Search Agent** using specified tools.
+-   The **Web Search Agent** executes web searches and returns the findings to the manager agent.
+-   The **AgentRuntime** connects all the agents to input and output `Clients`, and takes care of the agent execution lifecycle.
+
+## Conclusion
+
+This tutorial demonstrated how to build a multi-agent system using Galadriel, leveraging the `CodeAgent` and `DuckDuckGoSearchTool` to create a 
+manager-worker architecture. By specializing and delegating tasks to individual agents, you can achieve efficient and scalable solutions.
+
+Next Steps:
+
+- Review the [examples](/galadriel-network/examples/examples) page for more agent system examples.
+- Experiment with other available tools and managed agents to build more complex systems.
+- Learn more about agents and their capabilities in the [Agents](/galadriel-network/tutorials/agents) tutorial.
