@@ -92,9 +92,15 @@
             ]
           },
           {
-            "group": "Examples",
+            "group": "Examples - Tutorials",
             "pages": [
-              "galadriel-network/examples/examples"
+              "galadriel-network/examples/examples",
+              "galadriel-network/examples/trading",
+              "galadriel-network/examples/payments",
+              "galadriel-network/examples/discord",
+              "galadriel-network/examples/telegram",
+              "galadriel-network/examples/twitter",
+              "galadriel-network/examples/multi_agents"
             ]
           }
         ]

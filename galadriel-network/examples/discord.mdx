@@ -1,5 +1,5 @@
 ---
-title: Build a Discord Agent with Galadriel
+title: Discord Agent
 ---
 
 This tutorial will walk you through building a Discord agent using the Galadriel framework. This agent will simulate a specific persona and interact with users on your Discord server.
@@ -23,17 +23,31 @@ This tutorial will walk you through building a Discord agent using the Galadriel
 
 ## Step 2: Create a Galadriel Agent Project
 
-1.  **Initialize the Agent:** Open your terminal, navigate to the desired project directory, and run the following command:
+1.  **Clone the Galadriel repository:**
 
     ```bash
-    galadriel agent init
+    git clone <repository_url>
+    cd galadriel/examples/discord
     ```
 
-    You will be prompted to enter an agent name. Choose something descriptive, like `discord_agent`.
+    Replace `<repository_url>` with the actual URL of the Galadriel repository.
+
+2.  **Create a virtual environment:**
+
+    ```bash
+    python3 -m venv venv
+    source venv/bin/activate
+    ```
+
+3.  **Install the Galadriel framework:**
+
+    ```bash
+    pip install galadriel
+    ```
 
 ## Step 3: Configure Your Agent
 
-1.  **Set Environment Variables:** Rename the `template.env` file to `.env` in the root of your agent directory. Populate it with the necessary environment variables:
+1.  **Set Environment Variables:** Create a `.env` file in the root of your agent directory. Populate it with the necessary environment variables:
 
     ```bash
     DISCORD_TOKEN=<YOUR_DISCORD_BOT_TOKEN>

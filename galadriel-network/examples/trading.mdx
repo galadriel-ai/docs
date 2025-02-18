@@ -29,12 +29,10 @@ swaps using the Galadriel framework.
     source venv/bin/activate
     ```
 
-3.  **Install the required dependencies:**
+3.  **Install the Galadriel framework:**
 
     ```bash
-    pip install -r requirements.txt
-    cd examples/trading
-    pip install -r requirements.txt
+    pip install galadriel
     ```
 
 4.  **Configure environment variables:**
@@ -85,8 +83,7 @@ swaps using the Galadriel framework.
 
     # Set up a complex trading prompt which explains the trading strategy
     TRADING_PROMPT = """
-            You are an expert crypto trading advisor. Based on the user's portfolio, current market data, and trading patterns, your task is to 
-suggest one of three actions for each token: Buy, Sell, or Hold, and execute your decision using the available tools.
+            You are an expert crypto trading advisor. Based on the user's portfolio, current market data, and trading patterns, your task is to suggest one of three actions for each token: Buy, Sell, or Hold, and execute your decision using the available tools.
             """
 
     load_dotenv(dotenv_path=Path(".") / ".env", override=True)
