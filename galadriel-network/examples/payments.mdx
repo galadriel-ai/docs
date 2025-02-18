@@ -1,0 +1,174 @@
+---
+title: Payments Agent
+---
+
+This tutorial demonstrates how to create a research agent that receives SOL payments from users before executing tasks. The agent analyzes investment-related queries and retrieves data from Web3 tools.
+
+## Overview
+
+The agent leverages:
+
+-   `gpt-4o` model from OpenAI for language processing.
+-   `CodeAgent` to orchestrate a series of steps toward a final result.
+-   `AgentRuntime` to connect clients to the agent and manage execution.
+-   **Clients:**
+    -   `SimpleMessageClient` for local testing with predefined messages.
+    -   *(Optional)* `TwitterMentionClient` for processing mentions on Twitter.
+-   **Web3 Tools:**
+    -   `get_coin_price` (CoinGecko) to fetch real-time cryptocurrency prices.
+    -   `get_token_profile` (DexScreener) to retrieve token profiles.
+-   A **Pricing Mechanism** using Solana (SOL) payments.  The agent will validate payment before executing the task.
+
+### Payment & Transaction Requirements
+
+To use the agent, a client (user) must provide a task with *either*:
+
+- A link to a Solana transaction (e.g., from Solscan)
+- A transaction signature on the Solana blockchain
+
+## Setup
+
+1.  **Local Environment & Galadriel Installation:**
+
+    ```bash
+    python3 -m venv venv
+    source venv/bin/activate
+    pip install galadriel
+    ```
+
+2.  **Agent Wallet Creation:**
+
+    The agent needs a Solana wallet to receive payments. If you don't have one, create a new one. The tutorial is described in [Wallet Tutorial](galadriel-network/tutorials/wallet.mdx).
+
+3.  **Environment Variables Configuration:**
+
+    Rename `template.env` to `.env` and populate it with your OpenAI API key, agent wallet address, and optional Twitter API credentials (if using `TwitterMentionClient`):
+
+    ```bash
+    OPENAI_API_KEY=<YOUR_OPENAI_API_KEY>
+    TWITTER_CONSUMER_API_KEY=<YOUR_TWITTER_CONSUMER_API_KEY> #Optional
+    TWITTER_CONSUMER_API_SECRET=<YOUR_TWITTER_CONSUMER_API_SECRET> #Optional
+    TWITTER_ACCESS_TOKEN=<YOUR_TWITTER_ACCESS_TOKEN> #Optional
+    TWITTER_ACCESS_TOKEN_SECRET=<YOUR_TWITTER_ACCESS_TOKEN_SECRET> #Optional
+    TWITTER_USER_ID=<YOUR_TWITTER_USER_ID> #Optional
+    ```
+
+    *   Make sure you have configured `SOLANA_KEY_PATH` in .agents.env file to point the path to your Solana wallet
+
+4.  **Agent Code (`agent.py`):**
+
+    Create a file named `agent.py` with the following Python code.  Remember to replace placeholders with your actual values.
+
+    ```python
+    import asyncio
+    import os
+    from pathlib import Path
+
+    from dotenv import load_dotenv
+
+    from galadriel import AgentRuntime, CodeAgent
+    from galadriel.clients import SimpleMessageClient
+    # from galadriel.clients import TwitterMentionClient #Uncomment to enable Twitter client
+    from galadriel.core_agent import LiteLLMModel
+    from galadriel.entities import Pricing
+    from galadriel.tools.web3 import dexscreener, coingecko
+
+    load_dotenv(dotenv_path=Path(".") / ".env", override=True)
+
+    model = LiteLLMModel(
+        model_id="openai/gpt-4o",
+        api_key=os.getenv("OPENAI_API_KEY"),
+    )
+
+    # Set up a researcher who will perform Web3 related tasks
+    researcher = CodeAgent(
+        tools=[
+            coingecko.get_coin_price,
+            dexscreener.get_token_profile,
+        ],
+        model=model,
+        add_base_tools=True,
+        additional_authorized_imports=["json"],
+    )
+
+    # Configure agent's pricing information
+    agent_pricing = Pricing(
+        wallet_address="<YOUR_AGENT_WALLET_ADDRESS>",  # Replace with the agent's wallet address
+        cost=0.001,  # Price per task in SOL
+    )
+
+    # The client will pass a research task to the agent with either
+    # - a link to the transaction on Solscan
+    # - a signature of transaction of Solana
+    # Example transaction passed to SimpleMessageClient below:
+    # https://explorer.solana.com/tx/5aqB4BGzQyFybjvKBjdcP8KAstZo81ooUZnf64vSbLLWbUqNSGgXWaGHNteiK2EJrjTmDKdLYHamJpdQBFevWuvy
+    simple_client = SimpleMessageClient(
+        "Is Bitcoin good investment now with high prices? https://solscan.io/tx/5aqB4BGzQyFybjvKBjdcP8KAstZo81ooUZnf64vSbLLWbUqNSGgXWaGHNteiK2EJrjTmDKdLYHamJpdQBFevWuvy",
+    )
+
+    # Alternatively, Twitter (or Discord, Telegram) client which can be passed to inputs and outputs in order to get tasks from social channels
+    # twitter_client = TwitterMentionClient(
+    #     TwitterCredentials(
+    #         consumer_api_key=os.getenv("TWITTER_CONSUMER_API_KEY"),
+    #         consumer_api_secret=os.getenv("TWITTER_CONSUMER_API_SECRET"),
+    #         access_token=os.getenv("TWITTER_ACCESS_TOKEN"),
+    #         access_token_secret=os.getenv("TWITTER_ACCESS_TOKEN_SECRET"),
+    #     ),
+    #     user_id=os.getenv("TWITTER_USER_ID"),
+    # )
+
+    # Combine all elements into runtime
+    runtime = AgentRuntime(
+        inputs=[simple_client],  # Runtime inputs, pass twitter_client if you use it
+        outputs=[simple_client],  # Runtime outputs, pass twitter_client if you use it
+        agent=researcher,
+        pricing=agent_pricing,
+    )
+
+    # Run the runtime with agent
+    asyncio.run(runtime.run())
+    ```
+
+    *Code Explanation:*
+
+    *   **Imports**: Imports necessary libraries and modules.
+    *   **Environment Variables**: Loads environment variables from a `.env` file.
+    *   **Model Setup**: Initializes the `LiteLLMModel` with the specified model ID and API key.
+    *   **Tool Setup**:
+
+        *   Initializes `coingecko.get_coin_price` and `dexscreener.get_token_profile`
+
+    *   **Agent Setup**:
+
+        *   Initializes the `CodeAgent` with the specified tools
+
+    *   **Client Setup**:
+
+        *   Initializes the `SimpleMessageClient` with a sample question and Solana transaction link.
+
+    *   **Runtime Setup**:
+
+        *   Initializes the `AgentRuntime` with the agent, pricing, input, and output.
+
+5.  **Run the agent:**
+
+    ```bash
+    python agent.py
+    ```
+
+## Optional: Running the agent with Twitter Client
+
+**To use the Twitter client, you have to set** `TWITTER_CONSUMER_API_KEY`**,** `TWITTER_CONSUMER_API_SECRET`**,** `TWITTER_ACCESS_TOKEN` **and** `TWITTER_ACCESS_TOKEN_SECRET` **environment variables defined inside .env file.**
+
+1.  **Uncomment Twitter related code snippets:**
+    *   `TwitterMentionClient` import statement
+    *   `twitter_client` initialization with the proper credentials
+    *   Pass `twitter_client` client to the `AgentRuntime` arguments for `inputs` and `outputs`
+
+2.  **Run the agent:**
+
+    ```bash
+    python agent.py
+    ```
+
+The agent will now monitor Twitter mentions, check the transaction signature for payment, and provide its analysis if payment validation is successful.

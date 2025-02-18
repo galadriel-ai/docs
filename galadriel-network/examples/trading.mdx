@@ -1,0 +1,170 @@
+---
+title: DeFAI Trading Agent
+---
+
+This tutorial guides you through building a trading agent that fetches trending coins, gets market data, performs analysis, and executes token 
+swaps using the Galadriel framework.
+
+## Prerequisites
+
+-   Python >=3.10
+-   Git
+-   Familiarity with blockchain concepts and Solana development (optional)
+
+## Setup
+
+1.  **Clone the Galadriel repository:**
+
+    ```bash
+    git clone <repository_url>
+    cd galadriel
+    ```
+
+    Replace `<repository_url>` with the actual URL of the Galadriel repository.
+
+2.  **Create a virtual environment:**
+
+    ```bash
+    python3 -m venv venv
+    source venv/bin/activate
+    ```
+
+3.  **Install the Galadriel framework:**
+
+    ```bash
+    pip install galadriel
+    ```
+
+4.  **Configure environment variables:**
+
+    *   Rename `template.env` to `.env` and add your OpenAI API and Coingecko API keys:
+
+        ```
+        OPENAI_API_KEY=<YOUR_OPENAI_API_KEY>
+        COINGECKO_API_KEY=<YOUR_COINGECKO_API_KEY>
+        SOLANA_NETWORK="devnet" # devnet, mainnet
+        ```
+
+    *   Rename `template.agents.env` to `agents.env` and add your Solana keypair path:
+
+        ```
+        AGENT_NAME="trading_agent"
+        SOLANA_KEY_PATH=<YOUR_SOLANA_KEYPAIR_PATH>
+        ```
+
+        If you don't have a Solana keypair, you can create one using the Galadriel CLI (see [Wallet Setup](/galadriel-network/tutorials/wallet)):
+
+        ```bash
+        galadriel wallet create --path <YOUR_SOLANA_KEYPAIR_PATH>
+        ```
+
+## Agent Implementation
+
+1.  **Create the `agent.py` file:**
+
+    Create a new file named `agent.py` in the `examples/trading` directory and add the following code:
+
+    ```python
+    import asyncio
+    import os
+    from pathlib import Path
+
+    from dotenv import load_dotenv
+
+    from galadriel import AgentRuntime
+    from galadriel.agent import CodeAgent
+    from galadriel.core_agent import LiteLLMModel
+    from galadriel.clients import Cron
+    from galadriel.tools.web3.market_data import market_data_devnet
+    from galadriel.tools.web3.onchain.solana import raydium_cpmm
+    from galadriel.tools.web3.onchain.solana import common as solana_common
+
+    TRADING_INTERVAL_SECONDS = 300
+
+    # Set up a complex trading prompt which explains the trading strategy
+    TRADING_PROMPT = """
+            You are an expert crypto trading advisor. Based on the user's portfolio, current market data, and trading patterns, your task is to suggest one of three actions for each token: Buy, Sell, or Hold, and execute your decision using the available tools.
+            """
+
+    load_dotenv(dotenv_path=Path(".") / ".env", override=True)
+    load_dotenv(dotenv_path=Path(".") / ".agents.env", override=True)
+
+    model = LiteLLMModel(
+        model_id="openai/gpt-4o",
+        api_key=os.getenv("OPENAI_API_KEY"),
+    )
+
+    # Prepare a Web3 specific toolkit, relevant for the trading agent
+    tools = [
+        market_data_devnet.fetch_mock_market_data,
+        raydium_cpmm.BuyTokenWithSolTool(),
+        solana_common.GetAdminWalletAddressTool(),
+        solana_common.GetUserBalanceTool(),
+    ]
+
+    # Create a trading agent
+    trading_agent = CodeAgent(
+        prompt_template=TRADING_PROMPT,
+        model=model,
+        tools=tools,
+        add_base_tools=True,
+        additional_authorized_imports=["json"],
+        max_steps=8,  # Make the trading agent more reliable by increasing the number of steps he can take to complete the task
+    )
+
+    # Set up the runtime
+    runtime = AgentRuntime(
+        inputs=[Cron(TRADING_INTERVAL_SECONDS)],
+        outputs=[],
+        agent=trading_agent,
+    )
+
+    # Run the agent
+    asyncio.run(runtime.run())
+    ```
+
+## Code Explanation
+
+### Imports
+
+The code imports necessary modules from the Galadriel framework and standard Python libraries.
+
+### Configuration
+
+The code loads environment variables from `.env` and `agents.env` files, initializes the LiteLLM model with your OpenAI API key, and defines the 
+trading interval.
+
+### Tools
+
+The code defines the tools that the agent will use:
+
+*   `market_data_devnet.fetch_mock_market_data`: Fetches mock market data for development purposes.
+*   `raydium_cpmm.BuyTokenWithSolTool()`: Tool for buying tokens with SOL using Raydium CPMM.
+*   `solana_common.GetAdminWalletAddressTool()`: Tool to get the admin wallet address.
+*   `solana_common.GetUserBalanceTool()`: Tool to get the user's balance for a specific token.
+
+### Agent Initialization
+
+The code initializes the `CodeAgent` with the trading prompt, LiteLLM model, and the defined tools.  It also enables additional authorized imports 
+such as `json` that might be required by the tools.  Setting `max_steps` makes the trading agent more reliable by increasing the number of steps it
+can take to complete the task
+
+### Runtime Configuration
+
+The code configures the `AgentRuntime` with a `Cron` input to schedule agent execution, no outputs (as the agent executes trades directly), and the
+initialized trading agent.
+
+### Start the Agent
+
+The code runs the agent runtime, starting the autonomous trading loop.
+
+## Running the Agent
+
+1.  Make sure the solana keypair defined in `.agents.env` has some funds.
+2.  Run the agent:
+
+    ```bash
+    python agent.py
+    ```
+
+The agent will then start fetching trending coins, getting market data, performing analysis, and executing token swaps every 5 minutes.

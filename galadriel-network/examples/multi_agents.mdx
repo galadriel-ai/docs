@@ -1,0 +1,119 @@
+---
+title: Multi-Agents
+description: Learn how to build a multi-agent system with Galadriel using a manager-worker pattern.
+---
+
+This tutorial guides you through creating a multi-agent system using Galadriel, demonstrating a manager-worker pattern where a manager agent coordinates with a specialized worker agent to accomplish tasks. This setup allows for efficient delegation and specialization, improving overall system performance.
+
+## Prerequisites
+
+Before you begin, ensure you have:
+
+- Python 3.10 or higher
+- Galadriel installed
+- An OpenAI API key
+
+## Setup
+
+Create a project directory:
+
+```sh
+mkdir multi-agents-example
+cd multi-agents-example
+```
+
+Set up a virtual environment:
+
+```sh
+python3 -m venv venv
+source venv/bin/activate
+```
+
+Install Galadriel:
+
+```sh
+pip install galadriel
+```
+
+
+## Code Implementation
+
+### 1. Project Structure
+
+Create the following files:
+
+- `agent.py`: Contains the agent definitions and runtime setup.
+- `template.env`: Stores environment variables.
+
+### 2. Define Environment Variables
+
+Create a `.env` file with your OpenAI API key:
+
+```sh
+echo "OPENAI_API_KEY=your_api_key_here" > .env
+```
+
+### 3. Implement the Agents
+
+Open `agent.py` and add the following code:
+
+```python
+import asyncio
+import os
+from pathlib import Path
+from dotenv import load_dotenv
+from galadriel import AgentRuntime, CodeAgent
+from galadriel.clients import SimpleMessageClient
+from galadriel.core_agent import LiteLLMModel, DuckDuckGoSearchTool
+
+# Load environment variables
+load_dotenv(dotenv_path=Path(".") / ".env", override=True)
+
+model = LiteLLMModel(model_id="gpt-4o", api_key=os.getenv("OPENAI_API_KEY"))
+
+# Create the worker agent
+managed_web_agent = CodeAgent(
+    tools=[DuckDuckGoSearchTool()],
+    model=model,
+    name="web_search",
+    description="Runs web searches for you. Give it your query as an argument.",
+)
+
+# Create the manager agent
+manager_agent = CodeAgent(tools=[], model=model, managed_agents=[managed_web_agent])
+
+# Set up the client
+client = SimpleMessageClient("What's the most recent of Daige on X (twitter)?")
+
+# Set up the runtime
+runtime = AgentRuntime(
+    agent=manager_agent,
+    inputs=[client],
+    outputs=[client],
+)
+
+# Run the agent
+asyncio.run(runtime.run())
+```
+
+## Run the Example
+
+Set the `OPENAI_API_KEY` in your environment:
+
+```sh
+export OPENAI_API_KEY=your_api_key_here
+```
+
+Run the agent:
+
+```sh
+python agent.py
+```
+
+### Expected Output
+
+The agent will perform a web search to find the most recent tweets from Daige on X (Twitter) and provide a summary.
+
+## Conclusion
+
+This tutorial demonstrated how to create a multi-agent system using Galadriel. By creating a manager agent that delegates tasks to a specialized worker agent, you can build more efficient and modular AI systems.
