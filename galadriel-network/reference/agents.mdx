@@ -1,0 +1,143 @@
+---
+title: 'Agents'
+description: 'Reference documentation for CodeAgent and ToolCallingAgent classes'
+---
+
+
+## CodeAgent Class Reference
+**Description:**
+
+The `CodeAgent` class in Galadriel is a tool for building autonomous agents capable of reasoning and executing code. It extends the base `Agent` class and leverages the `smolagents` library. This agent uses language models to write and execute Python code.
+
+**Module:**
+
+`galadriel.agent`
+
+**Inheritance:**
+
+- `Agent` (Abstract Base Class)
+- `InternalCodeAgent` (from `smolagents`)
+
+**Initialization (`__init__`):**
+
+```python
+def __init__(
+    self,
+    prompt_template: Optional[str] = None,
+    flush_memory: Optional[bool] = False,
+    **kwargs,
+):
+```
+
+### Parameters:
+
+- `prompt_template` (Optional[str]):
+  - **Type**: str or None
+  - **Description**: A template used to format the input request for the agent. It must contain the placeholder `{{request}}` where the user's input should be inserted. If None, a default template is used. This template dictates how the LLM interprets the incoming task.
+  - **Example**: `Answer the following question: {{request}}`
+
+- `flush_memory` (Optional[bool]):
+  - **Type**: bool or None
+  - **Description**: Determines whether the agent's memory is cleared between each request. If True, the agent starts fresh with each new task. If False, the agent retains memory of past interactions.
+  - **Default**: False (memory is retained).
+
+- `**kwargs`:
+  - **Type**: Keyword arguments.
+  - **Description**: Arbitrary keyword arguments passed to the `InternalCodeAgent` constructor. These are used to configure the underlying code execution environment and language model.
+
+### Common `kwargs`:
+
+- `model` (str): The identifier of the language model to use (e.g., "gpt-4o"). This parameter is required.
+- `tools` (List[Tool]): A list of `Tool` objects the agent can utilize. See documentation on Tools for more information.
+- `add_base_tools` (bool): Whether to automatically add a set of base tools, like a Python REPL (Read-Eval-Print Loop).
+- `max_steps` (int): The maximum number of reasoning steps the agent is allowed to take for a given request.
+- `additional_authorized_imports` (List[str]): A list of Python modules that the agent is allowed to import when executing code. This provides a security mechanism by restricting the agent's access to potentially dangerous modules.
+
+**Methods:**
+
+### `execute(self, request: Message) -> Message`
+
+Processes a single request and generates a response.
+
+#### Parameters:
+
+- `request` (Message): The input message to be processed.
+  - `content` (str): The main text content of the message. This is the actual instruction or query from the user.
+  - `conversation_id` (Optional[str]): An optional identifier for the conversation. This can be used to group related messages together.
+  - `additional_kwargs` (Optional[Dict]): A dictionary containing any extra information related to the message. This can be used to pass data to the `AgentOutput`.
+
+#### Returns:
+
+- `Message`: The agent's response message.
+  - `content` (str): The text content of the agent's response.
+  - `conversation_id` (Optional[str]): The conversation ID (copied from the incoming request).
+  - `additional_kwargs` (Optional[Dict]): Any extra information related to the response (usually copied from the incoming request).
+
+**Data Types:**
+
+- `Message` (from `galadriel.entities`): A data class representing a message. Contains `content` (str), `conversation_id` (Optional[str]), `type` (Optional[str]), and `additional_kwargs` (Optional[Dict]).
+- `Optional[str]`: Either a string or None.
+- `Optional[bool]`: Either a boolean or None.
+- `Dict`: A standard Python dictionary.
+- `List`: A standard Python list.
+- `Tool`: A tool that can be used by the agent (see `galadriel.core_agent`).
+
+
+## ToolCallingAgent Class Reference
+
+**Description:**
+
+The `ToolCallingAgent` class is a subclass of both `Agent` and `InternalToolCallingAgent`. It allows you to create agents that can use tools to interact with the outside world. It formats requests, executes the tool-calling agent, and returns the response. Memory is kept between requests by default.
+
+**Module:**
+
+`galadriel.agent`
+
+**Inheritance:**
+
+- `Agent` (Abstract Base Class)
+- `InternalToolCallingAgent` (from `smolagents`)
+
+**Initialization:**
+
+- `prompt_template` (Optional[str]):
+  - **Type**: str or None
+  - **Description**: A template used to format the input request for the agent. It must contain the placeholder `{{request}}` where the user's input should be inserted. If None, a default template is used. This template dictates how the LLM interprets the incoming task.
+  - **Example**: `Answer the following question: {{request}}`
+
+- `flush_memory` (Optional[bool]):
+  - **Type**: Optional[bool]
+  - **Description**: If `True`, clears memory between requests.
+  - **Default**: `False`
+
+- `**kwargs`:
+  - **Description**: Additional arguments passed to `InternalToolCallingAgent`, including available tools.
+
+### Common `kwargs`:
+
+- `tools` (List[Tool]): A list of tools that the agent can use.
+- `model` (LiteLLMModel): The LLM model that the agent will use.
+- `max_steps` (int): The maximum number of steps the agent can take to complete a task.
+- `verbosity_level` (LogLevel): The level of verbosity to use for logging.
+
+**Methods:**
+
+### `execute(self, request: Message) -> Message`
+
+Processes a single request and generates a response.
+
+#### Parameters:
+
+- `request` (Message): The input message to be processed.
+  - `content` (str): The content of the message.
+  - `conversation_id` (Optional[str]): An optional ID to group messages into conversations.
+  - `type` (Optional[str]): The type of the message, defaults to `None`.
+  - `additional_kwargs` (Optional[Dict]): An optional dictionary containing additional information, defaults to `None`.
+
+#### Returns:
+
+- `Message`: The agent's response message.
+  - `content` (str): The content of the message.
+  - `conversation_id` (Optional[str]): An optional ID to group messages into conversations.
+  - `type` (Optional[str]): The type of the message, defaults to `None`.
+  - `additional_kwargs` (Optional[Dict]): An optional dictionary containing additional information, defaults to `None`. 

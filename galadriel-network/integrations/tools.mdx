@@ -7,39 +7,50 @@ Galadriel framework comes with a set of tools out of the box. New tools are regu
 
 Here is the list of market data API available as tools in the framework:
 
-### [Coingecko](https://github.com/galadriel-ai/galadriel/blob/main/galadriel/tools/web3/coingecko.py)
+### [Coingecko](https://github.com/galadriel-ai/galadriel/blob/main/galadriel/tools/web3/market_data/coingecko.py)
 
 Current provided set of tools related with Coingecko:
 
-- `get_coin_price`: Retrieves the current price, market cap, 24hr volume, and 24hr change for a given cryptocurrency.
-- `get_coin_historical_data`: Retrieves historical market data for a given cryptocurrency.
-- `fetch_trending_coins`: Retrieves the current trending coins on CoinGecko.
+- [`GetCoinPriceTool`](/galadriel-network/reference/web3_tools#getcoinpricetool): Retrieves the current price, market cap, 24hr volume, and 24hr change for a given cryptocurrency.
+- [`GetCoinMarketDataTool`](/galadriel-network/reference/web3_tools#getcoinmarketdatatool): Retrieves market data for a given cryptocurrency.
+- [`GetCoinHistoricalDataTool`](/galadriel-network/reference/web3_tools#getcoinhistoricaldatatool): Retrieves historical market data for a given cryptocurrency.
+- [`FetchMarketDataPerCategoriesTool`](/galadriel-network/reference/web3_tools#fetchmarketdatapercategoriestool): Retrieves market data for cryptocurrencies in specific categories.
+- [`FetchTrendingCoinsTool`](/galadriel-network/reference/web3_tools#fetchtrendingcoinstool): Retrieves the current trending coins on CoinGecko.
 
-### [Dexscreener](https://github.com/galadriel-ai/galadriel/blob/main/galadriel/tools/web3/dexscreener.py)
+
+### [Dexscreener](https://github.com/galadriel-ai/galadriel/blob/main/galadriel/tools/web3/market_data/dexscreener.py)
 
  Tools for interacting with the Dexscreener API to retrieve token information and market data.
 
-- `fetch_market_data`: Fetches market data for a list of tokens.
-- `get_token_profile`: Retrieves the latest token profiles from Dexscreener. It returns a formatted string containing the chain ID, token address, description, and links for each token.
+- [`GetTokenDataTool`](/galadriel-network/reference/web3_tools#gettokendatatool): Retrieves and formats token data from the DexScreener API.
 
-### [Jupiter](https://github.com/galadriel-ai/galadriel/blob/main/galadriel/tools/web3/jupiter.py)
+### [Devnet mock](https://github.com/galadriel-ai/galadriel/blob/main/galadriel/tools/web3/market_data/market_data_devnet.py)
+
+ Tools for interacting with the Dexscreener API to retrieve token information and market data.
+
+- [`fetch_mock_market_data`](/galadriel-network/reference/web3_tools#fetch-mock-market-data): Fetches mocked market data for the Solana Devnet.
+
+
+### [Jupiter](https://github.com/galadriel-ai/galadriel/blob/main/galadriel/tools/web3/onchain/solana/jupiter.py)
 
 Tool for swapping tokens on the Solana blockchain using the Jupiter Aggregator:
 
-- `swap_token`: This tool allows an agent to swap one token for another.
+- [`SwapTokenTool`](/galadriel-network/reference/web3_tools#swaptokentool): This tool allows an agent to swap one token for another.
 
-### [Solana](https://github.com/galadriel-ai/galadriel/blob/main/galadriel/tools/web3/solana.py)
+### [Solana](https://github.com/galadriel-ai/galadriel/tree/main/galadriel/tools/web3/onchain/solana)
 
 Set of tools for managing user token balances on the Solana blockchain
 
-- `update_user_balance`: Updates the balance of a specific token for a given user.
-- `get_all_users`: Returns a JSON string containing a list of all user addresses that have balances stored.
-- `get_all_portfolios`: Returns a JSON string representing the portfolios of all users.
-- `get_user_balance`: Retrieves a user's balance for a specific token.
+- [`GetUserBalanceTool`](/galadriel-network/reference/web3_tools#getuserbalancetool): Updates the balance of a specific token for a given user.
+- [`GetAdminWalletAddressTool`](/galadriel-network/reference/web3_tools#getadminwalletaddresstool): Retrieves the wallet address of the admin.
+- [`BuyTokenWithSolTool (Raydium CPMM)`](/galadriel-network/reference/web3_tools#buytokenwithsoltool-raydium-cpmm): Tool for buying tokens using SOL on Raydium CPMM.
+- [`SellTokenForSolTool (Raydium CPMM)`](/galadriel-network/reference/web3_tools#selltokenforsoltool-raydium-cpmm): Tool for selling tokens for SOL using Raydium CPMM.
+- [`BuyTokenWithSolTool (Raydium AMM V4)`](/galadriel-network/reference/web3_tools#buytokenwithsoltool-raydium-amm-v4): Tool for buying tokens using SOL on Raydium AMM V4.
+- [`SellTokenForSolTool (Raydium AMM V4)`](/galadriel-network/reference/web3_tools#selltokenforsoltool-raydium-amm-v4): Tool for selling tokens for SOL using Raydium AMM V4.
 
 ## Composio Tools
 
-[Composio](https://github.com/ComposioHQ/composio) is a service for connecting AI Agents to hundreds external tools like  Gmail, GitHub, Salesforce, etc. Each of these tools can be added by it’s name by using `convert_action` helper.
+[Composio](/galadriel-network/reference/utility_tools#composio-converter-tools) is a service for connecting AI Agents to hundreds external tools like  Gmail, GitHub, Salesforce, etc. Each of these tools can be added by it’s name by using `convert_action` helper.
 
 Galadriel framework empowers you to use any tool from Composio, here’s how to do it:
 
@@ -75,7 +86,7 @@ tool = WikipediaQueryRun(api_wrapper=api_wrapper)
 wikipedia_tool = Tool.from_langchain(langchain_tool=tool)
 ```
 
-## [Retriever](https://github.com/galadriel-ai/galadriel/blob/main/galadriel/tools/retriever.py) tool
+## [Retriever](https://localhost:3000/galadriel-network/reference/utility_tools#retriever-tool) tool
 
 Retriever provides access to loaded documents, which can be queried to retrieve knowledge.
 
@@ -97,10 +108,10 @@ Check out [Agentic RAG](/galadriel-network/tutorials/rag) where `RetrieverTool` 
 
 Galadriel provided multiple tools to build Twitter/X agents:
 
-- `TwitterPostTool` for posting a new tweet
-- `TwitterRepliesTool` for replying to existing tweet
-- `TwitterGetPostTool` for fetching a specific tweet by its ID
-- `TwitterSearchTool` which searches tweets based on a provided query
+- [`TwitterPostTool`](/galadriel-network/reference/twitter_tools#1-twitterposttool) for posting a new tweet
+- [`TwitterRepliesTool`](/galadriel-network/reference/twitter_tools#3-twitterrepliestool) for replying to existing tweet
+- [`TwitterGetPostTool`](/galadriel-network/reference/twitter_tools#4-twittergetposttool) for fetching a specific tweet by its ID
+- [`TwitterSearchTool`](/galadriel-network/reference/twitter_tools#2-twittersearchtool) which searches tweets based on a provided query
 
 ## Conclusion
 

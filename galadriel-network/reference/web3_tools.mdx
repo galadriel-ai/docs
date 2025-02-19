@@ -1,0 +1,279 @@
+## Web3 Tools Reference Documentation
+
+This documentation provides detailed information about the Web3 tools available within the Galadriel framework. These tools enable agents to interact with blockchain networks, retrieve market data, and manage user portfolios.
+
+### Market Data Tools
+
+#### `CoingeckoTool`
+(Abstract base class) Provides common functionality for accessing the Coingecko API.
+
+**Inheritance:** `Tool`
+
+**Attributes:**
+- `api_key` (str): The Coingecko API key. Must be set as an environment variable `COINGECKO_API_KEY`.
+
+**Methods:**
+- `__init__(self, *args, **kwargs)`: Initializes the Coingecko tool. Raises `ValueError` if `COINGECKO_API_KEY` environment variable is not set.
+
+#### `GetCoinPriceTool`
+Retrieves current cryptocurrency price and market data from Coingecko.
+
+**Inheritance:** `CoingeckoTool`, `Tool`
+
+**Name:** "get_coin_price"
+
+**Description:** "This is a tool that returns the price of given crypto token together with market cap, 24hr vol and 24hr change."
+
+**Inputs:**
+- `task` (str): The full name of the token. Example: 'solana' not 'sol'.
+
+**Output Type:** `string`
+
+**Methods:**
+- `forward(self, task: str) -> str`: Fetches current price and market data for a cryptocurrency from Coingecko. Returns a JSON string containing price and market data.
+
+#### `GetCoinMarketDataTool`
+Retrieves current market data for a specified cryptocurrency from Coingecko.
+
+**Inheritance:** `CoingeckoTool`, `Tool`
+
+**Name:** "get_coin_market_data"
+
+**Description:** "This is a tool that returns the market data of given crypto token."
+
+**Inputs:**
+- `coin_id` (str): The full name of the token. Example: 'solana' not 'sol'.
+
+**Output Type:** `string`
+
+**Methods:**
+- `forward(self, coin_id: str) -> str`: Fetches current market data for a cryptocurrency from Coingecko. Returns a JSON string containing market data.
+
+#### `GetCoinHistoricalDataTool`
+Retrieves historical cryptocurrency price data from Coingecko.
+
+**Inheritance:** `CoingeckoTool`, `Tool`
+
+**Name:** "get_coin_historical_data"
+
+**Description:** "This is a tool that returns the historical data of given crypto token."
+
+**Inputs:**
+- `task` (str): The full name of the token. Example: 'solana' not 'sol'.
+- `days` (str): Number of days of historical data to fetch.
+
+**Output Type:** `string`
+
+**Methods:**
+- `forward(self, task: str, days: str) -> str`: Fetches historical price data for a cryptocurrency from Coingecko. Returns a JSON string containing historical price data.
+
+#### `FetchMarketDataPerCategoriesTool`
+Tool for retrieving market data for cryptocurrencies in specific categories.
+
+**Inheritance:** `CoingeckoTool`, `Tool`
+
+**Name:** "fetch_market_data_per_categories"
+
+**Description:** "This is a tool that returns the market data for cryptocurrencies in specific categories."
+
+**Inputs:**
+- `categories` (list): The categories of the cryptocurrencies to fetch data for.
+
+**Output Type:** `string`
+
+**Methods:**
+- `forward(self, categories: list) -> str`: Fetches market data for cryptocurrencies in specified categories from Coingecko. Returns a JSON string containing the market data for the given categories.
+
+#### `FetchTrendingCoinsTool`
+Retrieves trending cryptocurrency data from Coingecko.
+
+**Inheritance:** `CoingeckoTool`, `Tool`
+
+**Name:** "fetch_trending_coins"
+
+**Description:** "This tool fetches the current trending cryptocurrencies based on Coingecko's trending coins data."
+
+**Inputs:**
+- None
+
+**Output Type:** `string`
+
+**Methods:**
+- `forward(self) -> str`: Fetches a list of currently trending cryptocurrencies from Coingecko. Returns a JSON string containing trending coin details.
+
+#### `GetTokenDataTool`
+Retrieves and formats token data from the DexScreener API.
+
+**Inheritance:** `Tool`
+
+**Name:** "get_token_data"
+
+**Description:** "Fetch detailed data for a specific token from DexScreener."
+
+**Inputs:**
+- `ecosystem` (str): The ecosystem of the token (e.g., 'solana', 'ethereum').
+- `token_address` (str): The address of the token to fetch data for.
+
+**Output Type:** `object`
+
+**Methods:**
+- `forward(self, ecosystem: str, token_address: str) -> Dict[str, Any]`: Fetches token data from DexScreener API. Returns a dictionary containing token details or an empty dictionary if the request fails.
+
+#### `fetch_mock_market_data`
+Fetches market data for the Solana Devnet.
+
+**Inheritance:** `Tool`
+
+**Name:** "fetch_mock_market_data"
+
+**Description:** "Fetches market data for the Solana Devnet."
+
+**Inputs:**
+- None
+
+**Output Type:** `string`
+
+**Methods:**
+- `fetch_mock_market_data() -> str`: Returns a JSON string containing mock market data for the Solana Devnet.
+
+### Solana On-Chain Tools
+
+#### `SolanaBaseTool`
+(Abstract base class) Base class for Solana tools that require wallet access and on-chain operations.
+
+**Inheritance:** `Tool`
+
+**Attributes:**
+- `wallet_manager` (`WalletManager`): Manager for handling wallet operations.
+- `network` (`Network`): The Solana network being used (mainnet or devnet).
+- `client` (`Client`, optional): The Solana RPC client for network interactions.
+- `async_client` (`AsyncClient`, optional): The HTTPX async client for network interactions.
+
+**Methods:**
+- `__init__(self, is_wallet_required: bool, is_async_client: bool, *args, **kwargs)`: Initializes the Solana tool. Raises `ValueError` if `SOLANA_KEY_PATH` environment variable is not set.
+
+#### `GetUserBalanceTool`
+Retrieves the user's balance for a specific token from the blockchain.
+
+**Inheritance:** `SolanaBaseTool`, `Tool`
+
+**Name:** "get_user_balance"
+
+**Description:** "Retrieves the user's balance for a specific token from the blockchain."
+
+**Inputs:**
+- `user_address` (str): The address of the user.
+- `token` (str): The token address in Solana.
+
+**Output Type:** `number` (Optional[float])
+
+**Methods:**
+- `forward(self, user_address: str, token: str) -> Optional[float]`: Retrieves the user's token balance. Returns the balance or `None` if the query fails.
+
+#### `SwapTokenTool`
+Tool for performing token swaps using Jupiter Protocol on Solana.
+
+**Inheritance:** `SolanaBaseTool`, `Tool`
+
+**Name:** "swap_token"
+
+**Description:** "Swaps one token for another in the user's portfolio."
+
+**Inputs:**
+- `token1` (str): The address of the token to sell.
+- `token2` (str): The address of the token to buy.
+- `amount` (float): The amount of `token1` to swap.
+- `slippage_bps` (int, default: `300`): Slippage tolerance in basis points.
+
+**Output Type:** `string`
+
+**Methods:**
+- `forward(self, token1: str, token2: str, amount: float, slippage_bps: int = 300) -> str`: Executes a token swap transaction. Returns a success message containing the transaction signature.
+
+#### `GetAdminWalletAddressTool`
+Retrieves the wallet address of the admin.
+
+**Inheritance:** `SolanaBaseTool`, `Tool`
+
+**Name:** "get_admin_wallet_address"
+
+**Description:** "This tool returns the wallet address of the admin."
+
+**Inputs:**
+- `dummy` (str): Dummy input.
+
+**Output Type:** `string`
+
+**Methods:**
+- `forward(self, dummy: str) -> str`: Returns the admin's wallet address.
+
+#### `BuyTokenWithSolTool` (Raydium CPMM)
+Tool for buying tokens using SOL on Raydium CPMM.
+
+**Inheritance:** `SolanaBaseTool`, `Tool`
+
+**Name:** "buy_token_with_sol_cpmm"
+
+**Description:** "Buy a token with SOL using the Raydium CPMM."
+
+**Inputs:**
+- `pair_address` (str): The address of the CPMM pair.
+- `sol_in` (number, default: 0.01): The amount of SOL to swap.
+- `slippage` (integer, default: 5): The slippage tolerance percentage.
+
+**Output Type:** `string`
+
+**Methods:**
+- `forward(self, pair_address: str, sol_in: float = 0.01, slippage: int = 5) -> str`: Executes a SOL to token swap transaction.  Returns a success or failure message.
+
+#### `SellTokenForSolTool` (Raydium CPMM)
+Tool for selling tokens for SOL using Raydium CPMM.
+
+**Inheritance:** `SolanaBaseTool`, `Tool`
+
+**Name:** "sell_token_for_sol_cpmm"
+
+**Description:** "Sell a token for SOL using the Raydium CPMM."
+
+**Inputs:**
+- `pair_address` (str): The address of the CPMM pair.
+- `percentage` (integer, default: 100): The percentage of token to sell.
+- `slippage` (integer, default: 5): The slippage tolerance percentage.
+
+**Output Type:** `string`
+
+**Methods:**
+- `forward(self, pair_address: str, percentage: int = 100, slippage: int = 5) -> str`: Executes a token to SOL swap. Returns a success or failure message.
+#### `BuyTokenWithSolTool` (Raydium AMM V4)
+Tool for buying tokens using SOL on Raydium AMM V4.
+
+**Inheritance:** `SolanaBaseTool`, `Tool`
+**Name:** "buy_token_with_sol"
+**Description:** "Buy a token with SOL using the Raydium AMM V4."
+
+**Inputs:**
+-   `pair_address` (str): The address of the AMM V4 pair.
+-   `sol_in` (number, `default`: 0.01): The amount of SOL to swap.
+-   `slippage` (integer, `default`: 5): The slippage tolerance percentage.
+
+**Output Type:** `string`
+
+**Methods:**
+- `forward(self, pair_address: str, sol_in: float = 0.01, slippage: int = 5) -> str`:  Executes a SOL to token swap transaction. Returns a success or failure message.
+
+#### `SellTokenForSolTool` (Raydium AMM V4)
+Tool for selling tokens for SOL using Raydium AMM V4.
+
+**Inheritance:** `SolanaBaseTool`, `Tool`
+**Name:** "sell_token_for_sol"
+**Description:** "Sell a token for SOL using the Raydium AMM V4."
+
+**Inputs:**
+-   `pair_address` (str): The address of the AMM V4 pair.
+- `percentage` (integer, `default`: 100): The percentage of token to sell.
+-   `slippage` (integer, `default`: 5): The slippage tolerance percentage.
+
+**Output Type:** `string`
+
+**Methods:**
+ - `forward(self, pair_address: str, percentage: int = 100, slippage: int = 5) -> str`: Executes a token to SOL swap transaction. Returns a success or failure message.

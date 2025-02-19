@@ -1,0 +1,74 @@
+## Composio Converter Tools
+
+This module provides tools for converting Composio Apps and Actions into Galadriel Tools.
+
+### `convert_action(api_key: str, action: str) -> Tool`
+Converts a single Composio action into a Galadriel Tool.
+
+#### Parameters:
+- `api_key` (str): Composio API key for authentication.
+- `action` (str): Name of the Composio action to convert.
+
+#### Returns:
+- `Tool`: The converted Galadriel Tool.
+
+#### Example:
+```python
+converted_tool = convert_action("your_api_key", "some_action")
+```
+
+---
+
+### `convert_app(api_key: str, app: App) -> list[Tool]`
+Converts all tools from a Composio App into Galadriel Tools.
+
+#### Parameters:
+- `api_key` (str): Composio API key for authentication.
+- `app` (`App`): The Composio App to convert.
+
+#### Returns:
+- `list[Tool]`: List of converted Galadriel Tools.
+
+#### Example:
+```python
+converted_tools = convert_app("your_api_key", some_app)
+```
+
+---
+
+## Retriever Tool
+
+This module provides semantic search functionality for retrieving relevant documents or document segments based on user queries. It uses the BM25 algorithm for ranking document relevance.
+
+### `RetrieverTool(docs: List[Document], **kwargs)`
+A tool for semantic document retrieval using BM25 ranking.
+
+#### Parameters:
+- `docs` (List[Document]): List of documents to index for retrieval. Documents should be pre-processed and split if needed.
+- `**kwargs`: Additional arguments passed to the parent `Tool` class.
+
+#### Attributes:
+- `name` (str): Tool identifier for the agent system (set to "retriever").
+- `description` (str): Description of the tool's functionality.
+- `inputs` (dict): Schema for the required input parameters.
+- `output_type` (str): Type of data returned by the tool (set to "string").
+- `retriever` (`BM25Retriever`): The underlying BM25 retrieval engine.
+
+### Methods:
+
+#### `forward(query: str) -> str`
+Performs a semantic search across the document collection.
+
+##### Parameters:
+- `query` (str): The search query string. This should be semantically close to your target documents. Use the affirmative form rather than a question.
+
+##### Returns:
+- `str`: A formatted string containing the retrieved documents, with each document prefixed by its index.
+
+##### Raises:
+- `AssertionError`: If the query is not a string.
+
+#### Example:
+```python
+retriever_tool = RetrieverTool(docs=some_documents)
+result = retriever_tool.forward("Find information about AI agents")

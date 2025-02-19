@@ -77,8 +77,8 @@ class Message(BaseModel):
 
 Galadriel provides two main interfaces you can use out of the box:
 
-1. **`ToolCallingAgent`** – Focuses on calling external functions (tools) to solve tasks.
-2. **`CodeAgent`** – Lets the LLM “write” Python code that is then executed, offering a powerful and flexible approach for certain use-cases.
+1. [**`ToolCallingAgent`**](/galadriel-network/reference/agents#toolcallingagent-class-reference) – Focuses on calling external functions (tools) to solve tasks.
+2. [**`CodeAgent`**](/galadriel-network/reference/agents#codeagent-class-reference) – Lets the LLM “write” Python code that is then executed, offering a powerful and flexible approach for certain use-cases.
 
 You can also create *custom agents* for specific personalities or domain knowledge. For example, [**`CharacterAgent`**](https://github.com/galadriel-ai/galadriel/tree/main/examples/discord) shows how to craft an agent with a distinct persona (like a Discord bot with a particular style).
 
@@ -86,7 +86,7 @@ You can also create *custom agents* for specific personalities or domain knowled
 
 ## Sample Usage
 
-Below is a quick demonstration of how to set up a `CodeAgent` with a web search tool, run it via the runtime, and communicate with a simple input/output client.
+Below is a quick demonstration of how to set up a [`CodeAgent`](/galadriel-network/reference/agents#codeagent-class-reference) with a web search tool, run it via the runtime, and communicate with a simple input/output client.
 
 ```python
 import asyncio

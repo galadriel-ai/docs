@@ -1,0 +1,136 @@
+## Twitter Tools Reference
+
+This document provides detailed reference information for the Twitter tools available in the Galadriel framework. These tools enable AI agents to interact with the Twitter (X) API for posting, searching, retrieving replies, and fetching specific tweets.
+
+### 1. TwitterPostTool
+
+#### Description
+The `TwitterPostTool` class is a tool for posting tweets to Twitter. It allows agents to post new tweets and replies to existing tweets using the Twitter API v2.
+
+#### Attributes
+- `name` (str): Tool identifier (`"twitter_post_tool"`).
+- `description` (str): A description of the tool's functionality.
+- `inputs` (dict): A dictionary defining the schema for required input parameters:
+  - `tweet` (str): The content of the tweet to post.
+  - `in_reply_to_id` (str): The ID of the tweet to reply to (optional; use an empty string for new tweets).
+- `output_type` (str): Type of data returned by the tool (`"object"`).
+
+#### Methods
+
+##### `__init__(self, _credentials: Optional[TwitterCredentials] = None)`
+Initializes the tool with Twitter API credentials.
+- Loads credentials from environment variables if `_credentials` is `None`.
+- Raises `CredentialsException` if required credentials are missing.
+
+###### Parameters:
+- `_credentials` (Optional[TwitterCredentials]): Twitter API credentials.
+
+##### `forward(self, tweet: str, in_reply_to_id: str) -> Dict`
+Posts a tweet or reply to Twitter.
+
+###### Parameters:
+- `tweet` (str): The content of the tweet to post.
+- `in_reply_to_id` (str): The ID of the tweet to reply to (use an empty string for new tweets).
+
+###### Returns:
+- `Dict`: Response data from the Twitter API.
+- Returns an empty dict if posting fails.
+
+---
+
+### 2. TwitterSearchTool
+
+#### Description
+The `TwitterSearchTool` class is a tool for searching tweets on Twitter using the Twitter API v2 search functionality.
+
+#### Attributes
+- `name` (str): Tool identifier (`"twitter_search_tool"`).
+- `description` (str): A description of the tool's functionality.
+- `inputs` (dict): A dictionary defining the schema for required input parameters:
+  - `search_query` (str): The search query supported by the Twitter API.
+- `output_type` (str): Type of data returned by the tool (`"string"`).
+
+#### Methods
+
+##### `__init__(self, _credentials: Optional[TwitterCredentials] = None)`
+Initializes the tool with Twitter API credentials.
+- Loads credentials from environment variables if `_credentials` is `None`.
+- Raises `CredentialsException` if required credentials are missing.
+
+###### Parameters:
+- `_credentials` (Optional[TwitterCredentials]): Twitter API credentials.
+
+##### `forward(self, search_query: str) -> str`
+Searches for tweets matching a query.
+
+###### Parameters:
+- `search_query` (str): The search query to execute.
+
+###### Returns:
+- `str`: JSON string containing search results.
+
+---
+
+### 3. TwitterRepliesTool
+
+#### Description
+The `TwitterRepliesTool` class is a tool for retrieving replies to a specific tweet using the Twitter API v2.
+
+#### Attributes
+- `name` (str): Tool identifier (`"twitter_replies_tool"`).
+- `description` (str): A description of the tool's functionality.
+- `inputs` (dict): A dictionary defining the schema for required input parameters:
+  - `conversation_id` (str): The conversation ID, which is set to the original tweet ID.
+- `output_type` (str): Type of data returned by the tool (`"string"`).
+
+#### Methods
+
+##### `__init__(self, _credentials: Optional[TwitterCredentials] = None)`
+Initializes the tool with Twitter API credentials.
+- Loads credentials from environment variables if `_credentials` is `None`.
+- Raises `CredentialsException` if required credentials are missing.
+
+###### Parameters:
+- `_credentials` (Optional[TwitterCredentials]): Twitter API credentials.
+
+##### `forward(self, conversation_id: str) -> str`
+Fetches replies to a specific tweet.
+
+###### Parameters:
+- `conversation_id` (str): The ID of the conversation to fetch replies from.
+
+###### Returns:
+- `str`: JSON string containing reply tweets.
+
+---
+
+### 4. TwitterGetPostTool
+
+#### Description
+The `TwitterGetPostTool` class is a tool for retrieving a specific tweet by its ID using the Twitter API v2.
+
+#### Attributes
+- `name` (str): Tool identifier (`"twitter_get_post_tool"`).
+- `description` (str): A description of the tool's functionality.
+- `inputs` (dict): A dictionary defining the schema for required input parameters:
+  - `tweet_id` (str): The ID of the tweet to fetch.
+- `output_type` (str): Type of data returned by the tool (`"string"`).
+
+#### Methods
+
+##### `__init__(self, _credentials: Optional[TwitterCredentials] = None)`
+Initializes the tool with Twitter API credentials.
+- Loads credentials from environment variables if `_credentials` is `None`.
+- Raises `CredentialsException` if required credentials are missing.
+
+###### Parameters:
+- `_credentials` (Optional[TwitterCredentials]): Twitter API credentials.
+
+##### `forward(self, tweet_id: str) -> str`
+Fetches a specific tweet by its ID.
+
+###### Parameters:
+- `tweet_id` (str): The ID of the tweet to fetch.
+
+###### Returns:
+- `str`: JSON string containing tweet data, or an empty string if not found.
