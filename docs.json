@@ -102,6 +102,16 @@
               "galadriel-network/examples/twitter",
               "galadriel-network/examples/multi_agents"
             ]
+          },
+          {
+            "group": "Reference",
+            "pages": [
+              "galadriel-network/reference/agents",
+              "galadriel-network/reference/runtime",
+              "galadriel-network/reference/web3_tools",
+              "galadriel-network/reference/twitter_tools",
+              "galadriel-network/reference/utility_tools"
+            ]
           }
         ]
       }

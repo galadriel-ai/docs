@@ -1,0 +1,82 @@
+## AgentRuntime Class Documentation
+
+**Description:**
+
+The `AgentRuntime` class provides the runtime environment for executing agent workflows. It manages the lifecycle of agent execution, including input processing, payment validation, response generation, and output delivery.
+
+**Class Definition:**
+
+### Parameters:
+
+- `inputs` (List[AgentInput]):
+  - **Description**: A list of `AgentInput` objects. These define the sources from which the agent receives messages.
+  - **Requirement**: Each `AgentInput` object must implement the `start` method, which pushes messages to a queue for processing.
+
+- `outputs` (List[AgentOutput]):
+  - **Description**: A list of `AgentOutput` objects. These define the destinations to which the agent sends responses.
+  - **Requirement**: Each `AgentOutput` object must implement the `send` method, which delivers a response message to its destination.
+
+- `agent` (Agent):
+  - **Description**: An `Agent` object that represents the core intelligence of the system.
+  - **Requirement**: This object must implement the `execute` method, which processes a single request and generates a response.
+
+- `pricing` (Optional[Pricing], defaults to `None`):
+  - **Description**: An optional `Pricing` object that defines the cost of using the agent and the wallet address to which payments should be sent.
+  - **Default**: If `None`, no payment validation is performed.
+
+- `debug` (bool, defaults to `False`):
+  - **Description**: A boolean indicating whether debug mode is enabled. In debug mode, additional logging information is printed.
+
+- `enable_logs` (bool, defaults to `False`):
+  - **Description**: A boolean indicating whether logging is enabled. When enabled, logs are exported to the Galadriel platform.
+
+**Variables:**
+
+- `inputs` (List[AgentInput]): Stores the input sources for the agent.
+- `outputs` (List[AgentOutput]): Stores the output destinations for responses.
+- `agent` (Agent): Stores the agent implementation being used.
+- `pricing` (Optional[Pricing]): Stores the payment configuration, if required.
+- `spent_payments` (Set[str]): A set to keep track of already processed transaction signatures to prevent duplicate processing.
+- `debug` (bool): Flag to enable debug mode for more verbose logging.
+- `enable_logs` (bool): Flag to enable log exporting.
+
+**Methods:**
+
+### `__init__(self, inputs: List[AgentInput], outputs: List[AgentOutput], agent: Agent, pricing: Optional[Pricing] = None, debug: bool = False, enable_logs: bool = False)`
+
+Initializes the `AgentRuntime` with input sources, output destinations, an agent implementation, pricing configuration, debug mode flag, and enable logs flag.
+
+### `run(self)`
+
+Starts the agent runtime loop, continuously processing incoming requests.
+
+### `_run_request(self, request: Message)`
+
+Processes a single request through the agent pipeline, handling payment validation, agent execution, and response delivery.
+
+### `_get_memory(self) -> List[Dict[str, str]]`
+
+Retrieves the current state of the agent's memory.
+
+### `_generate_proof(self, request: Message, response: Message) -> str`
+
+Generates a cryptographic proof of the request and response.
+
+### `_publish_proof(self, request: Message, response: Message, proof: str)`
+
+Publishes the cryptographic proof.
+
+**Data Types:**
+
+- `List[AgentInput]`: A list of objects conforming to the `AgentInput` interface.
+- `List[AgentOutput]`: A list of objects conforming to the `AgentOutput` interface.
+- `Agent`: An object conforming to the `Agent` interface.
+- `Optional[Pricing]`: An optional `Pricing` object with the following attributes:
+  - `cost` (float): The cost of the task in SOL.
+  - `wallet_address` (str): The Solana wallet address where payment should be sent.
+- `bool`: A boolean value (`True` or `False`).
+- `Message`: An object with the following attributes:
+  - `content` (str): The content of the message.
+  - `conversation_id` (Optional[str], defaults to `None`): An optional conversation ID.
+  - `type` (Optional[str], defaults to `None`): An optional message type.
+  - `additional_kwargs` (Optional[Dict], defaults to `None`): An optional dictionary of additional keyword arguments.
