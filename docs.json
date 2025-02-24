@@ -112,6 +112,12 @@
               "galadriel-network/reference/twitter_tools",
               "galadriel-network/reference/utility_tools"
             ]
+          },
+          {
+            "group": "Other",
+            "pages": [
+              "galadriel-network/other/changelog"
+            ]
           }
         ]
       }
