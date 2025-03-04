@@ -45,7 +45,21 @@ To import an existing wallet, use one of the following methods:
     ```
 
 
-After importing or creating a wallet, it will be ready for use. The private key's storage path can be found under `SOLANA_PRIVATE_KEY_PATH` in `.agents.env`.
+After importing or creating a wallet, it will be ready for use. The private key's storage path can be found under `SOLANA_KEY_PATH` in `.agents.env`.
+
+### Request Airdrop
+
+To help developers test the framework, Galadriel provides a faucet service that can fund your wallet with test tokens. 
+
+To request a small amount of SOL from the faucet service, execute the following command:
+
+```bash
+galadriel wallet airdrop
+```
+
+The airdrop service has the following rate limits:
+- One request per wallet address every 24 hours
+- One request per IP address every 30 minutes
 
 ## Using a Wallet in an Agent
 
