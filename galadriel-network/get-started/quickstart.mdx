@@ -98,25 +98,59 @@ It leverages:
 
 ## Create a Web3 Agent
 
+### Create Wallet
+
+Before creating a Web3 agent, you'll need a Solana wallet. You can either create a new one or import an existing wallet.
+
+#### Create a New Wallet
+
+Use the Galadriel CLI to create a new wallet:
+
+```bash
+galadriel wallet create --path <YOUR_SOLANA_KEYPAIR_PATH>
+```
+And get airdropped by running:
+
+```bash
+galadriel wallet airdrop
+```
+
+For details about how to use the wallet, see [wallet setup](/galadriel-network/tutorials/wallet).
+
+
 ### Agent Code
 
-Let’s extend the web search agent with Web3 capabilities to fetch real-time market data.
+Let’s extend the web search agent with Web3 capabilities to fetch real-time market data and execute an onchain swap.
 
 Modify your script to include:
 
 ```python
-from galadriel.tools.web3 import dexscreener
+from galadriel.tools.web3.onchain.solana import raydium
+from galadriel.tools.web3.market_data import dexscreener
 ```
 
-We are going to use [Dexscreener](https://dexscreener.com/)  to fetch market data. Dexscrener is a widely used Web3 tool to monitor crypto market data like prices, new tokens, etc.
-Modify the `CodeAgent` initialization:
+We'll use [Dexscreener](https://dexscreener.com/) to fetch real-time market data and [Raydium](https://raydium.io/) for executing token swaps based on market conditions.
+
+<Info>
+    Dexscreener is a popular Web3 platform for monitoring cryptocurrency market data including prices, trading volumes, and new token listings. 
+    
+    Raydium is Solana's leading decentralized exchange (DEX) that enables automated market making and token swaps with deep liquidity.
+</Info>
+
+First, we need to initialize the Solana wallet that was created in the previous step to allow agents to access it. This wallet will be used to sign transactions and interact with the Solana blockchain.
+
+```python
+solana_wallet = SolanaWallet(key_path=os.getenv("SOLANA_KEY_PATH"))
+```
+
+Next, update the `CodeAgent` initialization with Web3-specific tools:
 
 ```python
 agent = CodeAgent(
     model=model,
     tools=[
-        DuckDuckGoSearchTool(),
-        dexscreener.fetch_market_data
+        dexscreener.SearchTokenPairTool(),
+        raydium.SwapTokenTool(solana_wallet)
     ],
     additional_authorized_imports=["json"]
 )
@@ -124,13 +158,15 @@ agent = CodeAgent(
 
 <Info>
     Note `additional_authorized_imports=["json"]` parameter in the `CodeAgent` initialization.
-    It is required because `dexscreener.fetch_market_data` imports `json` module and the Python interpreter doesn’t allow imports by default outside of a safe list.
+    It is required because `dexscreener.SearchTokenPairTool()` imports `json` module and the Python interpreter doesn’t allow imports by default outside of a safe list.
 </Info>
 
-Update the client’s input by asking a Web3-specific question:
+Now let's update the client's input to ask a Web3-specific question that will utilize our new market data tools:
 
 ```python
-client = SimpleMessageClient("What are the top tokens on the market today?")
+client = SimpleMessageClient(
+    "What is the price of DAIGE today? Buy 0.001 SOL of DAIGE if the price is below 0.5 USD"
+)
 ```
 
 ### Running the Agent
@@ -141,11 +177,18 @@ Execute the script:
 python agent.py
 ```
 
-You should receive an output similar to:
+When you run the script, the agent will:
+1. Fetch the current market data for DAIGE token and its Raydium trading pairs
+2. Check if the current price meets our condition (below 0.5 USD)
+3. If the condition is met, execute a swap of 0.001 SOL to DAIGE tokens
+4. Output the transaction hash of the completed swap
 
+The agent will output something like:
 ```bash
-Answer: The top tokens by 24-hour volume are: 'Trump's Tax Company', 'dogwifouthat', 'THE DARK KNIGHT', and 'BRITISH DOG'
+Final answer: 24grLTGoL5utVrhAeVpxqCPCgu2VHFk1h9QhEG315ojnKRuSA6NGZ6RHQbNAMGvQnuYHXKbTDPbt4S4sBRtDwM65
 ```
+
+You can verify this transaction on Solana Explorer by visiting https://explorer.solana.com/ or https://solscan.io/.
 
 ## 🎉 Gratz on Building Your First Agent!
 
