@@ -65,6 +65,12 @@
             ]
           },
           {
+            "group": "Agent Deployment",
+            "pages": [
+              "galadriel-network/agent-deployment/agent-deployment"
+            ]
+          },
+          {
             "group": "Tutorials",
             "pages": [
               "galadriel-network/tutorials/agents",

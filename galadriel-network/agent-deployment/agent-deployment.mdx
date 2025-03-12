@@ -1,0 +1,230 @@
+---
+title: "Deploying Agents to Galadriel Network"
+---
+
+This guide covers how to deploy your agents to the Galadriel network using the Galadriel CLI. The CLI provides a comprehensive set of commands to manage the entire agent lifecycle - from initialization and development to deployment and monitoring.
+
+## Prerequisites
+
+Before deploying your agent, ensure you have:
+
+1. Installed the Galadriel package
+2. Docker installed and running (for build/publish operations)
+3. A Galadriel API key
+4. Docker Hub credentials (for publishing images)
+
+## Installation
+
+Install the Galadriel package using pip:
+
+```bash
+pip install galadriel
+```
+
+## Agent Lifecycle Management
+
+### Initializing a New Agent
+
+Create a new agent project with all necessary files and structure:
+
+```bash
+galadriel agent init
+```
+
+This interactive command will prompt you for:
+- Agent name
+
+The command creates:
+- Basic agent structure
+- Docker configuration
+- Environment files
+- Required Python files
+
+### Building Your Agent
+
+Build the Docker image for your agent:
+
+```bash
+galadriel agent build [--image-name NAME]
+```
+
+Options:
+- `--image-name`: Name for the Docker image (default: "agent")
+
+### Publishing Your Agent
+
+Push the agent's Docker image to Docker Hub:
+
+```bash
+galadriel agent publish [--image-name NAME]
+```
+
+Options:
+- `--image-name`: Name for the Docker image (default: "agent")
+
+### Deploying Your Agent
+
+Build, publish and deploy the agent to the Galadriel platform:
+
+```bash
+galadriel agent deploy [--image-name NAME] [--skip-build] [--skip-publish]
+```
+
+Options:
+- `--image-name`: Name for the Docker image (default: "agent")
+- `--skip-build`: Skip building the Docker image
+- `--skip-publish`: Skip publishing the Docker image to Docker Hub
+
+<Info>
+  When you deploy an agent, you'll receive an agent ID. Save this ID as you'll need it for future operations like checking state or updating the agent.
+</Info>
+
+### Updating an Existing Agent
+
+Update an agent that's already deployed on the Galadriel platform:
+
+```bash
+galadriel agent update --agent-id AGENT_ID [--image-name NAME]
+```
+
+Required:
+- `--agent-id`: ID of the agent to update
+
+Options:
+- `--image-name`: Name for the Docker image (default: "agent")
+
+### Monitoring Your Agent
+
+Retrieve the current state of a deployed agent:
+
+```bash
+galadriel agent state --agent-id AGENT_ID
+```
+
+Required:
+- `--agent-id`: ID of the deployed agent
+
+### Listing All Deployed Agents
+
+Get information about all your deployed agents:
+
+```bash
+galadriel agent list
+```
+
+### Removing a Deployed Agent
+
+Remove a deployed agent from the Galadriel platform:
+
+```bash
+galadriel agent destroy AGENT_ID
+```
+
+Required:
+- `AGENT_ID`: ID of the agent to destroy
+
+## Configuration Files
+
+### .env
+
+This file contains environment variables required for deployment:
+
+```
+DOCKER_USERNAME=your_username
+DOCKER_PASSWORD=your_password
+GALADRIEL_API_KEY=your_api_key
+```
+
+<Warning>
+  Keep your API keys and credentials secure. Never commit this file to version control.
+</Warning>
+
+### .agents.env
+
+This file contains environment variables for the agent runtime:
+
+```
+# Example
+LLM_API_KEY=your_key
+LLM_MODEL=your_model
+SOLANA_KEY_PATH=path_to_your_solana_key
+```
+
+<Warning>
+  Do not include deployment credentials in this file. This file is for agent-specific configuration only.
+</Warning>
+
+## Wallet Management
+
+For agents that interact with the Solana blockchain, the Galadriel CLI provides wallet management commands.
+
+### Creating a Wallet
+
+Create a new Solana wallet:
+
+```bash
+galadriel wallet create [--path PATH]
+```
+
+Options:
+- `--path`: Path to save the wallet key file (default: "~/.galadriel/solana/default_key.json")
+
+### Importing an Existing Wallet
+
+Import an existing wallet:
+
+```bash
+galadriel wallet import [--private-key KEY] [--path PATH]
+```
+
+Options:
+- `--private-key`: Private key of the wallet to import in JSON format
+- `--path`: Path to the wallet key file to import
+
+<Info>
+  You must provide either `--private-key` or `--path`, but not both.
+</Info>
+
+### Requesting an Airdrop
+
+Request an airdrop of 0.001 SOL to your Solana wallet:
+
+```bash
+galadriel wallet airdrop
+```
+
+## Deployment Example
+
+Here's a complete example of creating and deploying a new agent:
+
+```bash
+# Initialize new agent
+galadriel agent init
+
+# Build and deploy
+galadriel agent deploy --image-name my-first-agent
+
+# Check agent status
+galadriel agent state --agent-id your-agent-id
+```
+
+## Troubleshooting
+
+If you encounter issues during deployment:
+
+1. Ensure Docker is running before using build/publish commands
+2. Verify your Galadriel API key is valid
+3. Check that your Docker Hub credentials are correct
+4. Confirm your `.env` and `.agents.env` files are properly configured
+5. Make sure you have necessary permissions on Docker Hub
+
+<CardGroup cols={2}>
+    <Card title="Agent Framework"
+          href="/galadriel-network/get-started/agent-framework" icon="sitemap">
+        Learn more about the agent framework.
+    </Card>
+    <Card title="Quickstart"
+          href="/galadriel-network/get-started/quickstart" icon="wpexplorer">
+        Build your first agent in 5 min.
+    </Card>
+</CardGroup>
